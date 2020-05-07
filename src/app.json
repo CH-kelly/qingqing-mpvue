@@ -1,0 +1,49 @@
+{
+  "pages": [
+    "pages/index/main",
+
+    "pages/message/main",
+    "pages/heart/main",
+    "pages/dynamic/main",
+    "pages/setting/main"
+
+  ],
+  "tabBar": {
+    "borderStyle":"white",
+    "color":"#999999",
+    "selectedColor":"#595E6D",
+    "custom":true,
+    "list": [
+      {
+      "pagePath": "pages/index/main",
+      "iconPath":"/static/images/new/index.png",
+      "selectedIconPath":"/static/images/new/index_active.png",
+      "text": "首页"
+    },{
+      "pagePath": "pages/message/main",
+      "iconPath":"/static/images/new/message.png",
+      "selectedIconPath":"/static/images/new/message_active.png",
+      "text": "消息"
+    },{
+      "pagePath": "pages/heart/main",
+      "iconPath":"/static/images/new/heart.png",
+      "selectedIconPath":"/static/images/new/heart_active.png",
+      "text": "中意人"
+    },{
+      "pagePath": "pages/dynamic/main",
+      "iconPath":"/static/images/new/dynamic.png",
+      "selectedIconPath":"/static/images/new/dynamic_active.png",
+      "text": "动态"
+    },{
+      "pagePath": "pages/setting/main",
+      "iconPath":"/static/images/new/setting.png",
+      "selectedIconPath":"/static/images/new/setting_active.png",
+      "text": "设置"
+    }
+  ]
+  },
+  "window": {
+    "navigationStyle":"custom",
+    "navigationBarTextStyle":"black"
+  }
+}
