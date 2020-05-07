@@ -4,7 +4,7 @@
     <div v-for="(item,index) in messageLists" :key="index">
         <div class="news_lists">
             <div class="news_msg_left">
-                <img :src="item.avatar" class="news_avatar"></img>
+                <img :src="item.avatar" class="news_avatar" alt="">
             </div>
             <div class="news_msg_content">
                 <div class="msg_personnel">
@@ -31,11 +31,7 @@ export default {
 
 <style scoped>
 .news_center{
-    margin-top: 70px; 
-    margin-bottom: 56px;
     width: 100%;
-    
-    /* background-color: blue; */
     background-color: #fff;
     overflow: hidden;
 
@@ -49,7 +45,7 @@ export default {
     color: #999999;
 }
 .news_msg_left{
-    width: 20%;
+    width: 15%;
     padding-left:32rpx;
 }
 .news_avatar{

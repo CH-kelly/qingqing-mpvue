@@ -8,7 +8,7 @@
 <scroll-view scroll-y enable-back-to-top :style="{marginTop:systemHeight+'px',height:contentHeight+'px'}">
       
     <div class="index-center">
-            内容
+          <heart-item :heartList="heartList"></heart-item>
     </div>
  </scroll-view>
 
@@ -24,18 +24,31 @@ import navigationBar from '@/components/navbar/navbar'
 import bottomNavBar from "@/components/bottomNavBar"
 import store from '@/store'
 
+import heartItem from "./child/heartItem"
 
 export default {
   data () {
     return {
 
       systemHeight:0,
-      contentHeight:0
+      contentHeight:0,
+      heartList:[
+        {
+          avatar:'/static/images/lvy_icon.png',
+          nickname:'李毅',
+          education:'电子科技大学'
+        },
+        {
+          avatar:'/static/images/lvy_icon.png',
+          nickname:'李毅',
+          education:'电子科技大学'
+        }
+      ]
     }
   },
 
   components: {
-    navigationBar,bottomNavBar
+    navigationBar,bottomNavBar,heartItem
   },
   mounted(option){
     //  this.systemHeight = wx.getStorageSync('systemHeight');

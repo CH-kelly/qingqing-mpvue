@@ -9,7 +9,10 @@
         <!-- 123
       </div> -->
       <div slot="left">
-        中意人
+        <div class="navigation-left">
+          <img class="left-img" src="/static/images/new/delete.png" alt="">
+          <div>删除</div>
+        </div>
       </div>
       <div slot="center"> 
         <img class="navigation-center-image" src="/static/images/greet/lvy_title.png" alt="">
@@ -19,7 +22,7 @@
       
     <div class="index-center">
 
-      <chat-list messageLists="messageLists"></chat-list>
+      <chat-list :messageLists="messageLists"></chat-list>
 
     </div>
  </scroll-view>
@@ -49,12 +52,28 @@ export default {
             {
                 nickname:'小星',
                 content:'青青校园上线啦',
-                avatar:"/static/image/lvy_icon.png",
+                avatar:"/static/images/lvy_icon.png",
                 timer:'下午3:50'
             },{
                 nickname:'小星',
                 content:'青青校园上线啦',
-                avatar:"/static/image/lvy_icon.png",
+                avatar:"/static/images/lvy_icon.png",
+                timer:'下午3:50'
+            },{
+                nickname:'小星',
+                content:'青青校园上线啦',
+                avatar:"/static/images/lvy_icon.png",
+                timer:'下午3:50'
+            },{
+                nickname:'小星',
+                content:'青青校园上线啦',
+                avatar:"/static/images/lvy_icon.png",
+                timer:'下午3:50'
+            },{
+                nickname:'小星',
+                content:'青青校园上线啦',
+                avatar:"/static/images/lvy_icon.png",
+                timer:'下午3:50'
             }
         ],
     }
@@ -84,6 +103,21 @@ export default {
   
 
 }
+.navigation-left{
+  text-align: center;
+  font-size: 20rpx;
+  font-family:PingFang SC;
+  font-weight:500;
+  color:rgba(51,51,51,1);
+  
+  /* padding-left: 26rpx;   */
+
+}
+.left-img{
+  width: 32rpx;
+  height: 32rpx;
+
+}
 .navigation-center-image{
   width: 45%;
   height: 50%;
@@ -91,7 +125,7 @@ export default {
 
 
 .index-center{
-  padding: 0 20rpx 40rpx 20rpx;
+  padding-bottom:40rpx;
   background: #ffffff;
   /* background:skyblue; */
   overflow: hidden;
