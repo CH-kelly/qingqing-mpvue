@@ -5,7 +5,9 @@
     "pages/message/main",
     "pages/heart/main",
     "pages/dynamic/main",
-    "pages/setting/main"
+    "pages/setting/main",
+    "pages/member/main",
+    "pages/exchange/main"
 
   ],
   "tabBar": {

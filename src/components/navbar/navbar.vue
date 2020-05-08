@@ -2,7 +2,7 @@
   <div class="navigation-bar" :style="{paddingTop: paddingTop + 'px', height: height + 'px', backgroundColor: background||barStyle.background}" :class="shadow?'navigation-bar-background':''">
     <div class="navigation-left">
       <slot name="left">
-        <img class="left-image-back" src="/static/images/new/back.png" alt="">
+        <img class="left-image-back" src="/static/images/new/back.png" alt="" @click="gotoBack()">
       </slot>
     </div>
     <div class="navigation-center">
@@ -127,6 +127,11 @@
           store.commit('setMenuSettings', menuSettings)
         }
       },
+      gotoBack(){
+        wx.navigateBack({
+          delta: 1
+        })
+      }
     }
   }
 </script>
@@ -158,14 +163,16 @@ box-shadow:0px 0px 16px 2px rgba(4,0,0,0.08);
 
 .navigation-left{
   width: 20%;
-  /* background: orange; */
   display: flex;
-  justify-content: center;
   align-items: center;
+  padding-left: 30rpx;
 }
 .navigation-left>.left-image-back{
-    width: 22rpx;
-    height: 30rpx;
+    width: 20rpx;
+    height: 28rpx;
+    vertical-align: middle;
+    position: relative;
+    top: 6rpx;
 }
 .navigation-center{
   width: 60%;

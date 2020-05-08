@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navigation-bar >
+    <navigation-bar  shadow="true">
       <div slot="left">
         中意人
       </div>
@@ -34,12 +34,17 @@ export default {
       contentHeight:0,
       heartList:[
         {
-          avatar:'/static/images/lvy_icon.png',
+          avatar:'/static/images/demo_2@2x.png',
           nickname:'李毅',
           education:'电子科技大学'
         },
         {
-          avatar:'/static/images/lvy_icon.png',
+          avatar:'/static/images/demo_3@2x.png',
+          nickname:'李毅',
+          education:'电子科技大学'
+        },
+        {
+          avatar:'/static/images/demo_5@2x.png',
           nickname:'李毅',
           education:'电子科技大学'
         }
@@ -88,8 +93,9 @@ export default {
 
 
 .index-center{
-  padding: 0 20rpx 40rpx 20rpx;
-  background: #F4F5F9;
+  margin: 20rpx 20rpx 40rpx 20rpx;
+  
+  background: #ffffff;
   /* background:skyblue; */
   overflow: hidden;
 
