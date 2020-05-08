@@ -7,7 +7,8 @@
     "pages/dynamic/main",
     "pages/setting/main",
     "pages/member/main",
-    "pages/exchange/main"
+    "pages/exchange/main",
+    "pages/search/main"
 
   ],
   "tabBar": {

@@ -25,7 +25,7 @@
       </div>
       <!-- 菜单 -->
       <div class="menu-lists">
-          <div class="menu-lists-item">
+          <div class="menu-lists-item" @click="search()">
             <img class="item-icon" src="/static/images/new/search.png" alt="">
             <div class="item-title">搜索设置</div>
             <img class="item-back" src="/static/images/new/back.png" alt="">
@@ -101,6 +101,12 @@ export default {
       // 立即开通VIP按钮
       wx.navigateTo({
         url:'/pages/member/main'
+      })
+    },
+    search(){
+      // 搜索设置按钮
+      wx.navigateTo({
+        url:'/pages/search/main'
       })
     }
   },
