@@ -6,7 +6,7 @@
       </div>
       <div slot="center">    </div> -->
       <div slot="left">
-        <div class="navigation-left-back">回看</div>
+        <div class="navigation-left-back"  @click="gotoBackImage">回看</div>
       </div>
       <div slot="center"> 
         <img class="navigation-center-image" src="/static/images/greet/lvy_title.png" alt="">
@@ -92,6 +92,12 @@ export default {
     clickLove(){
       console.log('clickLove',k);
       
+    },
+    gotoBackImage(){
+      //pages/lookBack/main
+      wx.navigateTo({
+        url:"/pages/lookBack/main"
+      })
     }
   },
 
@@ -131,7 +137,7 @@ export default {
 }
 
 .index-timer{
-  /* height: 100%; */
+  height: 100%;
   background: #F4F5F9;
   padding: 20rpx 40rpx ;
 }
