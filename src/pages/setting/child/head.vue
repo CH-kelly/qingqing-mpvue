@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="head-right">
-            <div class="head-right-button">
+            <div class="head-right-button" @click="editInfo">
                 <span class="head-right-title">查看/编辑资料</span>
                 <!-- <span>></span> -->
                 <img class="item-back" src="/static/images/new/back.png" alt="">
@@ -23,6 +23,13 @@
 export default {
     props:{
         headInfo:{type:Object}
+    },
+    methods:{
+        editInfo(){
+            wx.navigateTo({
+                url:'/pages/editInfo/main'
+            })
+        }
     }
 }
 </script>

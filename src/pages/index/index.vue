@@ -12,31 +12,37 @@
         <img class="navigation-center-image" src="/static/images/greet/lvy_title.png" alt="">
       </div>
     </navigation-bar>
-<scroll-view scroll-y enable-back-to-top :style="{marginTop:systemHeight+'px',height:contentHeight+'px'}">
-      
-    <div class="index-center">
-    <!-- <div class="index-center" :style="{marginTop:systemHeight+'px'}"> -->
-        <swiper :images="images" />
-
-        <!-- 个人资料 -->
-        <personal></personal>
-
-        <describe title="自我介绍" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
-        <describe title="个人爱好" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
-        <describe title="内心独白" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
-        <describe title="自我介绍" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
-        <describe title="微信号" content="1234566"></describe>
-
-        <button></button>
-
-
     
-    </div>
- </scroll-view>
+      <scroll-view scroll-y enable-back-to-top :style="{marginTop:systemHeight+'px',height:contentHeight+'px'}">
+            
+          <div class="index-center"  v-show="status===1">
+          <!-- <div class="index-center" :style="{marginTop:systemHeight+'px'}"> -->
+              <swiper :images="images" />
+
+              <!-- 个人资料 -->
+              <personal></personal>
+
+              <describe title="自我介绍" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
+              <describe title="个人爱好" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
+              <describe title="内心独白" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
+              <describe title="自我介绍" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
+              <describe title="微信号" content="1234566"></describe>
+
+              <button ></button>
+
+
+          
+          </div>
+
+           <!-- 倒计时 -->
+          <div class="index-timer" v-show="status===0">
+            <countDownTimer :downTimerArray="downTimerArray"></countDownTimer>
+          </div>
+
+      </scroll-view>
 
     <bottomNavBar></bottomNavBar>
-
-
+   
   </div>
 
 </template>
@@ -47,9 +53,10 @@ import swiper from "@/components/swiper";
 import bottomNavBar from "@/components/bottomNavBar"
 import store from '@/store'
 
-import personal from "./child/personal"
-import describe from "./child/describe"
-import button from "./child/button"
+import personal from "./child/personal"   //个人信息
+import describe from "./child/describe"   //简介
+import button from "./child/button";      //喜欢 不喜欢 按钮
+import countDownTimer from "./child/countDownTimer"
 
 export default {
   data () {
@@ -65,12 +72,14 @@ export default {
         }
       ],
       systemHeight:0,
-      contentHeight:0
+      contentHeight:0,
+      status:0,
+      downTimerArray:{like:2,timer:1589017132}
     }
   },
 
   components: {
-    navigationBar,swiper,personal,describe,button,bottomNavBar
+    navigationBar,swiper,personal,describe,button,bottomNavBar,countDownTimer
   },
   mounted(option){
     //  this.systemHeight = wx.getStorageSync('systemHeight');
@@ -80,6 +89,10 @@ export default {
      
   },
   methods: {
+    clickLove(){
+      console.log('clickLove',k);
+      
+    }
   },
 
   created () {
@@ -117,5 +130,10 @@ export default {
 
 }
 
+.index-timer{
+  /* height: 100%; */
+  background: #F4F5F9;
+  padding: 20rpx 40rpx ;
+}
 
 </style>

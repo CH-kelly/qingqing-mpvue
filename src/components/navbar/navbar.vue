@@ -103,7 +103,9 @@
         }
         // 计算内容可视区域
         let setContentHeight  = systemInfo.windowHeight -  systemHeight - bottomNavBarHeight;
+        let setSecondPageHeight = systemInfo.windowHeight -  systemHeight ; //二级页面内容可视区域
         store.commit('setContentHeight', setContentHeight)
+        store.commit('setSecondPageHeight', setSecondPageHeight)
         store.commit('setBottomNavBarHeight', bottomNavBarHeight)
       
       let barStyle = {...navBarStyle}

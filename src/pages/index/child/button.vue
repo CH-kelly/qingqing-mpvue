@@ -1,9 +1,9 @@
 <template>
     <div class="button" :style="{bottom:'70px'}">
-        <div class="button-left">
+        <div class="button-left" @click="clickLove">
             <img class="button-image" src="/static/images/greet/delete_icon.png" alt="">
         </div>
-        <div class="button-right">
+        <div class="button-right" @click="clickLove">
             <img  class="button-image" src="/static/images/greet/like_icon.png" alt="">
         </div>
     </div>
@@ -30,6 +30,14 @@ export default {
         
         
     },
+    methods:{
+        clickLove(){
+            // console.log('k',k);
+            console.log(1111);
+            
+            // this.$emit('clickLove',k)
+        }
+    },
     mounted(){
         // this.distanceBottom = store.state.bottomNavBarHeight;
         // console.log('distanceBottom',this.distanceBottom);
@@ -48,8 +56,15 @@ export default {
     justify-content: center;
 }
 .button-left{
-    width: 30%;
+    /* width: 30%; */
+    background: orange;
+    margin-right: 30rpx;
 }
+.button-right{
+    background: skyblue;
+}
+
+
 .button-image{
     width: 160rpx;
     height: 160rpx;

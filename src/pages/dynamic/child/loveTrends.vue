@@ -8,7 +8,7 @@
             <div class="head-desc">TA发布了{{head.number}}条动态</div>
         </div>
         <div class="head-right">
-            <div class="head-right-button">
+            <div class="head-right-button" @click="gotoLoveStory">
                 <img class="head-right-icon" src="/static/images/new/heart-love.png" alt="">
                 <span class="head-right-title">恋爱故事</span>
             </div>
@@ -19,6 +19,16 @@
 export default {
     props:{
         head:{type:Object}
+    },
+    methods:{
+        //pages/loveStory/main
+        gotoLoveStory(){
+            console.log('恋爱故事');
+            
+            wx.navigateTo({
+                url:'/pages/loveStory/main'
+            })
+        }
     }
 }
 </script>

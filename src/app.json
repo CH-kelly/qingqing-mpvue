@@ -4,11 +4,19 @@
 
     "pages/message/main",
     "pages/heart/main",
+
+    
     "pages/dynamic/main",
+    "pages/dynamicRelease/main",
+    "pages/loveStory/main",
+
+
     "pages/setting/main",
     "pages/member/main",
     "pages/exchange/main",
-    "pages/search/main"
+    "pages/search/main",
+    "pages/editInfo/main",
+    "pages/idAuth/main"
 
   ],
   "tabBar": {

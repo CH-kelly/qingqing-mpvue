@@ -1,6 +1,6 @@
 <template>
-    <div class="button" :style="{bottom:'70px'}">
-        <div class="button-circle">
+    <div class="button" :style="{bottom:'80px'}">
+        <div class="button-circle" @click="gotoSend">
             <div>
                 <img class="button-circle-img"  src="/static/images/new/send.png" alt="">
                 <div class="button-title">发布</div>
@@ -12,7 +12,7 @@
 import store from '@/store'
 export default {
     props:{
-        
+        type:{type:Number,default:1}
     },
     data () {
         return {
@@ -35,6 +35,15 @@ export default {
         // console.log('distanceBottom',this.distanceBottom);
         
         
+    },
+    methods:{
+        gotoSend(){ //发送动态
+            console.log('type',this.type);
+            
+            wx.navigateTo({
+                url:'/pages/dynamicRelease/main?type='+this.type
+            })
+        }
     }
 }
 </script>
