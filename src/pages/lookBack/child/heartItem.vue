@@ -19,7 +19,7 @@
         <span>已喜欢</span>
       </div>
       <div class="list-item-desc" v-if="item.like==0">
-        <img src="/static/images/greet/like_icon.png" alt />
+        <img src="/static/images/greet/delete_icon.png" alt />
         <span>无感</span>
       </div>
     </div>
@@ -94,10 +94,12 @@ export default {
 
   display: flex;
   align-items: center;
+  justify-content: center;
+
   /* padding: 5rpx 8rpx; */
-  background: rgba(0, 0, 0, 0.8);
-  width: 130rpx;
-  height: 50rpx;
+  background: rgba(0, 0, 0, 0.6);
+  width: 120rpx;
+  height: 36rpx;
   border-radius: 38rpx;
   color: #ffffff;
 
@@ -110,8 +112,8 @@ color:rgba(255,255,255,1);
 
 }
 .list-item-desc > image {
-  width: 30rpx;
-  height: 30rpx;
+  width: 32rpx;
+  height: 32rpx;
   vertical-align: middle;
 }
 </style>

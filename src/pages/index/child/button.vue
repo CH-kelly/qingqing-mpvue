@@ -1,10 +1,10 @@
 <template>
     <div class="button" :style="{bottom:'70px'}">
-        <div class="button-left" @click="clickLove">
-            <img class="button-image" src="/static/images/greet/delete_icon.png" alt="">
+        <div class="button-left" >
+            <img @click="clickButtonImage" class="button-image" src="/static/images/greet/delete_icon.png" alt="">
         </div>
-        <div class="button-right" @click="clickLove">
-            <img  class="button-image" src="/static/images/greet/like_icon.png" alt="">
+        <div class="button-right" >
+            <img @click="clickButtonImage"  class="button-image" src="/static/images/greet/like_icon.png" alt="">
         </div>
     </div>
 </template>
@@ -31,7 +31,7 @@ export default {
         
     },
     methods:{
-        clickLove(){
+        clickButtonImage(){
             // console.log('k',k);
             console.log(1111);
             

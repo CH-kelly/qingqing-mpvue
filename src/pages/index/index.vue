@@ -28,9 +28,16 @@
               <describe title="自我介绍" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
               <describe title="微信号" content="1234566"></describe>
 
-              <button ></button>
-
-
+              <!-- <button ></button> -->
+              <!--底部按钮-->
+              <div class="button" :style="{bottom:'70px'}">
+                  <div class="button-left" >
+                      <img @click="clickButtonImage(1)" class="button-image" src="/static/images/greet/delete_icon.png" alt="">
+                  </div>
+                  <div class="button-right" >
+                      <img @click="clickButtonImage(2)"  class="button-image" src="/static/images/greet/like_icon.png" alt="">
+                  </div>
+              </div>
           
           </div>
 
@@ -55,7 +62,7 @@ import store from '@/store'
 
 import personal from "./child/personal"   //个人信息
 import describe from "./child/describe"   //简介
-import button from "./child/button";      //喜欢 不喜欢 按钮
+// import button from "./child/button";      //喜欢 不喜欢 按钮
 import countDownTimer from "./child/countDownTimer"
 
 export default {
@@ -74,12 +81,12 @@ export default {
       systemHeight:0,
       contentHeight:0,
       status:0,
-      downTimerArray:{like:2,timer:1589017132}
+      downTimerArray:{like:2,timer:10170}
     }
   },
 
   components: {
-    navigationBar,swiper,personal,describe,button,bottomNavBar,countDownTimer
+    navigationBar,swiper,personal,describe,bottomNavBar,countDownTimer
   },
   mounted(option){
     //  this.systemHeight = wx.getStorageSync('systemHeight');
@@ -98,6 +105,11 @@ export default {
       wx.navigateTo({
         url:"/pages/lookBack/main"
       })
+
+    },
+    clickButtonImage(key){
+      this.status=0;
+      console.log(this.status)
     }
   },
 
@@ -142,4 +154,30 @@ export default {
   padding: 20rpx 40rpx ;
 }
 
+
+
+
+/* 按钮样式 */
+.button{
+    width: 100%;
+    position: fixed;
+    bottom: 0px;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+}
+.button-left{
+    /* width: 30%; */
+    background: orange;
+    margin-right: 30rpx;
+}
+.button-right{
+    background: skyblue;
+}
+
+
+.button-image{
+    width: 160rpx;
+    height: 160rpx;
+}
 </style>

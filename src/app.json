@@ -1,7 +1,10 @@
 {
   "pages": [
+    "pages/guide/main",
     "pages/index/main",
     "pages/lookBack/main",
+    "pages/personalData/main",
+
 
     "pages/message/main",
     "pages/heart/main",

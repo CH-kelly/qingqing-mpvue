@@ -6,7 +6,8 @@
     <div class="count-down-timer-line"></div>
     <div class="count-down-timer-content">
       <div class="next-recommend">距离下次推荐开始</div>
-      <div class="down-timer">02:49:35</div>
+      <!-- <div class="down-timer">02:49:35</div> -->
+      <div class="down-timer">{{downTimerString}}</div>
       <div class="timer-image">
         <img src="/static/images/new/timer-image.png" alt />
       </div>
@@ -25,11 +26,61 @@ export default {
   data() {
     return {
       // distanceBottom:70
+      downTimerInter: null,
+      downTimerString: this.getDownTimer(this.downTimerArray.timer)
     };
   },
-  computed: {},
+
+  computed: {
+    downTimer() {
+      // let timer = 10170;
+      let timer = this.downTimerArray.timer;
+      this.downTimerInter = setInterval(() => {
+        timer--;
+        if (timer < 0) {
+          clearInterval(this.downTimerInter);
+        } else {
+          this.downTimerString = this.getDownTimer(timer);
+        }
+      }, 1000);
+    }
+  },
   onshow() {},
-  mounted() {}
+  mounted() {},
+  methods: {
+    getDownTimer(timer) {
+      // console.log(timer);
+
+      if (timer < 60 && timer > 10) {
+        return "00:00:" + timer;
+      }
+
+      if (timer < 10) {
+        return "00:00:0" + timer;
+      }
+      let hour1, minute1;
+      let hour = String(parseInt(timer / 3600));
+
+      if (hour.length < 2) {
+        hour1 = "0" + hour;
+      } else {
+        hour1 = hour;
+      }
+
+      let minute = String(parseInt((timer - hour * 3600) / 60));
+      if (minute.length < 2) {
+        minute1 = "0" + minute;
+      } else {
+        minute1 = minute;
+      }
+
+      let second = String(timer - hour * 3600 - minute * 60);
+      if (second.length < 2) {
+        second = "0" + second;
+      }
+      return hour1 + ":" + minute1 + ":" + second;
+    }
+  }
 };
 </script>
 <style scoped>
