@@ -1,8 +1,9 @@
 {
   "pages": [
     
-    "pages/guide/main",
+    
     "pages/index/main",
+    "pages/guide/main",
     "pages/lookBack/main",
     "pages/personalData/main",
     

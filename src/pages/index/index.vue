@@ -4,85 +4,137 @@
       <!-- <div slot="left">
         <img src="/static/images/new/back.png" alt="">
       </div>
-      <div slot="center">    </div> -->
+      <div slot="center">    </div>-->
       <div slot="left">
-        <div class="navigation-left-back"  @click="gotoBackImage">回看</div>
+        <div class="navigation-left-back" @click="gotoBackImage">回看</div>
       </div>
-      <div slot="center"> 
-        <img class="navigation-center-image" src="/static/images/greet/lvy_title.png" alt="">
+      <div slot="center">
+        <img class="navigation-center-image" src="/static/images/greet/lvy_title.png" alt />
       </div>
     </navigation-bar>
-    
-      <scroll-view scroll-y enable-back-to-top :style="{marginTop:systemHeight+'px',height:contentHeight+'px'}">
-            
-          <div class="index-center"  v-if="status===0">
-          <!-- <div class="index-center" :style="{marginTop:systemHeight+'px'}"> -->
-              <swiper :images="images" />
 
-              <!-- 个人资料 -->
-              <personal></personal>
+    <scroll-view
+      scroll-y
+      enable-back-to-top
+      :style="{marginTop:systemHeight+'px',height:contentHeight+'px'}"
+    >
+      <div class="index-center" v-if="status===0">
+        <!-- <div class="index-center" :style="{marginTop:systemHeight+'px'}"> -->
+        <swiper :images="images" />
 
-              <describe title="自我介绍" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
-              <describe title="个人爱好" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
-              <describe title="内心独白" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
-              <describe title="自我介绍" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
-              <describe title="微信号" content="1234566"></describe>
+        <!-- 个人资料 -->
+        <personal></personal>
 
-              <!-- <button ></button> -->
-              <!--底部按钮-->
-              <div class="button" :style="{bottom:'70px'}">
-                  <div class="button-left" >
-                      <img @click="clickButtonImage(1)" class="button-image" src="/static/images/greet/delete_icon.png" alt="">
-                  </div>
-                  <div class="button-right" >
-                      <img @click="clickButtonImage(2)"  class="button-image" src="/static/images/greet/like_icon.png" alt="">
-                  </div>
-              </div>
-          
+        <describe title="自我介绍" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
+        <describe title="个人爱好" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
+        <describe title="内心独白" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
+        <describe title="自我介绍" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
+        <describe title="微信号" content="1234566"></describe>
+
+        <!-- <button ></button> -->
+        <!--底部按钮-->
+        <div class="button" :style="{bottom:'70px'}">
+          <div class="button-left">
+            <img
+              @click="clickButtonImage(1)"
+              class="button-image"
+              src="/static/images/greet/delete_icon.png"
+              alt
+            />
           </div>
+          <div class="button-center" @click="superLike">
+            <!-- <img @click="clickButtonImage(3)" class="button-image" src="/static/images/greet/delete_icon.png" alt=""> -->
 
-           <!-- 倒计时 -->
-          <div class="index-timer" v-else>
-            <countDownTimer :downTimerArray="downTimerArray"></countDownTimer>
+            <img class="super-like-image" src="/static/images/new/heart2.png" alt />
+            <div class="super-like-title">超级喜欢</div>
           </div>
+          <div class="button-right">
+            <img
+              @click="clickButtonImage(2)"
+              class="button-image"
+              src="/static/images/greet/like_icon.png"
+              alt
+            />
+          </div>
+        </div>
+      </div>
 
-      </scroll-view>
+      <!-- 倒计时 -->
+      <div class="index-timer" v-else>
+        <countDownTimer :downTimerArray="downTimerArray"></countDownTimer>
+      </div>
+    </scroll-view>
 
     <!-- <bottomNavBar></bottomNavBar> -->
 
     <div class="dialog-wrap-guide" v-if="isReadDialog===1">
       <div class="dialog-wrap-guide-sex">
-        <img  class="dialog-wrap-guide-image" v-if="lookAroundSex===2" src="/static/images/popup/newbie_1_m.png" alt="" @click="knowSex">
-        <img  class="dialog-wrap-guide-image" v-if="lookAroundSex===1" src="/static/images/popup/newbie_1_f.png" alt=""  @click="knowSex">
-        <img class="dialog-wrap-guide-like"  v-if="lookAroundSex===3" src="/static/images/popup/newbie_2.png" alt=""  @click="knowSex">
-        <img class="dialog-wrap-guide-nolike" v-if="lookAroundSex===4" src="/static/images/popup/newbie_3.png" alt=""  @click="knowSex">
-        <img class="dialog-wrap-guide-image" v-if="lookAroundSex===5" src="/static/images/popup/popup_3.png" alt=""  @click="knowSex">
+        <img
+          class="dialog-wrap-guide-image"
+          v-if="lookAroundSex===2"
+          src="/static/images/popup/newbie_1_m.png"
+          alt
+          @click="knowSex"
+        />
+        <img
+          class="dialog-wrap-guide-image"
+          v-if="lookAroundSex===1"
+          src="/static/images/popup/newbie_1_f.png"
+          alt
+          @click="knowSex"
+        />
+        <img
+          class="dialog-wrap-guide-like"
+          v-if="lookAroundSex===3"
+          src="/static/images/popup/newbie_2.png"
+          alt
+          @click="knowSex"
+        />
+        <img
+          class="dialog-wrap-guide-nolike"
+          v-if="lookAroundSex===4"
+          src="/static/images/popup/newbie_3.png"
+          alt
+          @click="knowSex"
+        />
+        <img
+          class="dialog-wrap-guide-image"
+          v-if="lookAroundSex===5"
+          src="/static/images/popup/popup_3.png"
+          alt
+          @click="knowSex"
+        />
       </div>
     </div>
 
+    <!-- 登录授权 -->
     <auth v-if="isAuth===1" @SignInTemporarily="SignInTemporarily"></auth>
+
+    <!-- 超级喜欢 -->
+    <superLike v-if="isSuperLike===1" @close="closeSuperLike"></superLike>
 
 
   </div>
-
 </template>
 
 <script>
-import navigationBar from '@/components/navbar/navbar.vue'
+import navigationBar from "@/components/navbar/navbar.vue";
 import swiper from "@/components/swiper";
+import superLike from "@/components/superLike";
+
 // import bottomNavBar from "@/components/bottomNavBar"
-import store from '@/store'
+import store from "@/store";
 
-import personal from "./child/personal"   //个人信息
-import describe from "./child/describe"   //简介
+import personal from "./child/personal"; //个人信息
+import describe from "./child/describe"; //简介
 // import button from "./child/button";      //喜欢 不喜欢 按钮
-import countDownTimer from "./child/countDownTimer"
+import countDownTimer from "./child/countDownTimer";
 
-import auth from "@/pages/auth"   //授权登录
+import auth from "@/pages/auth"; //授权登录
 
 
 export default {
-  data () {
+  data() {
     return {
       images: [
         {
@@ -94,16 +146,17 @@ export default {
             "https://img-oss.yunshanmeicai.com/goods/default/e83c8f0f-4acc-4729-bcbb-294f2b314977.jpg"
         }
       ],
-      systemHeight:0,
-      isReadDialog:0,
-      contentHeight:0,
-      lookAroundSex:0,
-      lookAround:0,
-      status:0,
-      downTimerArray:{like:2,timer:10170},
-      userInfo:null,
-      isAuth:0,
-    }
+      systemHeight: 0,
+      isReadDialog: 0,
+      contentHeight: 0,
+      lookAroundSex: 0,
+      lookAround: 0,
+      status: 0,
+      downTimerArray: { like: 2, timer: 10170 },
+      userInfo: null,
+      isAuth: 0,
+      isSuperLike:1,
+    };
   },
   // created(){
   //    let userInfo = wx.getStorageSync('userInfo') || null
@@ -119,179 +172,202 @@ export default {
   //         url: "/pages/guide/main"
   //       });
   //     }
-    
+
   // },
   onLoad(options) {
-    
-    console.log('userInfo2',this.userInfo);
+    console.log("userInfo2", this.userInfo);
 
     let that = this;
     wx.getStorage({
-      key: 'lookAround',
-      success (res) {
-        that.lookAround = res.data
+      key: "lookAround",
+      success(res) {
+        that.lookAround = res.data;
       }
-    })
+    });
     wx.getStorage({
-      key: 'isReadDialog',
-      success (res) {
-        that.isReadDialog = res.data
+      key: "isReadDialog",
+      success(res) {
+        that.isReadDialog = res.data;
       }
-    })
+    });
     wx.getStorage({
-      key: 'lookAroundSex',
-      success (res) {
-        that.lookAroundSex = res.data
+      key: "lookAroundSex",
+      success(res) {
+        that.lookAroundSex = res.data;
       }
-    })
+    });
     wx.getStorage({
-      key: 'userInfo',
-      success (res) {
-        console.log('userInfo1',res.data);
+      key: "userInfo",
+      success(res) {
+        console.log("userInfo1", res.data);
         that.userInfo = JSON.parse(res.data);
       }
-    })
+    });
   },
   components: {
-    navigationBar,swiper,personal,describe,
+    navigationBar,
+    swiper,
+    personal,
+    describe,
     // bottomNavBar,
-    countDownTimer,auth
+    countDownTimer,
+    auth,
+    superLike
   },
-  mounted(option){
+  mounted(option) {
     //  this.systemHeight = wx.getStorageSync('systemHeight');
-     console.log('systemHeight',store.state.systemHeight);
-     this.systemHeight = store.state.systemHeight;
-      this.contentHeight = store.state.contentHeight;
+    console.log("systemHeight", store.state.systemHeight);
+    this.systemHeight = store.state.systemHeight;
+    this.contentHeight = store.state.contentHeight;
   },
   methods: {
-    SignInTemporarily(){
+    superLike(){
+      this.isSuperLike = 1;
+    },
+    closeSuperLike(){
+      this.isSuperLike = 0;
+    },
+    SignInTemporarily() {
       this.isAuth = 0;
     },
-    clickLove(){
-      console.log('clickLove',k);
-      
+    clickLove() {
+      console.log("clickLove", k);
     },
-    gotoBackImage(){
+    gotoBackImage() {
       //pages/lookBack/main
-      
-        if(this.userInfo){
-          wx.navigateTo({
-            url:"/pages/lookBack/main"
-          })
-        }else{
-          // 登录
-          this.isAuth = 1;
-        }
-      
-    },
-    clickButtonImage(key){
-      // 点击喜欢或不喜欢按钮
-      console.log("clickButtonImage",this.userInfo);
-      console.log(!this.userInfo);
-      
-      if(this.userInfo){
-          this.status=1;
-      }else{
+
+      if (this.userInfo) {
+        wx.navigateTo({
+          url: "/pages/lookBack/main"
+        });
+      } else {
         // 登录
         this.isAuth = 1;
       }
-      
     },
-    knowSex(){
-      //1男  2女
-      if(this.lookAroundSex == 1){
-          this.lookAroundSex = this.lookAroundSex +2;
-      }else{
-         this.lookAroundSex = this.lookAroundSex +1;
+    clickButtonImage(key) {
+      // 点击喜欢或不喜欢按钮
+      console.log("clickButtonImage", this.userInfo);
+      console.log(!this.userInfo);
+
+      if (this.userInfo) {
+        this.status = 1;
+      } else {
+        // 登录
+        this.isAuth = 1;
       }
-     
-      
-      if(this.lookAroundSex > 5){
+    },
+    knowSex() {
+      //1男  2女
+      if (this.lookAroundSex == 1) {
+        this.lookAroundSex = this.lookAroundSex + 2;
+      } else {
+        this.lookAroundSex = this.lookAroundSex + 1;
+      }
+
+      if (this.lookAroundSex > 5) {
         this.isReadDialog = 2;
-        wx.setStorageSync('isReadDialog', 2); //是否已阅读引导页面
+        wx.setStorageSync("isReadDialog", 2); //是否已阅读引导页面
       }
     }
-  },
-}
+  }
+};
 </script>
 
 <style scoped>
-.navigation-left-back{
-  width:90rpx;
-  height:44rpx;
+.navigation-left-back {
+  width: 90rpx;
+  height: 44rpx;
   line-height: 44rpx;
   text-align: center;
-  background:rgba(255,255,255,1);
-  border-radius:22rpx;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 22rpx;
   color: #333333;
   font-size: 26rpx;
-  font-weight:normal;
+  font-weight: normal;
 
   overflow: hidden;
-
 }
-.navigation-center-image{
+.navigation-center-image {
   width: 45%;
   height: 50%;
 }
 
-
-.index-center{
+.index-center {
   padding: 0 20rpx 40rpx 20rpx;
-  background: #F4F5F9;
+  background: #f4f5f9;
   /* background:skyblue; */
   overflow: hidden;
-
 }
 
-.index-timer{
+.index-timer {
   height: 100%;
-  background: #F4F5F9;
-  padding: 20rpx 40rpx ;
+  background: #f4f5f9;
+  padding: 20rpx 40rpx;
 }
-
-
-
 
 /* 按钮样式 */
-.button{
-    width: 100%;
-    position: fixed;
-    bottom: 0px;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
+.button {
+  width: 100%;
+  position: fixed;
+  bottom: 0px;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.button-left{
-    /* width: 30%; */
-    /* background: orange; */
-    margin-right: 30rpx;
+.button-left {
+  /* width: 30%; */
+  /* background: orange; */
+  margin-right: 30rpx;
 }
-.button-right{
-    /* background: skyblue; */
+.button-right {
+  /* background: skyblue; */
+}
+.button-center {
+  width: 290rpx;
+  height: 108rpx;
+  background: linear-gradient(
+    -40deg,
+    rgba(219, 128, 100, 1),
+    rgba(253, 59, 109, 1)
+  );
+  border-radius: 53rpx;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 30rpx;
+}
+.super-like-image {
+  width: 70rpx;
+  height: 50rpx;
+  vertical-align: middle;
+}
+.super-like-title {
+  font-size: 34rpx;
+  font-family: PingFang SC;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  line-height: 38rpx;
 }
 
-
-.button-image{
-    width: 160rpx;
-    height: 160rpx;
+.button-image {
+  width: 140rpx;
+  height: 140rpx;
 }
-
-
-
-
 
 /* 引导页面的样式 */
-.dialog-wrap-guide{
+.dialog-wrap-guide {
   height: 100vh;
   width: 100vw;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 9;
-  background: rgba(0, 0, 0, .9);
+  background: rgba(0, 0, 0, 0.9);
 }
-.dialog-wrap-guide-sex{
+.dialog-wrap-guide-sex {
   width: 100%;
   height: 100%;
   display: flex;
@@ -299,21 +375,19 @@ export default {
   align-items: center;
   position: relative;
 }
-.dialog-wrap-guide-image{
-
+.dialog-wrap-guide-image {
   width: 560rpx;
   height: 760rpx;
 }
-.dialog-wrap-guide-like{
+.dialog-wrap-guide-like {
   width: 500rpx;
   height: 560rpx;
 
   position: absolute;
   bottom: 125rpx;
   right: 0;
-
 }
-.dialog-wrap-guide-nolike{
+.dialog-wrap-guide-nolike {
   width: 500rpx;
   height: 560rpx;
 
@@ -321,12 +395,4 @@ export default {
   bottom: 125rpx;
   left: 83rpx;
 }
-
-
-
-
-
-
-
-
 </style>

@@ -12,9 +12,10 @@
         <swiper :images="images" />
 
         <div class="center-content">
-          <div class="center-content-top">
-            <img class="contnent-top-avatar" src="/static/images/lvy_icon.png" alt />
-            <div class="center-content-title">
+          <div style="padding:30rpx">
+            <div class="center-content-top">
+            <img class="contnent-top-avatar" src="/static/images/demo_2@2x.png" alt />
+            <div class="center-content-title1">
               <div class="center-content-title">晓欣</div>
               <div class="center-content-date">2020.4.28 17:54</div>
             </div>
@@ -31,16 +32,17 @@
                 <div class="center-heart">1</div>
               </div>
             </div>
-            <div class="comment-q-right">
+            <div class="comment-q-right" @click="report">
               <img class="dynamic-icon-report" src="/static/images/new/no-like3.png" alt />
             </div>
+          </div>
           </div>
           <div class="content-comment">
             <div class="contnent-comment-q">
               <img class="contnent-comment-q-avatar" src="/static/images/lvy_icon.png" alt />
               <div class="center-comment-title">
-                <div class="center-comment-title">晓欣</div>
-                <div class="center-comment-date">我家金毛就是看家的~</div>
+                <div class="center-content-title">晓欣</div>
+                <div class="center-comment-content">我家金毛就是看家的~</div>
               </div>
               <div class="comment-right">14分钟前</div>
             </div>
@@ -59,25 +61,44 @@
         </div>
       </div>
     </scroll-view>
+
+
+    <report v-if="isReport===1" @cancel="cancelReport"></report>
+
   </div>
 </template>
 
 <script>
 import navigationBar from "@/components/navbar/navbar";
 import swiper from "@/components/swiper";
+import report from "@/components/report";
+
+
 import store from "@/store";
 
 export default {
   data() {
     return {
       systemHeight: 0,
-      contentHeight: 0
+      contentHeight: 0,
+      images: [
+        {
+          url:
+            "https://img-oss.yunshanmeicai.com/goods/default/31d8dfa4-0d7b-4694-80f9-41b07c9d0a3a.png"
+        },
+        {
+          url:
+            "https://img-oss.yunshanmeicai.com/goods/default/e83c8f0f-4acc-4729-bcbb-294f2b314977.jpg"
+        }
+      ],
+      isReport:0,
     };
   },
 
   components: {
     navigationBar,
-    swiper
+    swiper,
+    report
   },
   mounted(option) {
     //  this.systemHeight = wx.getStorageSync('systemHeight');
@@ -85,7 +106,16 @@ export default {
     this.systemHeight = store.state.systemHeight;
     this.contentHeight = store.state.contentHeight;
   },
-  methods: {},
+  methods: {
+    report(){
+      // 举报
+      console.log('report举报');
+      this.isReport = 1;
+    },
+    cancelReport(){
+      this.isReport = 0;
+    }
+  },
 
   created() {
     // let app = getApp()
@@ -113,7 +143,7 @@ export default {
 }
 
 .index-center {
-  margin: 20rpx 20rpx 40rpx 20rpx;
+  /* margin: 20rpx 20rpx 40rpx 20rpx; */
   overflow: hidden;
 }
 
@@ -126,6 +156,20 @@ export default {
   width: 90%;
   display: flex;
   align-items: center;
+}
+.contnent-comment-q{
+  
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  
+  background: #F6F6F6;
+}
+.contnent-comment-q-avatar{
+  width:82rpx;
+height:82rpx;
+border-radius: 50%;
+margin-right: 10rpx;
 }
 .comment-like {
   width: 87rpx;
@@ -152,27 +196,54 @@ export default {
   font-weight: 500;
   color: rgba(153, 153, 153, 1);
 }
-
+.center-comment-content{
+  
+font-size:26rpx;
+font-family:PingFang SC;
+font-weight:500;
+color:rgba(51,51,51,1);
+}
+.comment-right{
+  
+font-size:22rpx;
+font-family:PingFang SC;
+font-weight:500;
+color:rgba(153,153,153,1);
+}
 
 
 
 
 .placeholder-class {
-  font-size: 26rpx;
+  font-size: 20rpx;
   font-family: PingFang SC;
   font-weight: 500;
   color: rgba(187, 187, 187, 1);
 }
 
 .contnent-comment-message {
-  width: 750rpx;
+  width: 100%;
   height: 87rpx;
   background: rgba(255, 255, 255, 1);
+  position: fixed;
+  bottom: 0;
+
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #f2f2f2;
+
+
+}
+.comment-message{
+  width: 80%;
 }
 
 .send-comment-message {
-  width: 137rpx;
+  width: 20%;
+  /* width: 137rpx; */
   height: 65rpx;
+  line-height: 65rpx;
+  text-align: center;
   background: rgba(89, 94, 109, 1);
   border-radius: 33rpx;
 
@@ -181,4 +252,55 @@ export default {
   font-weight: 500;
   color: rgba(255, 255, 255, 1);
 }
+.weui-input{
+  padding-left: 36rpx;
+}
+
+.center-content-top{
+  
+  display: flex;
+  align-items: center;
+
+}
+.contnent-top-avatar{
+  width:90rpx;
+height:90rpx;
+border-radius: 50%;
+margin-right: 20rpx;
+}
+.center-content-title{
+  
+font-size:30rpx;
+font-family:PingFang SC;
+font-weight:bold;
+color:rgba(111,121,181,1);
+}
+.center-content-date{
+  
+font-size:22rpx;
+font-family:PingFang SC;
+font-weight:500;
+color:rgba(102,102,102,1);
+}
+.content{
+  
+font-size:26rpx;
+font-family:PingFang SC;
+font-weight:500;
+color:rgba(51,51,51,1);
+line-height:56rpx;
+}
+
+.center-comment-title{
+  width: 70%;
+}
+
+
+
+
+
+
+
+
+
 </style>
