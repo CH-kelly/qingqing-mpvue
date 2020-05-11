@@ -108,14 +108,14 @@ export default {
     },
     mounted(option){
         const systemInfo = wx.getSystemInfoSync();     
-        let bottomNavBarHeight = 50 ;   // 计算底部导航栏的高度
-        // 判断是否iponex的代码
-        var model = systemInfo.model;
-        if(model.search('iPhone X')!=-1){
-            store.commit('setISipx', 1)
-            bottomNavBarHeight = 50+20;
-            this.isIPX = 20;
-        }
+        // let bottomNavBarHeight = 50 ;   // 计算底部导航栏的高度
+        // // 判断是否iponex的代码
+        // var model = systemInfo.model;
+        // if(model.search('iPhone X')!=-1){
+        //     store.commit('setISipx', 1)
+        //     bottomNavBarHeight = 50+20;
+        //     this.isIPX = 20;
+        // }
         console.log('机型：',store.state.isIPX);
         
         const systemHeight = store.state.systemHeight;

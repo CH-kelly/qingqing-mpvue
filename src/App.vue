@@ -1,5 +1,6 @@
 <script>
 export default {
+  
   created () {
     // 调用API从本地缓存中获取数据
     /*
@@ -23,6 +24,7 @@ export default {
       logs.unshift(Date.now())
       mpvue.setStorageSync('logs', logs)
     }
+    
   },
   log () {
     console.log(`log at:${Date.now()}`)

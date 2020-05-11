@@ -16,16 +16,16 @@
     <release></release>
 
 <!-- 底部按钮 -->
-    <bottomNavBar></bottomNavBar>
+    <!-- <bottomNavBar></bottomNavBar> -->
 
-
+  
   </div>
 
 </template>
 
 <script>
 import navigationBar from '@/components/navbar/navbar'
-import bottomNavBar from "@/components/bottomNavBar"
+// import bottomNavBar from "@/components/bottomNavBar"
 import store from '@/store'
 
 import loveTrends from "./child/loveTrends";  //动态头部
@@ -67,7 +67,9 @@ export default {
   },
 
   components: {
-    navigationBar,bottomNavBar,loveTrends,loveTrendsLists,release
+    navigationBar,
+    // bottomNavBar,
+    loveTrends,loveTrendsLists,release
   },
   mounted(option){
     //  this.systemHeight = wx.getStorageSync('systemHeight');

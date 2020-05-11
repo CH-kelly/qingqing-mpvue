@@ -74,6 +74,10 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+.title-left{
+  display: flex;
+  align-items: center;
+}
 .top-rounded {
   width: 10rpx;
   height: 30rpx;

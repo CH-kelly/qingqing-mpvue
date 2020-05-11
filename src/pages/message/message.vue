@@ -27,7 +27,7 @@
     </div>
  </scroll-view>
 
-    <bottomNavBar></bottomNavBar>
+    <!-- <bottomNavBar></bottomNavBar> -->
 
 
   </div>
@@ -37,7 +37,7 @@
 <script>
 import navigationBar from '@/components/navbar/navbar'
 import swiper from "@/components/swiper";
-import bottomNavBar from "@/components/bottomNavBar"
+// import bottomNavBar from "@/components/bottomNavBar"
 import store from '@/store'
 
 import chatList from "./child/chatList"
@@ -80,7 +80,9 @@ export default {
   },
 
   components: {
-    navigationBar,bottomNavBar,chatList
+    navigationBar,
+    // bottomNavBar,
+    chatList
   },
   mounted(option){
     //  this.systemHeight = wx.getStorageSync('systemHeight');
@@ -99,6 +101,7 @@ export default {
 </script>
 
 <style scoped>
+
 .navigation-left-back{
   
 

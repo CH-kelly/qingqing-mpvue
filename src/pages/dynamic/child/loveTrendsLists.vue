@@ -1,6 +1,6 @@
 <template>
   <div class="love-trends-head">
-    <div class="love-trends-lists-item" v-for="(item,i) in dynamicList" :key="i">
+    <div class="love-trends-lists-item" v-for="(item,i) in dynamicList" :key="i" @click="dynamicDetail(item)">
       <div class="head-top">
         <div class="head-left">
           <img class="head-avatar" :src="item.avatar" alt />
@@ -16,6 +16,21 @@
         <div class="lists-item-center-image">
           <img :src="s" alt v-for="(s,r) in item.image" :key="r" />
         </div>
+        <div class="comment-q">
+          <div class="comment-q-left">
+            <div class="comment-like">
+              <img class="dynamic-icon" src="/static/images/new/no-like1.png" alt />
+              <div class="center-heart">1</div>
+            </div>
+            <div class="comment-like">
+              <img class="dynamic-icon" src="/static/images/new/no-like2.png" alt />
+              <div class="center-heart">1</div>
+            </div>
+          </div>
+          <div class="comment-q-right">
+            <img class="dynamic-icon-report" src="/static/images/new/no-like3.png" alt />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -24,6 +39,14 @@
 export default {
   props: {
     dynamicList: { type: Array, defaula: [] }
+  },
+  methods:{
+    dynamicDetail(item){
+      console.log('dynamicDetail',item);
+      wx.navigateTo({
+        url:"/pages/dynamicDetail/main"
+      })
+    }
   }
 };
 </script>
@@ -101,4 +124,44 @@ export default {
   margin-bottom: 20rpx;
   vertical-align: middle;
 }
+
+.comment-q {
+  margin-top: 20rpx;
+  display: flex;
+  align-items: center;
+}
+.comment-q-left {
+  width: 90%;
+  display: flex;
+  align-items: center;
+}
+.comment-like {
+  width: 87rpx;
+  height: 43rpx;
+  border: 1rpx solid rgba(212, 212, 212, 1);
+  border-radius: 10rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20rpx;
+}
+.dynamic-icon {
+  width: 28rpx;
+  height: 23rpx;
+  margin-right: 8rpx;
+}
+.dynamic-icon-report {
+  width: 38rpx;
+  height: 8rpx;
+}
+.center-heart{
+  
+font-size:24rpx;
+font-family:PingFang SC;
+font-weight:500;
+color:rgba(153,153,153,1);
+}
+
+
+
 </style>

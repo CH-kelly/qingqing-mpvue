@@ -94,15 +94,16 @@
       store.commit('setSystemHeight', systemHeight)
       
       let bottomNavBarHeight = 50 ;   // 计算底部导航栏的高度
+      // let bottomNavBarHeight = 0 ;   // 计算底部导航栏的高度
        
        // 判断是否iponex的代码
         var model = systemInfo.model;
         if(model.search('iPhone X')!=-1){
             store.commit('setISipx', 1)
-            bottomNavBarHeight = 50+20;
+            // bottomNavBarHeight = 20;
         }
         // 计算内容可视区域
-        let setContentHeight  = systemInfo.windowHeight -  systemHeight - bottomNavBarHeight;
+        let setContentHeight  = systemInfo.windowHeight -  systemHeight ;
         let setSecondPageHeight = systemInfo.windowHeight -  systemHeight ; //二级页面内容可视区域
         store.commit('setContentHeight', setContentHeight)
         store.commit('setSecondPageHeight', setSecondPageHeight)

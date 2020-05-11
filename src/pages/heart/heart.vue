@@ -12,7 +12,7 @@
     </div>
  </scroll-view>
 
-    <bottomNavBar></bottomNavBar>
+    <!-- <bottomNavBar></bottomNavBar> -->
 
 
   </div>
@@ -21,7 +21,7 @@
 
 <script>
 import navigationBar from '@/components/navbar/navbar'
-import bottomNavBar from "@/components/bottomNavBar"
+// import bottomNavBar from "@/components/bottomNavBar"
 import store from '@/store'
 
 import heartItem from "./child/heartItem"
@@ -53,7 +53,9 @@ export default {
   },
 
   components: {
-    navigationBar,bottomNavBar,heartItem
+    navigationBar,
+    // bottomNavBar,
+    heartItem
   },
   mounted(option){
     //  this.systemHeight = wx.getStorageSync('systemHeight');

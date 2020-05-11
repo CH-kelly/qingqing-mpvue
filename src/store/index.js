@@ -11,7 +11,8 @@ const store = new Vuex.Store({
     contentHeight:0,  //内容可显示区域
     secondPageHeight:0,  //二级页面内容可视区域
     bottomNavBarHeight:0, //底部导航栏的高度
-    currentIndex:'index'
+    currentIndex:'index',
+    SignInTemporarily:0,
   },
   mutations: {
     setMenuSettings (state, settings) {
@@ -34,6 +35,11 @@ const store = new Vuex.Store({
     },
     setCuttentIndex(state,index){
       state.currentIndex = index
+    },
+    setSignInTemporarily(state,key){
+      state.SignInTemporarily = key
+      console.log(state.SignInTemporarily);
+      
     }
   }
 })

@@ -20,6 +20,9 @@
 
         <!-- 三重认证 -->
         <tripleCertification :userInfo="userInfo"></tripleCertification>
+        
+        <!-- 基本资料 -->
+        <basicInfo  :headInfo="userInfo"></basicInfo>
 
         <!-- 自我介绍 -->
         <describe title="自我介绍" :content="introduceOneself"></describe>
@@ -48,6 +51,9 @@ import completion from "./child/completion"                     //说明
 import uploadImage from "./child/uploadImage"                   //上传背景图片
 import tripleCertification from "./child/tripleCertification"   //三重认证
 import describe from "./child/describe"                         //简介
+import basicInfo from "./child/basicInfo"                       //基本资料
+
+
 export default {
   data () {
     return {
@@ -55,17 +61,20 @@ export default {
       contentHeight:0,
       secondPageHeight:0,
       userInfo:{
-          isProve:1,isEducation:1,education:'电子科技大学',education1:'本科',education2:'全日制',company:'成都科技有限公司',occupation:'设计师'
+          isProve:1,isEducation:1,education:'电子科技大学',education1:'本科',education2:'全日制',
+          company:'成都科技有限公司',occupation:'设计师',age:20,height:166,constellation:'水瓶座',
+          city:'四川',area:'成都',income:'20-30W',nickName:'小星'
       },
       introduceOneself:"自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍自我介绍",
       hobby:"个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好",
       innerMonologue:"内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白",
-      weix:"134445321415"
+      weix:"134445321415",
+      headInfo:null
     }
   },
 
   components: {
-    navigationBar,completion,uploadImage,tripleCertification,describe
+    navigationBar,completion,uploadImage,tripleCertification,describe,basicInfo
   },
   mounted(option){
     //  this.systemHeight = wx.getStorageSync('systemHeight');
@@ -74,6 +83,19 @@ export default {
      let height = store.state.secondPageHeight;
      this.contentHeight = height;
      
+  },
+  onShow() {
+    let that = this;
+    wx.getStorage({
+      key: "userInfo",
+      success(res) {
+        let info =  JSON.parse(res.data);
+        this.userInfo.nickName = info.nickName;
+        this.userInfo.avatarUrl = info.avatarUrl;
+          that.headInfo = JSON.parse(res.data);
+      }
+    });
+    console.log("this.userInfo", this.userInfo);
   },
   methods: {
     

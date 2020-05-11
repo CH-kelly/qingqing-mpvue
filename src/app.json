@@ -1,9 +1,12 @@
 {
   "pages": [
+    
     "pages/guide/main",
     "pages/index/main",
     "pages/lookBack/main",
     "pages/personalData/main",
+    
+    "pages/auth/main",
 
 
     "pages/message/main",
@@ -12,6 +15,9 @@
     
     "pages/dynamic/main",
     "pages/dynamicRelease/main",
+    "pages/dynamicMessage/main",
+    "pages/dynamicDetail/main",
+    
     "pages/loveStory/main",
 
 
@@ -24,10 +30,10 @@
 
   ],
   "tabBar": {
-    "borderStyle":"white",
+    "borderStyle":"black",
     "color":"#999999",
     "selectedColor":"#595E6D",
-    "custom":true,
+    
     "list": [
       {
       "pagePath": "pages/index/main",

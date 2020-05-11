@@ -1,30 +1,9 @@
 <template>
-  <div>
-    <navigation-bar background="#F4F5F9">
-      <div slot="left"></div>
-    </navigation-bar>
-
-    <div class="index-center" :style="{marginTop:systemHeight+'px',height:contentHeight+'px'}">
-      <img class="index-center-logo" src="/static/images/new/logo.png" alt />
-
-      <div class="index-center-button">
-        <div class="index-center-origin" style="background: #1be9c9;"></div>
-        <div class="index-center-title">真实交友</div>
-        <div class="index-center-desc">拒绝酒托、微商等各类骗子，打造100%真实的单身交友平台</div>
-      </div>
-
-      <div class="index-center-button">
-        <div class="index-center-origin" style="background: #ff4ca0;"></div>
-        <div class="index-center-title">严格审核</div>
-        <div class="index-center-desc">每个人都要经过严格的资料审核和实名+学历双重认证才能交友</div>
-      </div>
-
-      <div class="index-center-button">
-        <div class="index-center-origin" style="background: #6d48e5;"></div>
-        <div class="index-center-title">隐私保护</div>
-        <div class="index-center-desc">100%隐私安全，青藤之恋不会泄露你的任何隐私信息</div>
-      </div>
-
+  <div class="index-center">
+    <div class="index-center-model">
+      <img class="logo" src="/static/images/lvy_icon.png" alt />
+      <div class="index-center-title-h1">马上注册青藤之恋</div>
+      <div class="index-center-title-h1">高学历优质青年的交友平台</div>
       <div class="index-center-bottom">
         <div class="index-center-bottom-wx">
           <div class="bottom-wx-log" @click="wxLogin">
@@ -32,9 +11,9 @@
             <span class="bottom-wx-secert">私密</span>
           </div>
         </div>
-        <div class="bottom-tourist" @click="lookAround">随便看看</div>
+        <div class="bottom-tourist" @click="lookAround">暂不登录</div>
         <div class="bottom-agreement">
-          登录即同意青藤之恋
+          登录即表明您同意
           <span class="bottom-agreement-protocol" @click="goUserAgreement">《用户协议》</span>与
           <span class="bottom-agreement-protocol" @click="goPrivacyPolicy">《隐私政策》</span>
         </div>
@@ -47,55 +26,39 @@
         <div class="reminder-content">
           <div>亲，感谢您信任并使用青藤之恋！我们依据最新的法律法规、监管政策要求及业务实际情况更新了青藤之恋</div>
         </div>
-        
         <div class="reminder-button">
           <div class="reminder-button-left" @click="disagree">不同意</div>
           <button class="reminder-button-left" open-type="getUserInfo" 
           @getuserinfo="bindGetUserInfo" 
           style="background: rgba(27,233,201,1);border: none;"
           >同意</button>
+
+          <!-- <div
+            class="reminder-button-left"
+            @click="agree"
+            style="background: rgba(27,233,201,1);border: none;"
+          >同意</div> -->
         </div>
       </div>
     </div>
+
+
+
+
   </div>
+
+  
+
 </template>
 
 <script>
-import navigationBar from "@/components/navbar/navbar";
 import store from "@/store";
 
 export default {
   data() {
     return {
-      systemHeight: 0,
-      contentHeight: 0,
-      showModel: 0,
-      isReadDialog: 0
+        showModel: 0,
     };
-  },
-
-  components: {
-    navigationBar
-  },
-  onLoad(options) {
-    let that = this;
-    //判断用户是否第一次访问引导页
-    wx.getStorage({
-      key: "isReadDialog",
-      success(res) {
-        that.isReadDialog = res.data;
-      }
-    });
-    console.log('this.isReadDialog',this.isReadDialog);
-
-  },
-  mounted(option) {
-    //  this.systemHeight = wx.getStorageSync('systemHeight');
-
-    this.systemHeight = store.state.systemHeight;
-    let height = store.state.secondPageHeight;
-    this.contentHeight = height;
-    console.log("showModel", this.showModel);
   },
   methods: {
     goUserAgreement() {
@@ -113,25 +76,12 @@ export default {
       });
     },
     lookAround() {
-      //随便看看 如果已经选择过随便看看并且指导页面已完成就不用进随便看看了
-      console.log("随便看看");
-      
-      //判断用户是否第一次访问引导页  2已阅读引导页   1表示要去选择性别
-      if (this.isReadDialog == 2) {
-        wx.switchTab({
-          url: "/pages/index/main"
-        });
-      } else {
-        //选择性别
-        wx.navigateTo({
-          url: "/pages/personalData/main?lookAround=1"
-        });
-      }
+      this.$emit('SignInTemporarily',1)
     },
     wxLogin() {
-      // 微信登录 温馨提示
-      this.showModel = 1;
       console.log("微信登录");
+      
+      this.showModel = 1;
     },
     disagree() {
       console.log("不同意");
@@ -148,23 +98,6 @@ export default {
             wx.setStorageSync('userInfo', JSON.stringify(userInfo)); //保存用户信息
 
              this.$emit('SignInTemporarily',1)  //弹框隐藏
-             
-          this.showModel = 0;
-          wx.showLoading({
-              title: '请稍等...',
-              icon: 'success',
-              duration: 1000
-          })
-          if (this.isReadDialog == 2) {
-            wx.switchTab({
-              url: "/pages/index/main"
-            });
-          } else {
-            //选择性别
-            wx.navigateTo({
-              url: "/pages/personalData/main?lookAround=0"
-            });
-          }
             //userInfo
             // self.$http.post(api,{
             //     // 这里的code就是通过wx.login()获取的
@@ -182,92 +115,68 @@ export default {
             console.log('用户按了拒绝按钮');
         }
     },
-  }
+  },
+
+  created() {}
 };
 </script>
 
 <style scoped>
-.navigation-left-back {
-  width: 90rpx;
-  height: 44rpx;
-  line-height: 44rpx;
-  text-align: center;
-  background: rgba(255, 255, 255, 1);
-  border-radius: 22rpx;
-  color: #333333;
-  font-size: 26rpx;
-  font-weight: normal;
-
-  overflow: hidden;
-}
-.navigation-center-image {
-  width: 45%;
-  height: 50%;
-}
-
 .index-center {
-  background: #f4f5f9;
-  overflow: hidden;
-  text-align: center;
-  margin: 0 auto;
-}
-.index-center-logo {
-  padding: 98rpx 0;
-  width: 516rpx;
-  height: 108rpx;
-}
-.index-center-button {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.8);
+
   display: flex;
+  justify-content: center;
   align-items: center;
-  width: 640rpx;
-  height: 140rpx;
-  background-color: #fff;
-  box-shadow: 0rpx 8rpx 20rpx 0rpx rgba(0, 0, 0, 0.04);
-  border-radius: 12rpx;
-  border: 2rpx solid #efefef;
-
-  margin: 0 auto;
-  margin-bottom: 16rpx;
 }
-.index-center-origin {
-  margin-left: 32rpx;
-  margin-right: 20rpx;
 
-  width: 12rpx;
-  height: 12rpx;
-  border-radius: 50%;
+.index-center-model {
+  padding: 40rpx;
+
+  height: 660rpx;
+  border-radius: 14rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #333;
+  background: #ffffff;
 }
-.index-center-title {
-  margin-right: 34rpx;
+.logo {
+  width: 108rpx;
+  height: 108rpx;
+  margin-top: 98rpx;
+  margin-bottom: 44rpx;
+}
+.index-center-title-h1 {
+  font-size: 30rpx;
+  line-height: 42rpx;
+  font-weight: bold;
 
-  font-size: 32rpx;
-  font-weight: 800;
   font-family: PingFang SC;
-}
-.index-center-desc {
-  font-size: 22rpx;
-
-  width: 336rpx;
-  min-height: 68rpx;
-  line-height: 34rpx;
 }
 
 .index-center-bottom {
   width: 100%;
-  position: fixed;
-  bottom: 60rpx;
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
 }
 .index-center-bottom-wx {
+  margin-top: 60rpx;
+
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .bottom-wx-log {
-  width: 560rpx;
+  width: 440rpx;
   height: 100rpx;
   border-radius: 56rpx;
   color: #29363b;
@@ -316,6 +225,15 @@ export default {
   margin: 0 8rpx;
   color: #1be9c9;
 }
+
+
+
+
+
+
+
+
+
 
 /* 温馨提示 */
 .reminder {

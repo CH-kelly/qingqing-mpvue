@@ -55,7 +55,7 @@
       <div class="index-center-content" v-show="nextStatus==3">
         <img class="center-content-birthday" src="/static/images/new/location1.png" alt="">
         <div class="center-content-picker">
-            <picker mode="multiSelector" @columnchange="changeCityValue" :value="mulIndex" :range="mulArr">
+            <picker mode="multiSelector" @columnchange="changeCityValue" :value="mulIndex" :range="mulArr" @change="changeCity">
                 <div class="center-content-title" v-show="choiceCityValue==1">点击选择地区</div>
                 <div class="center-content-title" v-show="choiceCityValue==2">{{mulArr[0][mulIndex[0]]}}，{{mulArr[1][mulIndex[1]]}}，{{mulArr[2][mulIndex[2]]}}</div>
             
@@ -68,7 +68,7 @@
 
 
       <!-- 按钮 -->
-      <div class="index-center-button">
+      <div class="index-center-button" v-if="lookAround==0">
         <div class="center-button" @click="nextButton">{{nextTtitle}}</div>
       </div>
     </div>
@@ -84,7 +84,8 @@ export default {
     return {
       systemHeight: 0,
       titleH2: "性别",
-      isActive: 1,
+      lookAround:0,     //随便看看
+      isActive: 0,
       nextStatus: 1, //第一步是性别      第二步是选择生日    第三部是地区
       nextTtitle: "下一步",
       birthdayTimer: '点击选择生日',
@@ -119,12 +120,19 @@ export default {
             { name: "捷安特", cars: ["ATX777", "XTR"] }
           ]
         }
-      ]
+      ],
+      area:null,
     };
   },
   components: {
     navigationBar
-  }, onLoad() {
+  },
+  onLoad(options) {
+    
+    if(options){
+      this.lookAround = options.lookAround;
+    }
+    
     // 初始化picker默认值
     this.mulArr[0] = this.json.map(function(v) {
       return v.type;
@@ -134,20 +142,8 @@ export default {
     });
     this.mulArr[2] = this.json[this.mulIndex[0]].brand[this.mulIndex[1]].cars;
 
-    // 初始化职业的值
-    this.occupationArr[0] = this.occupationArrJson.map(function(v){
-      return v.type
-    })
-    this.occupationArr[1] = this.occupationArrJson[this.occupationIndex[0]].brand.map(function(v) {
-      return v.name;
-    });
-    this.occupationArr[2] = this.occupationArrJson[this.occupationIndex[0]].brand[this.occupationIndex[1]].cars;
-
-
-
-
   },
-  mounted(option) {
+  mounted() {
     //  this.systemHeight = wx.getStorageSync('systemHeight');
 
     this.systemHeight = store.state.systemHeight;
@@ -155,7 +151,18 @@ export default {
   methods: {
     clickRadio(key) {
       this.isActive = key;
-      console.log(" this.isActive", this.isActive);
+      
+      if(this.lookAround == 1){  //表示随便看看
+        wx.setStorageSync('lookAround', 1);   //记录随便看看的值
+        wx.setStorageSync('isReadDialog', 1);   //记录随便看看的值
+        wx.setStorageSync('lookAroundSex', key);  //记录随便看看的性别
+        
+        setTimeout(() => {
+          wx.switchTab({
+            url: "/pages/index/main"
+          });
+        }, 1000);
+      }
     },
     radioChange(e) {
       console.log("radioChange");
@@ -171,21 +178,30 @@ export default {
             this.nextTtitle = "开启青青校园"
         }
         if(this.nextStatus >3){ //提交
-            console.log('提交个人资料');
             this.nextStatus = 3;
-            wx.showToast({
-                title: '成功',
+
+          wx.setStorageSync('isReadDialog', 1);   //记录随便看看的值
+          wx.setStorageSync('lookAroundSex', this.isActive);  //记录随便看看的性别
+          wx.setStorageSync('lookAroundBirthday', this.birthdayTimer);  //记录登录后用户选择的生日
+          wx.setStorageSync('lookAroundArea', this.area);  //记录登录后用户选择的地区
+            wx.showLoading({
+                title: '请稍等...',
                 icon: 'success',
-                duration: 2000
+                duration: 1000
             })
-            
+            wx.switchTab({
+              url: "/pages/index/main"
+            });
         }
         
     },
     bindMultiPickerChange(e){
         // 获取时间日期
-        console.log('bindMultiPickerChange',e);
         this.birthdayTimer = e.mp.detail.value;
+    },
+    changeCity(e){
+      console.log(e);
+      this.area = e.mp.detail.value;
     },
     changeCityValue(e) {
       //更新城市
