@@ -1,24 +1,24 @@
 <template>
   <div class="heart-list-item">
     <div class="list-item" v-for="(item,i) in heartList" :key="i">
-      <img class="list-item-img" :src="item.avatar" alt />
+      <img class="list-item-img" :src="item.avatar_url" alt @click="gotoIndex(i)" />
       <div class="nickname">{{item.nickname}}</div>
       <div class="info">
-        <span class="info-desc">19岁</span>
+        <span class="info-desc">{{item.age}}岁</span>
         <span class="info-line"></span>
-        <span class="info-desc">166cm</span>
+        <span class="info-desc">{{item.stature}}cm</span>
         <span class="info-line"></span>
-        <span class="info-desc">水瓶座</span>
+        <span class="info-desc">{{item.profession}}</span>
       </div>
       <div class="education">
         <img class="education-icon" src="/static/images/icon_school@2x.png" alt />
-        <span class="education-title">{{item.education}}</span>
+        <span class="education-title">{{item.school}}</span>
       </div>
-      <div class="list-item-desc" v-if="item.like==1">
+      <div class="list-item-desc" v-if="item.is_liked==true">
         <img src="/static/images/greet/like_icon.png" alt />
         <span>已喜欢</span>
       </div>
-      <div class="list-item-desc" v-if="item.like==0">
+      <div class="list-item-desc" v-if="item.is_liked==false">
         <img src="/static/images/greet/delete_icon.png" alt />
         <span>无感</span>
       </div>
@@ -29,6 +29,14 @@
 export default {
   props: {
     heartList: { type: Array, default: [] }
+  },
+  methods:{
+    gotoIndex(){
+     
+      wx.switchTab({
+        url: "/pages/index/main"
+      });
+    }
   }
 };
 </script>

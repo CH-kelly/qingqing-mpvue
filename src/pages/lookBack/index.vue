@@ -10,24 +10,26 @@
     >
       <div class="index-center">
         
-        <div class="index-center-title">
+       <div v-for="(item,i) in history" :key="i">
+          <div class="index-center-title">
           <div class="top-left">
             <div class="top-rounded"></div>
-            <div class="top-title">昨天</div>
+            <div class="top-title">{{item.time}}</div>
           </div>
           <div class="top-right">
-            <span class="top-right-title">推荐 5</span>
+            <span class="top-right-title">推荐 {{item.total}}</span>
             <span class="top-right-title top-right-line">|</span>
-            <span class="top-right-title">喜欢 3</span>
+            <span class="top-right-title">喜欢 {{item.like}}</span>
             <span class="top-right-title top-right-line">|</span>
-            <span class="top-right-title">无感 2</span>
+            <span class="top-right-title">无感 {{item.not_like}}</span>
           </div>
         </div>
 
         <div class="index-center-content">
-          <heart-item :heartList="heartList"></heart-item>
+          <heart-item :heartList="item.list"></heart-item>
         </div>
 
+       </div>
       </div>
     </scroll-view>
   </div>
@@ -44,29 +46,34 @@ export default {
       systemHeight: 0,
       contentHeight: 0,
       secondPageHeight: 0,
-      heartList: [
-        {
-          avatar: "/static/images/demo_2@2x.png",
-          nickname: "李毅",
-          like:0,
-          education: "电子科技大学"
-        },
-        {
-          avatar: "/static/images/demo_3@2x.png",
-          nickname: "李毅",
-          like:1,
-          education: "电子科技大学"
-        },
-        {
-          avatar: "/static/images/demo_5@2x.png",
-          nickname: "李毅",
-          like:0,
-          education: "电子科技大学"
-        }
-      ]
+      token:'',
+      history:[],
+      heartList: [],
+      // heartList: [
+      //   {
+      //     avatar: "/static/images/demo_2@2x.png",
+      //     nickname: "李毅",
+      //     like:0,
+      //     education: "电子科技大学"
+      //   },
+      //   {
+      //     avatar: "/static/images/demo_3@2x.png",
+      //     nickname: "李毅",
+      //     like:1,
+      //     education: "电子科技大学"
+      //   },
+      //   {
+      //     avatar: "/static/images/demo_5@2x.png",
+      //     nickname: "李毅",
+      //     like:0,
+      //     education: "电子科技大学"
+      //   }
+      // ]
     };
   },
-
+onShow(){
+    this.history_recommend_list();
+  },
   components: {
     navigationBar,
     heartItem
@@ -78,7 +85,27 @@ export default {
     let height = store.state.secondPageHeight;
     this.contentHeight = height;
   },
-  methods: {},
+  methods: {
+    history_recommend_list(){  //获取首页推荐
+        let that = this;
+        let token = store.state.token || wx.getStorageSync('token');
+        this.token = token;
+        that.postRequest("home/recommend/get_history_recommend_list",{token}).then(res=>{
+                
+            if(res.code===0){
+                
+                var history = res.data.history;
+                if(history.length !== 0){
+                  that.history = history;
+                }
+              
+            }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
+  },
 
   created() {
     // let app = getApp()

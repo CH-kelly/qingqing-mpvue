@@ -1,11 +1,11 @@
 <template>
   <div class="love-trends-head" v-if="isAuth==0">
     <div class="head-left">
-      <img class="head-avatar" :src="headInfo.avatarUrl" alt />
+      <img class="head-avatar" :src="headInfo.avatar_url" alt />
     </div>
     <div class="head-center">
-      <div class="head-nickname">{{headInfo.nickName}}</div>
-      <div class="head-desc">
+      <div class="head-nickname">{{headInfo.nickname}}</div>
+      <div class="head-desc" v-if="headInfo.cert_pass == 1">
         <img class="head-right-icon" src="/static/images/new/authentication.png" alt />
         <span class="head-right-authentication">已认证</span>
       </div>

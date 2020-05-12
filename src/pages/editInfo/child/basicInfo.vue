@@ -11,18 +11,18 @@
         <div class="personal">
             <div class="info-card">  
                 <div class="card-left">
-                    <div class="nickname">{{headInfo.nickName}}</div>
+                    <div class="nickname">{{headInfo.nickname}}</div>
                     <div class="info">
                         <div class="info-desc">{{headInfo.age}}岁</div>
                         <div class="info-line"></div>
-                        <div class="info-desc">{{headInfo.height}}cm</div>
+                        <div class="info-desc">{{headInfo.stature}}cm</div>
                         <div class="info-line"></div>
-                        <div class="info-desc">{{headInfo.constellation}}</div>
+                        <div class="info-desc">{{headInfo.horoscope}}</div>
                     </div>
                 </div>
                 <div class="card-right">
                     <img class="card-right-location" src="/static/images/new/location.png" alt="">
-                    <span>{{headInfo.city}}</span><span>{{headInfo.area}}</span>
+                    <span>{{headInfo.province}}</span><span>{{headInfo.city}}</span>
                 </div>
             </div>
             <!-- 职业 -->

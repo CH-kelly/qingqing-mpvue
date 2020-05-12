@@ -46,8 +46,13 @@
 
         <!-- 输入框 -->
         <div class="index-center-id-auth">
-          <div class="center-id-auth-input" v-for="(item,i) in inputArray[status]" :key="i">
-            <idAuthInput :inputArray="item"></idAuthInput>
+          <div v-if="status!==3">
+            <div class="center-id-auth-input" v-for="(item,i) in inputArray[status]" :key="i">
+              <idAuthInput :inputArray="item"></idAuthInput>
+            </div>
+          </div>
+          <div v-if="status === 3">
+              <education></education>
           </div>
         </div>
 
@@ -69,13 +74,16 @@ import navigationBar from "@/components/navbar/navbar";
 import store from "@/store";
 
 import idAuthInput from "./child/idAuthInput";
+import education from "./child/education"
+
+
 export default {
   data() {
     return {
       systemHeight: 0,
       contentHeight: 0,
       secondPageHeight: 0,
-      status: 1,
+      status: 3,
       buttonText: "下一步",
       inputArray: {
         1: [{ title: "姓名" }, { title: "身份证号码" }],
@@ -87,7 +95,8 @@ export default {
 
   components: {
     navigationBar,
-    idAuthInput
+    idAuthInput,
+    education
   },
   mounted(option) {
     //  this.systemHeight = wx.getStorageSync('systemHeight');

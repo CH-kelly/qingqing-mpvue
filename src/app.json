@@ -1,16 +1,19 @@
 {
   "pages": [
     
-    
     "pages/index/main",
     "pages/guide/main",
+    
     "pages/lookBack/main",
     "pages/personalData/main",
     
     "pages/auth/main",
+    "pages/agreement/main",
 
 
     "pages/message/main",
+    "pages/messageDetail/main",
+
     "pages/heart/main",
 
     

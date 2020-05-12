@@ -23,17 +23,16 @@
         <swiper :images="images" />
 
         <!-- 个人资料 -->
-        <personal></personal>
+        <personal :currentUser="currentUser"></personal>
 
-        <describe title="自我介绍" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
-        <describe title="个人爱好" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
-        <describe title="内心独白" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
-        <describe title="自我介绍" content="....eedddcontentcontent自我介绍自我介绍自我介绍content"></describe>
-        <describe title="微信号" content="1234566"></describe>
+        <describe title="自我介绍" :content="currentUser.about_me"></describe>
+        <describe title="个人爱好" :content="currentUser.hobbies"></describe>
+        <describe title="内心独白" :content="currentUser.emotional_view"></describe>
+        <describe title="微信号" :content="currentUser.wxid"></describe>
 
         <!-- <button ></button> -->
         <!--底部按钮-->
-        <div class="button" :style="{bottom:'70px'}">
+        <div class="button" :style="{bottom:'10px'}">
           <div class="button-left">
             <img
               @click="clickButtonImage(1)"
@@ -45,7 +44,7 @@
           <div class="button-center" @click="superLike">
             <!-- <img @click="clickButtonImage(3)" class="button-image" src="/static/images/greet/delete_icon.png" alt=""> -->
 
-            <img class="super-like-image" src="/static/images/new/heart2.png" alt />
+            <img class="super-like-image" src="/static/images/new/heart3.png" alt />
             <div class="super-like-title">超级喜欢</div>
           </div>
           <div class="button-right">
@@ -136,16 +135,10 @@ import auth from "@/pages/auth"; //授权登录
 export default {
   data() {
     return {
-      images: [
-        {
-          url:
-            "https://img-oss.yunshanmeicai.com/goods/default/31d8dfa4-0d7b-4694-80f9-41b07c9d0a3a.png"
-        },
-        {
-          url:
-            "https://img-oss.yunshanmeicai.com/goods/default/e83c8f0f-4acc-4729-bcbb-294f2b314977.jpg"
-        }
-      ],
+      images:[],
+      user_list:[],
+      currentUser:{},
+      currentIndex:0,
       systemHeight: 0,
       isReadDialog: 0,
       contentHeight: 0,
@@ -155,28 +148,13 @@ export default {
       downTimerArray: { like: 2, timer: 10170 },
       userInfo: null,
       isAuth: 0,
-      isSuperLike:1,
+      isSuperLike:0,
+      isLogin:store.state.isLogin,
+      token:null,
     };
   },
-  // created(){
-  //    let userInfo = wx.getStorageSync('userInfo') || null
-  //     console.log("created",userInfo);
-  //     if(userInfo===null){
-  //       //pages/guide/main
-  //       wx.showLoading({
-  //           title: '请稍等111...',
-  //           icon: 'success',
-  //           duration: 1000
-  //       })
-  //       wx.reLaunch({
-  //         url: "/pages/guide/main"
-  //       });
-  //     }
-
-  // },
   onLoad(options) {
-    console.log("userInfo2", this.userInfo);
-
+    
     let that = this;
     wx.getStorage({
       key: "lookAround",
@@ -212,7 +190,10 @@ export default {
     // bottomNavBar,
     countDownTimer,
     auth,
-    superLike
+    superLike,
+  },
+  onShow(){
+    this.getrecommend_list();
   },
   mounted(option) {
     //  this.systemHeight = wx.getStorageSync('systemHeight');
@@ -227,31 +208,120 @@ export default {
     closeSuperLike(){
       this.isSuperLike = 0;
     },
-    SignInTemporarily() {
+    SignInTemporarily() { //
       this.isAuth = 0;
+      this.getrecommend_list();
     },
     clickLove() {
       console.log("clickLove", k);
     },
+    getrecommend_list(){  //获取首页推荐
+        let that = this;
+        let token = store.state.token || wx.getStorageSync('token');
+        let url = '';
+        console.log('token',token,!token);
+        if(token){
+          url = "home/recommend/get_recommend_list";
+        }else{
+          
+          url = "home/recommend/get_anonymous_recommend_list";
+        }
+        
+        that.postRequest(url,{token}).then(res=>{
+                
+            if(res.code===0){
+                // if(res.data.total_rec_num>0){
+                var userList = res.data.user_list;
+                if(userList.length !== 0){
+                  that.user_list = userList;
+                  that.currentUser = userList[0];
+                  that.images = that.currentUser.photos;
+
+                }else{
+
+                   that.downTimerArray={
+                      like: res.data.is_like_num, timer: res.data.count_down
+                  }
+
+                  that.status = 1;
+                  
+                }
+              
+            }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
+    get_user_info(token){
+      let that = this;
+        
+      that.postRequest('home/user/get_user_info',{token}).then(res=>{  
+          if(res.code===0){
+              that.userInfo = res.data;
+          }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
     gotoBackImage() {
       //pages/lookBack/main
+      this.isLogin = store.state.isLogin;
+      let token = store.state.token || wx.getStorageSync('token');
 
-      if (this.userInfo) {
-        wx.navigateTo({
-          url: "/pages/lookBack/main"
-        });
+      this.get_user_info(token);
+
+      if (this.userInfo || this.isLogin===1 || token) { //已登录
+        //登录成功后需要时vip才可以查看回看
+        if(this.userInfo.is_vip === 1){
+
+          wx.navigateTo({
+            url: "/pages/lookBack/main"
+          });
+
+        }else{
+          wx.showToast({
+            title: '您还不是VIP，不能查看回放',
+            icon: 'loading',
+            duration: 2000
+          })
+        }
+
+        
       } else {
         // 登录
         this.isAuth = 1;
       }
     },
     clickButtonImage(key) {
-      // 点击喜欢或不喜欢按钮
-      console.log("clickButtonImage", this.userInfo);
-      console.log(!this.userInfo);
-
-      if (this.userInfo) {
-        this.status = 1;
+      // 点击喜欢或不喜欢按钮   1不喜欢   2喜欢
+      this.isLogin = store.state.isLogin;
+      this.token = wx.getStorageSync('token');
+      this.userInfo = store.state.userInfo;
+      console.log(this.token,' ---------this.token');
+      var that = this;
+      
+      if (this.userInfo || this.isLogin===1 || this.token!==null) {
+          // 已登录
+          let url = '';
+          
+          var data = {token:that.token,target_uid:that.currentUser.uid};
+          if(key===1){
+            url ="home/recommend/skip_recommend_user";
+          }else{
+            data.type=1;
+            url ="home/like/add_like";
+          }
+          console.log('clickButtonImage',data);
+          
+          that.postRequest(url,data).then(res=>{
+              if(res.code ===0){      
+                  that.getrecommend_list();     
+              }
+          }).catch(res=>{
+            wx.showToast(res)
+          })
       } else {
         // 登录
         this.isAuth = 1;

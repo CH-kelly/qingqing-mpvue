@@ -58,28 +58,44 @@ export default {
   data() {
     return {
         showModel: 0,
+        code:"",
     };
   },
   methods: {
     goUserAgreement() {
-      wx.showToast({
-        title: "《用户协议》",
-        icon: "success",
-        duration: 2000
+      // wx.showToast({
+      //   title: "《用户协议》",
+      //   icon: "success",
+      //   duration: 2000
+      // });
+      wx.navigateTo({
+        url: "/pages/agreement/main?agreement=1"
       });
     },
     goPrivacyPolicy() {
-      wx.showToast({
-        title: "《隐私政策》",
-        icon: "success",
-        duration: 2000
+      // wx.showToast({
+      //   title: "《隐私政策》",
+      //   icon: "success",
+      //   duration: 2000
+      // });
+      wx.navigateTo({
+        url: "/pages/agreement/main?agreement=2"
       });
     },
     lookAround() {
-      this.$emit('SignInTemporarily',1)
+      this.$emit('SignInTemporarily',0)
     },
     wxLogin() {
       console.log("微信登录");
+      let that = this;
+      wx.login({
+          success (res) {
+            if (res.code) {
+              console.log(res.code);
+              that.code = res.code;
+            }
+          }
+      })
       
       this.showModel = 1;
     },
@@ -91,25 +107,37 @@ export default {
     bindGetUserInfo(e) {
         // console.log('回调事件后触发')
         const self = this;
+        if(this.code === ''){
+          console.log('这是code是空',code)
+        }
         if (e.mp.detail.userInfo){
-            console.log('用户按了允许授权按钮')
+            let code = self.code;
+            let inviter = '';
             let { encryptedData,userInfo,iv } = e.mp.detail;
-            
-            wx.setStorageSync('userInfo', JSON.stringify(userInfo)); //保存用户信息
+            console.log(code);
+            console.log(encryptedData);
+            console.log(iv);
+            self.postRequest('home/user/login',{ encryptedData,iv,code,inviter}).then(res=>{
+                wx.showToast({
+                  title: res.message,
+                  icon: 'success',
+                  duration: 2000
+                })
+              if(res.code ===0){
+                store.state.is_new_user = res.data.is_new_user
+                store.state.token = res.data.token
+                
+                wx.setStorageSync('userInfo', JSON.stringify(userInfo)); //保存用户信息
+                wx.setStorageSync('token', res.data.token); //保存用户登录的token信息
 
-             this.$emit('SignInTemporarily',1)  //弹框隐藏
-            //userInfo
-            // self.$http.post(api,{
-            //     // 这里的code就是通过wx.login()获取的
-            //     code:self.code,
-            //     encryptedData,
-            //     iv,
-            // }).then(res => {
-            //     console.log(`后台交互拿回数据:`,res);
-            //     // 获取到后台重写的session数据，可以通过vuex做本地保存
-            // }).catch(err => {
-            //     console.log(`api请求出错:`,err);
-            // })  
+                self.$emit('SignInTemporarily',1)  //弹框隐藏,并发送事件通知父组件
+                store.commit('setisLogin',1)
+                store.commit('setUserInfo',userInfo)
+              
+              }
+            }).catch(res=>{
+              wx.showToast(res)
+            })
         } else {
             //用户按了拒绝按钮
             console.log('用户按了拒绝按钮');
@@ -271,7 +299,7 @@ export default {
 .reminder-button {
   margin-bottom: 32rpx;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 .reminder-button-left {

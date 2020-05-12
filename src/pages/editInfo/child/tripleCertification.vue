@@ -11,19 +11,28 @@
     <div class="triple-certification-item">
       <span class="triple-certification-item-title">身份认证</span>
       <div class="triple-authentication">
-        <img class="authentication" v-if="isProve==1" src="/static/images/new/authentication.png" alt />
-        <span class="triple-authentication-title" v-if="isProve==1">已认证</span>
+        <img class="authentication" v-if="userInfo.cert_pass==1" src="/static/images/new/authentication.png" alt />
+        <span class="triple-authentication-title" v-if="userInfo.cert_pass==1">已认证</span>
         <span class="triple-authentication-title" v-else>未认证</span>
       </div>
     </div>
     <div class="triple-certification-item">
       <span class="triple-certification-item-title">学历认证</span>
-      <div class="triple-authentication"  v-if="isEducation==1">
+      <div class="triple-authentication"  v-if="userInfo.check_pass==1">
         <img class="authentication" src="/static/images/new/authentication.png" alt />
         <div class="triple-authentication-title">
-            <span class="triple-authentication-education">{{userInfo.education}}</span>
+            <span class="triple-authentication-education">{{userInfo.school}}</span>
             <span class="triple-authentication-title-line">|</span>
-            <span class="triple-authentication-education1">{{userInfo.education1}}·{{userInfo.education2}}</span>
+            <span class="triple-authentication-education1" style="display: flex;align-items: center;">
+                <span v-if="currentUser.education == 1">专科</span>
+                <span v-if="currentUser.education == 2">本科</span>
+                <span v-if="currentUser.education == 3">硕士</span>
+                <span v-if="currentUser.education == 4">博士</span>·
+                <span v-if="currentUser.education_type == 0">未填写</span>
+                <span v-if="currentUser.education_type == 1">非全日制</span>
+                <span v-if="currentUser.education_type == 2">全日制 </span>
+            </span>
+            <!-- <span class="triple-authentication-education1">{{userInfo.education}}·{{userInfo.education_type}}</span> -->
         </div>
       </div>
       <div class="triple-authentication"  v-else>
@@ -41,7 +50,7 @@
     <div class="triple-certification-item">
       <span class="triple-certification-item-title">职 务</span>
       <div class="triple-authentication">
-        <span class="triple-authentication-title">{{userInfo.occupation}}</span>
+        <span class="triple-authentication-title">{{userInfo.profession}}</span>
       </div>
     </div>
   </div>

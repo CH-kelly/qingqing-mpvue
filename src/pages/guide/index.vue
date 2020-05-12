@@ -99,17 +99,24 @@ export default {
   },
   methods: {
     goUserAgreement() {
-      wx.showToast({
-        title: "《用户协议》",
-        icon: "success",
-        duration: 2000
+      // wx.showToast({
+      //   title: "《用户协议》",
+      //   icon: "success",
+      //   duration: 2000
+      // });
+      wx.navigateTo({
+        url: "/pages/agreement/main?agreement=1"
       });
+
     },
     goPrivacyPolicy() {
-      wx.showToast({
-        title: "《隐私政策》",
-        icon: "success",
-        duration: 2000
+      // wx.showToast({
+      //   title: "《隐私政策》",
+      //   icon: "success",
+      //   duration: 2000
+      // });
+      wx.navigateTo({
+        url: "/pages/agreement/main?agreement=2"
       });
     },
     lookAround() {
@@ -122,6 +129,7 @@ export default {
           url: "/pages/index/main"
         });
       } else {
+
         //选择性别
         wx.navigateTo({
           url: "/pages/personalData/main?lookAround=1"

@@ -2,7 +2,7 @@
   <div>
     <navigation-bar  shadow="true">
       <div slot="center">
-        小星
+        {{userInfo.nickname}}
       </div>
     </navigation-bar>
 <scroll-view scroll-y enable-back-to-top :style="{marginTop:systemHeight+'px',height:contentHeight+'px'}">
@@ -25,10 +25,10 @@
         <basicInfo  :headInfo="userInfo"></basicInfo>
 
         <!-- 自我介绍 -->
-        <describe title="自我介绍" :content="introduceOneself"></describe>
-        <describe title="个人爱好" :content="hobby"></describe>
-        <describe title="内心独白" :content="innerMonologue"></describe>
-        <describe title="微信号" :content="weix"></describe>
+        <describe title="自我介绍" :content="userInfo.about_me"></describe>
+        <describe title="个人爱好" :content="userInfo.hobbies"></describe>
+        <describe title="内心独白" :content="userInfo.emotional_view"></describe>
+        <describe title="微信号" :content="userInfo.wxid"></describe>
         
 
 
@@ -69,7 +69,7 @@ export default {
       hobby:"个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好个人爱好",
       innerMonologue:"内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白内心独白",
       weix:"134445321415",
-      headInfo:null
+      token:null,
     }
   },
 
@@ -85,20 +85,24 @@ export default {
      
   },
   onShow() {
-    let that = this;
-    wx.getStorage({
-      key: "userInfo",
-      success(res) {
-        let info =  JSON.parse(res.data);
-        this.userInfo.nickName = info.nickName;
-        this.userInfo.avatarUrl = info.avatarUrl;
-          that.headInfo = JSON.parse(res.data);
-      }
-    });
-    console.log("this.userInfo", this.userInfo);
+  
+    let token = store.state.token || wx.getStorageSync('token');
+    this.token = token;
+    this.get_user_info(token);
+
   },
   methods: {
-    
+    get_user_info(token){
+      let that = this;
+      that.postRequest('home/user/get_user_info',{token}).then(res=>{  
+          if(res.code===0){
+              that.userInfo = res.data;
+          }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
   },
 
   created () {

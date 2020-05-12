@@ -227,6 +227,7 @@ color:rgba(153,153,153,1);
   background: rgba(255, 255, 255, 1);
   position: fixed;
   bottom: 0;
+  left: 0;
 
   display: flex;
   align-items: center;
@@ -235,7 +236,7 @@ color:rgba(153,153,153,1);
 
 }
 .comment-message{
-  width: 80%;
+  width: 76%;
 }
 
 .send-comment-message {

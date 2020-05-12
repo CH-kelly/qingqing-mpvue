@@ -2,36 +2,51 @@
     <div class="personal">
         <div class="info-card">  
             <div class="card-left">
-                <div class="nickname">小星</div>
+                <div class="nickname">{{currentUser.nickname}}</div>
                 <div class="info">
-                    <span class="info-desc">19岁</span>
+                    <span class="info-desc">{{currentUser.age}}岁</span>
                     <span class="info-line"></span>
-                    <span class="info-desc">166cm</span>
+                    <span class="info-desc">{{currentUser.stature}}cm</span>
                     <span class="info-line"></span>
-                    <span class="info-desc">水瓶座</span>
+                    <span class="info-desc">{{currentUser.horoscope}}</span>
                 </div>
             </div>
             <div class="card-right">
                 <img class="card-right-location" src="/static/images/new/location.png" alt="">
-                <span>四川</span><span>成都</span>
+                <span>{{currentUser.province}}</span><span>{{currentUser.city}}</span>
             </div>
         </div>
 <!-- 学历 -->
         <div class="info-card-education background-border-radius">
-            <span class="ellipsis">电子科技大学</span>
+            <span class="ellipsis">{{currentUser.school}}</span>
             <span class="info-line"></span>
-            <span>本科·全日制</span>
+            <span style="display: flex;align-items: center;">
+                <span v-if="currentUser.education == 1">专科</span>
+                <span v-if="currentUser.education == 2">本科</span>
+                <span v-if="currentUser.education == 3">硕士</span>
+                <span v-if="currentUser.education == 4">博士</span>·
+                <span v-if="currentUser.education_type == 0">未填写</span>
+                <span v-if="currentUser.education_type == 1">非全日制</span>
+                <span v-if="currentUser.education_type == 2">全日制 </span>
+            </span>
+            
+            <!-- <span>{{currentUser.education}}·{{currentUser.education_type}}</span> -->
         </div>
         <!-- 职业 -->
         <div class="info-card-occupation">
-            <div class="occupation-left background-border-radius">职业：美容/化妆师</div>
-            <div  class="occupation-left background-border-radius">收入：20-30W</div>
+            <div class="occupation-left background-border-radius">职业：{{currentUser.profession}}</div>
+            <div  class="occupation-left background-border-radius">收入：{{currentUser.annual_salary}}</div>
         </div>
     </div>
 </template>
 <script>
 export default {
-    
+    props:{
+        currentUser:{
+            type:Object,
+            default:{}
+        }
+    }
 }
 </script>
 <style scoped>
@@ -112,6 +127,9 @@ export default {
     /* margin-top: 20rpx;
     font-size: 24rpx;
     color: #000; */
+    
+    display: flex;
+    align-items: center;
 }
 .info-card-occupation{
     display: flex;

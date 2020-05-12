@@ -2,7 +2,7 @@
     <swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
         <block v-for="(item, index) in images" :key="index">
             <swiper-item>
-                <img :src="item.url" class="slide-image" mode="aspectFill">
+                <img :src="item" class="slide-image" mode="aspectFill">
             </swiper-item>
         </block>
     </swiper>

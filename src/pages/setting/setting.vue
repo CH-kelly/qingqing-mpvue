@@ -81,7 +81,8 @@ export default {
       systemHeight: 0,
       contentHeight: 0,
       userInfo: null,
-      isAuth: 0
+      isAuth: 0,
+      token:null,
     };
   },
   onShow() {
@@ -94,6 +95,13 @@ export default {
       }
     });
     console.log("this.userInfo", this.userInfo);
+
+
+    
+    let token = store.state.token || wx.getStorageSync('token');
+    this.token = token;
+    this.get_user_info(token);
+
   },
 
   components: {
@@ -109,6 +117,18 @@ export default {
     this.contentHeight = store.state.contentHeight;
   },
   methods: {
+    get_user_info(token){
+      let that = this;
+      that.postRequest('home/user/get_user_info',{token}).then(res=>{  
+          if(res.code===0){
+              that.userInfo = res.data;
+              that.headInfo = res.data;
+          }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
     SignInTemporarily() {
       this.isAuth = 0;
       wx.getStorage({

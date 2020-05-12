@@ -13,6 +13,10 @@ const store = new Vuex.Store({
     bottomNavBarHeight:0, //底部导航栏的高度
     currentIndex:'index',
     SignInTemporarily:0,
+    isLogin:0,  //是否已登录
+    userInfo:null,
+    is_new_user:null,
+    token:null,
   },
   mutations: {
     setMenuSettings (state, settings) {
@@ -40,6 +44,13 @@ const store = new Vuex.Store({
       state.SignInTemporarily = key
       console.log(state.SignInTemporarily);
       
+    },
+    setisLogin(state,key){
+      state.isLogin = key
+          
+    },
+    setUserInfo(state,value){
+      state.userInfo = value
     }
   }
 })

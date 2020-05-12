@@ -20,9 +20,13 @@
             <textarea
             @blur="bindTextAreaBlur"
             class="index-center-textarea"
-            :placeholder="placeholder"
+            placeholder="用一句话打动她吧~"
             placeholder-class="placeholder-class"
+            maxlength=30
+            cursor=10
+            @input="textareaInput"
             />
+            <div class="to-textarea-desc">{{num}}/30</div>
         </div>
       </div>
       <div class="super-flex">
@@ -35,11 +39,16 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      num:0,
+    };
   },
   methods: {
       close(){
           this.$emit('close');
+      },
+      textareaInput(e){
+        this.num = this.num+1;
       }
   }
 };
@@ -129,15 +138,18 @@ margin-top: 48rpx;
   height: 209rpx;
   background: rgba(239, 239, 239, 1);
   border-radius: 20rpx;
+  position: relative;
 }
 
 .index-center-textarea {
+  padding: 20rpx;
   width: 100%;
   height: 300rpx;
   font-size: 28rpx;
   font-family: PingFang SC;
   font-weight: 500;
   color: #333;
+  text-align: left;
 }
 
 .placeholder-class {
@@ -166,7 +178,20 @@ margin-top: 48rpx;
   color: rgba(255, 255, 255, 1);
   line-height: 80rpx;
 }
+.to-textarea-desc{
+  position: absolute;
+  right: 10rpx;
+bottom: 10rpx;
 
+
+
+
+font-size:20rpx;
+font-family:PingFang SC;
+font-weight:500;
+color:rgba(153,153,153,1);
+line-height:38rpx;
+}
 .to-button-desc {
     margin-top: 20rpx;
   font-size: 24rpx;
