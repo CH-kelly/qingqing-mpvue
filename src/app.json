@@ -1,36 +1,26 @@
 {
   "pages": [
     
-    "pages/index/main",
+    "pages/index/index/main",
     "pages/guide/main",
     
-    "pages/lookBack/main",
-    "pages/personalData/main",
     
     "pages/auth/main",
     "pages/agreement/main",
 
 
-    "pages/message/main",
-    "pages/messageDetail/main",
+    "pages/message/message/main",
+
 
     "pages/heart/main",
 
     
-    "pages/dynamic/main",
-    "pages/dynamicRelease/main",
-    "pages/dynamicMessage/main",
-    "pages/dynamicDetail/main",
-    
+    "pages/dynamic/dynamic/main",
+
     "pages/loveStory/main",
 
 
-    "pages/setting/main",
-    "pages/member/main",
-    "pages/exchange/main",
-    "pages/search/main",
-    "pages/editInfo/main",
-    "pages/idAuth/main"
+    "pages/setting/setting/main"
 
   ],
   "tabBar": {
@@ -40,12 +30,12 @@
     
     "list": [
       {
-      "pagePath": "pages/index/main",
+      "pagePath": "pages/index/index/main",
       "iconPath":"/static/images/new/index.png",
       "selectedIconPath":"/static/images/new/index_active.png",
       "text": "首页"
     },{
-      "pagePath": "pages/message/main",
+      "pagePath": "pages/message/message/main",
       "iconPath":"/static/images/new/message.png",
       "selectedIconPath":"/static/images/new/message_active.png",
       "text": "消息"
@@ -55,12 +45,12 @@
       "selectedIconPath":"/static/images/new/heart_active.png",
       "text": "中意人"
     },{
-      "pagePath": "pages/dynamic/main",
+      "pagePath": "pages/dynamic/dynamic/main",
       "iconPath":"/static/images/new/dynamic.png",
       "selectedIconPath":"/static/images/new/dynamic_active.png",
       "text": "动态"
     },{
-      "pagePath": "pages/setting/main",
+      "pagePath": "pages/setting/setting/main",
       "iconPath":"/static/images/new/setting.png",
       "selectedIconPath":"/static/images/new/setting_active.png",
       "text": "设置"
@@ -70,5 +60,52 @@
   "window": {
     "navigationStyle":"custom",
     "navigationBarTextStyle":"black"
-  }
+  },
+  "subPackages": [
+    {
+    "root": "pages/dynamic/pages/",
+    "pages": [
+        "dynamicDetail/main",
+        "dynamicMessage/main",
+        "dynamicRelease/main"
+      ]
+    },
+    {
+      "root": "pages/index/pages/",
+      "pages": [
+          "lookBack/main",
+          "personalData/main"
+        ]
+    },
+    {
+      "root": "pages/message/pages/",
+      "pages": [
+          "messageDetail/main"
+        ]
+    },
+    {
+      "root": "pages/setting/pages/",
+      "pages": [
+          "exchange/main",
+          "idAuth/main",
+          "member/main",
+          "recommend/main",
+          "search/main"
+        ]
+    },
+    {
+      "root": "pages/basicInfo/pages/",
+      "pages": [
+          "basicInfo/main",
+          "basicInfoDesc/main",
+          "editInfo/main"
+        ]
+    },
+    {
+      "root": "pages/share/pages/",
+      "pages": [
+          "index/main"
+        ]
+    }
+  ]
 }

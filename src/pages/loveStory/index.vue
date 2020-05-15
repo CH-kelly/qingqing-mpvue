@@ -27,8 +27,8 @@ import navigationBar from "@/components/navbar/navbar";
 import store from "@/store";
 
 
-import loveTrendsLists from "@/pages/dynamic/child/loveTrendsLists";  //动态列表
-import release from "@/pages/dynamic/child/send"; //发布按钮
+import loveTrendsLists from "@/pages/dynamic/dynamic/child/loveTrendsLists";  //动态列表
+import release from "@/pages/dynamic/dynamic/child/send"; //发布按钮
 
 // import loveTrendsLists from "./child/loveTrendsLists";  //动态列表
 // import release from "./child/send"; //发布按钮
