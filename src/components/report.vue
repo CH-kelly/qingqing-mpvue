@@ -1,6 +1,7 @@
 <template>
-  <div class="report">
-    <div v-if="status===0" class="report-anonymous" @click="anonymous">匿名举报</div>
+  <div class="report"  @click.stop="cancel">
+    <div v-if="status===0 && isDelete ===0" class="report-anonymous" @click.stop="anonymous">匿名举报</div>
+    <div v-if="status===0 && isDelete ===1" style="color:#E62C2C" class="report-anonymous" @click.stop="deleteDynamic">删除</div>
 
     <div v-if="status===1" class="report-reason">
       <div class="report-reason-title">
@@ -10,7 +11,7 @@
       <div class="report-reason-list">
         <div class="report-reason-item" v-for="(item,i) in reason" :key="i">
           <div class="item-title">{{item}}</div>
-          <div class="item-right" @click="clickReason(i)">
+          <div class="item-right" @click.stop="clickReason(i)">
             <img
               v-if="i===isActive"
               class="item-hook-active"
@@ -22,14 +23,22 @@
         </div>
       </div>
       <div class="report-button">
-        <div class="button-left"  @click="cancel">取消</div>
-        <div class="button-left" style="color:#595E6D;border-right:none" @click="nextReport">下一步</div>
+        <div class="button-left"  @click.stop="cancel">取消</div>
+        <div class="button-left" style="color:#595E6D;border-right:none" @click.stop="nextReport">下一步</div>
       </div>
     </div>
   </div>
 </template>
 <script>
+
+import store from "@/store";
+
 export default {
+  props:{
+    id:{type:Number},
+    uid:{type:Number},
+    isDelete:{type:Number}
+  },
   data() {
     return {
       status: 0,
@@ -41,12 +50,40 @@ export default {
         "诈骗、托儿",
         "其他违规行为"
       ],
-      isActive: 0
+      isActive: 0,
+      token:''
     };
+  },
+  mounted(){
+    let token = store.state.token || wx.getStorageSync('token');
+    this.token = token;
+    console.log(this.token);
   },
   methods: {
     anonymous() {
       this.status = 1;
+    },
+    deleteDynamic(){
+        let that = this;
+        let data = {
+          token:that.token,
+          id:that.id
+        }
+        console.log(data);
+        that.postRequest('/home/moment/delete_moment',data).then(res=>{  
+          if(res.code===0){
+            wx.showToast({
+              title: '删除成功',
+              icon: 'success',
+              duration: 3000
+            })
+            
+            this.$emit('cancel');
+          }
+        },err=>{
+          console.log(err);
+          
+        })
     },
     clickReason(i) {
       this.isActive = i;
@@ -60,8 +97,10 @@ export default {
         console.log('下一步',this.isActive);
         
         wx.navigateTo({
-            url:"/pages/dynamicRelease/main?reason="+this.isActive
+            url:"/pages/dynamic/pages/dynamicRelease/main?reason="+this.isActive+"&type=3&id="+this.id+"&uid="+this.uid
         })
+        
+        this.$emit('cancel');
     }
   }
 };
@@ -78,10 +117,13 @@ export default {
   background: rgba(0, 0, 0, 0.8);
 
   display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 .report-anonymous {
+
   width: 567rpx;
   height: 82rpx;
   background: rgba(255, 255, 255, 1);

@@ -70,6 +70,7 @@ export default {
       systemHeight: 0,
       contentHeight: 0,
       showModel: 0,
+      code:"",
       isReadDialog: 0
     };
   },
@@ -78,6 +79,16 @@ export default {
     navigationBar
   },
   onLoad(options) {
+    console.log('onLoad options',options)
+    // 记录邀请码
+    try {
+      wx.setStorageSync('inviter', options.inviter);
+      store.commit('setInviter', options.inviter)
+
+    } catch (e) {}
+
+
+
     let that = this;
     //判断用户是否第一次访问引导页
     wx.getStorage({
@@ -89,6 +100,9 @@ export default {
     console.log('this.isReadDialog',this.isReadDialog);
 
   },
+  onShow(options){
+    console.log('onShow options',options)
+  },
   mounted(option) {
     //  this.systemHeight = wx.getStorageSync('systemHeight');
 
@@ -99,22 +113,12 @@ export default {
   },
   methods: {
     goUserAgreement() {
-      // wx.showToast({
-      //   title: "《用户协议》",
-      //   icon: "success",
-      //   duration: 2000
-      // });
       wx.navigateTo({
         url: "/pages/agreement/main?agreement=1"
       });
 
     },
     goPrivacyPolicy() {
-      // wx.showToast({
-      //   title: "《隐私政策》",
-      //   icon: "success",
-      //   duration: 2000
-      // });
       wx.navigateTo({
         url: "/pages/agreement/main?agreement=2"
       });
@@ -126,13 +130,13 @@ export default {
       //判断用户是否第一次访问引导页  2已阅读引导页   1表示要去选择性别
       if (this.isReadDialog == 2) {
         wx.switchTab({
-          url: "/pages/index/main"
+          url: "/pages/index/index/main"
         });
       } else {
 
         //选择性别
         wx.navigateTo({
-          url: "/pages/personalData/main?lookAround=1"
+          url: "/pages/index/pages/personalData/main?lookAround=1"
         });
       }
     },
@@ -140,6 +144,15 @@ export default {
       // 微信登录 温馨提示
       this.showModel = 1;
       console.log("微信登录");
+      let that = this;
+      wx.login({
+          success (res) {
+            if (res.code) {
+              console.log(res.code);
+              that.code = res.code;
+            }
+          }
+      })
     },
     disagree() {
       console.log("不同意");
@@ -147,44 +160,55 @@ export default {
       this.showModel = 0;
     },
     bindGetUserInfo(e) {
-        // console.log('回调事件后触发')
+         // console.log('回调事件后触发')
         const self = this;
+        if(this.code === ''){
+          console.log('这是code是空',code)
+        }
         if (e.mp.detail.userInfo){
-            console.log('用户按了允许授权按钮')
+            let code = self.code;  
+            let inviter = store.state.inviter || wx.getStorageSync('inviter');
             let { encryptedData,userInfo,iv } = e.mp.detail;
-            
-            wx.setStorageSync('userInfo', JSON.stringify(userInfo)); //保存用户信息
 
-             this.$emit('SignInTemporarily',1)  //弹框隐藏
-             
-          this.showModel = 0;
-          wx.showLoading({
-              title: '请稍等...',
-              icon: 'success',
-              duration: 1000
-          })
-          if (this.isReadDialog == 2) {
-            wx.switchTab({
-              url: "/pages/index/main"
-            });
-          } else {
-            //选择性别
-            wx.navigateTo({
-              url: "/pages/personalData/main?lookAround=0"
-            });
-          }
-            //userInfo
-            // self.$http.post(api,{
-            //     // 这里的code就是通过wx.login()获取的
-            //     code:self.code,
-            //     encryptedData,
-            //     iv,
-            // }).then(res => {
-            //     console.log(`后台交互拿回数据:`,res);
-            //     // 获取到后台重写的session数据，可以通过vuex做本地保存
-            // }).catch(err => {
-            //     console.log(`api请求出错:`,err);
-            // })  
+            console.log('inviter------',inviter);
+            self.postRequest('home/user/login',{ encryptedData,iv,code,inviter}).then(res=>{
+                wx.showToast({
+                  title: res.message,
+                  icon: 'success',
+                  duration: 2000
+                })
+              if(res.code ===0){                
+                this.showModel = 0;
+                
+                store.state.is_new_user = res.data.is_new_user
+                store.state.token = res.data.token
+                
+                wx.setStorageSync('userInfo', JSON.stringify(userInfo)); //保存用户信息
+                wx.setStorageSync('token', res.data.token); //保存用户登录的token信息
+
+                store.commit('setisLogin',1)
+                store.commit('setUserInfo',userInfo)
+
+
+                if (this.isReadDialog == 2) {
+                    console.log('setTimeout isReadDialog ---',this.isReadDialog);
+                  wx.switchTab({
+                    url: "/pages/index/index/main"
+                  });
+                } else {
+                  //选择性别
+                  setTimeout(() => {
+                    console.log('setTimeout 3000 ---');
+                    wx.navigateTo({
+                      url: "/pages/index/pages/personalData/main"
+                    });
+                  }, 3000);
+                }
+              
+              }
+            }).catch(res=>{
+              wx.showToast(res)
+            })
         } else {
             //用户按了拒绝按钮
             console.log('用户按了拒绝按钮');

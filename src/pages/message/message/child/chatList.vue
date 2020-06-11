@@ -1,16 +1,16 @@
 <template>
   <div class="news_center">
-    <div v-for="(item,index) in messageLists" :key="index" @click="gotoDetail">
+    <div v-for="(item,index) in messageLists" :key="index" @click="toChat(index)">
       <div class="news_lists">
         <div class="news_msg_left">
-          <img :src="item.avatar" class="news_avatar" alt />
+          <img :src="item.friendHeadUrl" class="news_avatar" alt />
         </div>
         <div class="news_msg_content">
           <div class="msg_personnel">
-            <div class="nickname">{{item.nickname}}</div>
+            <div class="nickname">{{item.friendName}}</div>
             <div class="msg_content">{{item.content}}</div>
           </div>
-          <div class="msg_send_time">{{item.timer}}</div>
+          <div class="msg_send_time">{{item.timeStr}}</div>
         </div>
       </div>
     </div>
@@ -23,12 +23,25 @@ export default {
     messageLists: { type: Array, default: [] }
   },
   methods: {
-    gotoDetail() {
-      //"pages/messageDetail/main",
-      wx.navigateTo({
-        url: "/pages/messageDetail/main"
-      });
-    }
+    // gotoDetail() {
+    //   //"pages/messageDetail/main",
+    //   wx.navigateTo({
+    //     url: "/pages/message/pages/messageDetail/main"
+    //   });
+    // },
+    toChat(e) {
+      console.log(e);
+        // let item = e.currentTarget.dataset.item;
+        let item = this.messageLists[e]
+        delete item.latestMsg;
+        delete item.unread;
+        delete item.content;
+        item.friendHeadUrl=escape(item.friendHeadUrl)
+        console.log(item.friendHeadUrl,JSON.stringify(item))
+        wx.navigateTo({
+            url: `/pages/chat/main?friend=${JSON.stringify(item)}`
+        });
+    },
   }
 };
 </script>

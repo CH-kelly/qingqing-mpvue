@@ -1,8 +1,11 @@
 <template>
-    <swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
+    <swiper class="swiper" :indicator-dots="indicatorDots" 
+    :autoplay="autoplay" :interval="interval" 
+    :circular="true"
+    :duration="duration">
         <block v-for="(item, index) in images" :key="index">
-            <swiper-item>
-                <img :src="item" class="slide-image" mode="aspectFill">
+            <swiper-item v-if="item!=1">
+                <img v-if="item!=1" :src="item" class="slide-image" mode="aspectFill">
             </swiper-item>
         </block>
     </swiper>

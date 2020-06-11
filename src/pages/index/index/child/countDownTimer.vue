@@ -39,6 +39,7 @@ export default {
         timer--;
         if (timer < 0) {
           clearInterval(this.downTimerInter);
+          this.$emit('clearTimer')
         } else {
           this.downTimerString = this.getDownTimer(timer);
         }

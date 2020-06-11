@@ -1,6 +1,13 @@
 <script>
+
+// import AppIMDelegate from "./delegate/app-im-delegate";
+
 export default {
-  
+  data () {
+    return {
+      
+    }
+  },
   created () {
     // 调用API从本地缓存中获取数据
     /*
@@ -24,8 +31,35 @@ export default {
       logs.unshift(Date.now())
       mpvue.setStorageSync('logs', logs)
     }
-    
+
   },
+  methods:{
+    getIMHandler() {
+        return this.appIMDelegate.getIMHandlerDelegate();
+    },
+  },
+    onLaunch() {
+      // console.log(this.appIMDelegate);
+        // this.appIMDelegate = new AppIMDelegate(this);
+        // this.appIMDelegate = new this.appIMDelegate();
+        // console.log('socket start 1');
+        
+       
+    },
+    relink(){
+        // this.appIMDelegate = new AppIMDelegate(this);
+        this.appIMDelegate.relink();
+    },
+    onHide() {
+        this.appIMDelegate.onHide();
+    },
+    onShow(options) {
+       this.appIMDelegate.onLaunch();
+        this.appIMDelegate.onShow(this.userInfo);
+        // this.globalData.appIMDelegate = this.appIMDelegate.getIMHandlerDelegate();
+       
+    },
+  methods:{},
   log () {
     console.log(`log at:${Date.now()}`)
   }

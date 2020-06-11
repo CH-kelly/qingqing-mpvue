@@ -1,7 +1,7 @@
 <template>
   <div class="heart-list-item">
-    <div class="list-item" v-for="(item,i) in heartList" :key="i">
-      <img class="list-item-img" :src="item.avatar_url" alt @click="gotoIndex(i)" />
+    <div class="list-item" v-for="(item,i) in heartList" :key="i"  @click="heartInfo(item.uid)">
+      <img class="list-item-img" :src="item.avatar_url" alt />
       <div class="nickname">{{item.nickname}}</div>
       <div class="info">
         <span class="info-desc">{{item.age}}岁</span>
@@ -31,11 +31,10 @@ export default {
     heartList: { type: Array, default: [] }
   },
   methods:{
-    gotoIndex(){
-     
-      wx.switchTab({
-        url: "/pages/index/main"
-      });
+    heartInfo(key){
+        wx.navigateTo({
+            url: "/pages/heartInfo/heartInfo/main?target_uid="+key
+        });
     }
   }
 };

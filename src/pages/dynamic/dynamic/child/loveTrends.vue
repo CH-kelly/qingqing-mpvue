@@ -1,11 +1,11 @@
 <template>
     <div class="love-trends-head">
         <div class="head-left">
-            <img class="head-avatar" :src="head.avatar" alt="">
+            <img class="head-avatar" :src="head.avatar_url" alt="">
         </div>
         <div class="head-center">
             <div class="head-nickname">{{head.nickname}}</div>
-            <div class="head-desc">TA发布了{{head.number}}条动态</div>
+            <div class="head-desc">TA发布了{{head.total}}条动态</div>
         </div>
         <div class="head-right">
             <div class="head-right-button" @click="gotoLoveStory">
@@ -16,6 +16,7 @@
     </div>
 </template>
 <script>
+import store from '@/store'
 export default {
     props:{
         head:{type:Object}
@@ -23,11 +24,22 @@ export default {
     methods:{
         //pages/loveStory/main
         gotoLoveStory(){
-            console.log('恋爱故事');
-            
-            wx.navigateTo({
-                url:'/pages/loveStory/main'
-            })
+
+
+            let token = store.state.token || wx.getStorageSync('token');
+            if(token){
+                 
+                wx.navigateTo({
+                    url:'/pages/loveStory/main'
+                })
+            }else{
+               wx.showToast({
+                    title: '请登录',
+                    icon: 'none',
+                    duration: 2000
+                })
+            }
+           
         }
     }
 }

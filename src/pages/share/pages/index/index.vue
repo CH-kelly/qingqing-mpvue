@@ -38,9 +38,10 @@
                         <rich-text :nodes="rule"></rich-text>   
                     </scroll-view>
                 </div>
-                <div class="button">
+                <button  class="button" open-type="share">立即邀请好友</button>
+                <!-- <div class="button">
                     立即邀请好友
-                </div>
+                </div> -->
             </div>
 
 
@@ -57,13 +58,13 @@ import store from "@/store";
 export default {
   data() {
     return {
-      headInfo: {},
-      systemHeight: 0,
-      contentHeight: 0,
       token:null,
       userInfo:[],
       rule:'',
       list:[],
+      inviter:0,
+      systemHeight:0,
+      contentHeight:0,
     };
   },
   onShow() {
@@ -80,7 +81,7 @@ export default {
   },
   mounted(option) {
     //  this.systemHeight = wx.getStorageSync('systemHeight');
-    console.log("systemHeight", store.state.systemHeight);
+    console.log("systemHeight", store.state);
     this.systemHeight = store.state.systemHeight;
     this.contentHeight = store.state.contentHeight;
   },
@@ -90,6 +91,7 @@ export default {
       that.postRequest('home/user/get_user_info',{token}).then(res=>{  
           if(res.code===0){
               that.userInfo = res.data;
+              that.inviter = res.data.id;
           }
         },err=>{
           console.log(err);
@@ -108,7 +110,16 @@ export default {
           
         })
     },
-  }
+  },
+  onShareAppMessage(){
+      let that = this;
+      let inviter = that.inviter;
+      return {
+        title: '青青校园',
+        path: '/pages/guide/main?inviter='+inviter
+        
+      }
+    }
 };
 </script>
 

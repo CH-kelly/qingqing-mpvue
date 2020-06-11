@@ -58,7 +58,7 @@ export default {
       // console.log("编辑");
       // this.isEdit = 1;  
       wx.navigateTo({
-        url: "/pages/basicInfo/pages/basicInfo/main"
+        url: "/pages/basicInfoA/pages/basicInfo/main"
         // url:'/pages/basicInfo/main'
       })
     },

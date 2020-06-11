@@ -8,7 +8,7 @@
 <scroll-view scroll-y enable-back-to-top :style="{marginTop:systemHeight+'px',height:contentHeight+'px'}">
       
     <div class="index-center">
-      <completion ></completion>
+      <completion :completeness="userInfo.completeness"></completion>
       <!-- 提示 -->
       <div class="center-explain">
           <img class="center-explain-img" src="/static/images/new/anquan.png" alt="">
@@ -79,14 +79,7 @@ export default {
       secondPageHeight:0,
       userInfo:{},
       certInfo:{},
-      images:[
-        "/static/images/new/upload-background.png",
-        "/static/images/new/upload-background.png",
-        "/static/images/new/upload-background.png",
-        "/static/images/new/upload-background.png",
-        "/static/images/new/upload-background.png",
-        "/static/images/new/upload-background.png",
-      ],
+      images:[],
       photos:[],    //后端返回的图片地址
       introduceOneself:"",
       hobby:"",
@@ -123,6 +116,13 @@ export default {
       that.postRequest('home/user/get_user_info',{token}).then(res=>{  
           if(res.code===0){
               that.userInfo = res.data;
+              that.images[0] = res.data.photos[0] || 1;
+              that.images[1] = res.data.photos[1] || 1;
+              that.images[2] = res.data.photos[2] || 1;
+              that.images[3] = res.data.photos[3] || 1;
+              that.images[4] = res.data.photos[4] || 1;
+              that.images[5] = res.data.photos[5] || 1;
+              console.log(that.images);
           }
         },err=>{
           console.log(err);
@@ -168,8 +168,14 @@ export default {
               let result = JSON.parse(res.data);
               console.log(res,result);
               if(result.code === 0){
-                that.photos[that.key] = result.data.img;
-                that.postRequest('home/user/update_user_info',{token,photos:JSON.stringify(that.photos)}).then(res=>{  
+                that.images[that.key] = result.data.img;
+
+                let avatar_url = that.userInfo.avatar_url;
+                if(that.key === 0){
+                  avatar_url = that.images[that.key];
+                }
+
+                that.postRequest('home/user/update_user_info',{token,avatar_url,photos:JSON.stringify(that.images)}).then(res=>{  
                 },err=>{
                   console.log(err);
                   
@@ -188,10 +194,11 @@ export default {
     photograph2(){       //手机相册拍照
       let that = this;
       let token = this.token;
+      console.log(that.photos[that.key]);
       wx.chooseImage({
       count: 1,
       sizeType: ['original', 'compressed'],
-      sourceType: ['camera'],
+      sourceType: ['album'],
       success (res) {
           // tempFilePath可以作为img标签的src属性显示图片
           const tempFilePaths = res.tempFilePaths
@@ -204,8 +211,13 @@ export default {
               let result = JSON.parse(res.data);
               console.log(res,result);
               if(result.code === 0){
-                that.photos[that.key] = result.data.img;
-                that.postRequest('home/user/update_user_info',{token,photos:JSON.stringify(that.photos)}).then(res=>{  
+                that.images[that.key] = result.data.img;
+                console.log('that.photos',that.photos);
+                let avatar_url = that.userInfo.avatar_url;
+                if(that.key === 0){
+                  avatar_url = that.images[that.key];
+                }
+                that.postRequest('home/user/update_user_info',{token,avatar_url,photos:JSON.stringify(that.images)}).then(res=>{  
                 },err=>{
                   console.log(err);
                   

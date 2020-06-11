@@ -12,7 +12,7 @@
       <div class="super-flex">
             <div class="to-whom super-flex">
                 想对
-                <span class="to-whom-name">晓欣</span>说
+                <span class="to-whom-name">{{currentUser.nickname}}</span>说
             </div>
       </div>
       <div class="super-flex">
@@ -32,12 +32,16 @@
       <div class="super-flex">
         <div class="to-button">购买超级喜欢</div>
       </div>
-      <div class="to-button-desc">你还剩余0个超级喜欢</div>
+      <div class="to-button-desc">你还剩余{{super_like_num}}个超级喜欢</div>
     </div>
   </div>
 </template>
 <script>
 export default {
+  props:{
+    super_like_num:{type:Number,default:0},
+    currentUser:{type:Object,default:{}}
+  },
   data() {
     return {
       num:0,
@@ -117,8 +121,7 @@ export default {
   line-height: 38rpx;
 }
 .to-whom {
-margin-top: 48rpx;
-  width: 180rpx;
+  margin-top: 48rpx;
   height: 31rpx;
   font-size: 32rpx;
   font-family: PingFang SC;
@@ -164,11 +167,9 @@ margin-top: 48rpx;
     margin-top: 34rpx;
   width: 558rpx;
   height: 80rpx;
-  background: linear-gradient(
-    -40deg,
-    rgba(219, 128, 100, 1),
-    rgba(253, 59, 109, 1)
-  );
+  
+background:linear-gradient(180deg,rgba(219,128,100,1),rgba(253,59,109,1));
+
   border-radius: 40rpx;
 
   text-align: center;

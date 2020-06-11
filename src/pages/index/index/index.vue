@@ -60,7 +60,7 @@
 
       <!-- 倒计时 -->
       <div class="index-timer" v-else>
-        <countDownTimer :downTimerArray="downTimerArray"></countDownTimer>
+        <countDownTimer :downTimerArray="downTimerArray" @clearTimer="clearTimer"></countDownTimer>
       </div>
     </scroll-view>
 
@@ -110,7 +110,7 @@
     <auth v-if="isAuth===1" @SignInTemporarily="SignInTemporarily"></auth>
 
     <!-- 超级喜欢 -->
-    <superLike v-if="isSuperLike===1" @close="closeSuperLike"></superLike>
+    <superLike v-if="isSuperLike===1" @close="closeSuperLike"  :currentUser="currentUser" :super_like_num="super_like_num" ></superLike>
 
 
   </div>
@@ -151,6 +151,7 @@ export default {
       isSuperLike:0,
       isLogin:store.state.isLogin,
       token:null,
+      super_like_num:0,
     };
   },
   onLoad(options) {
@@ -177,7 +178,6 @@ export default {
     wx.getStorage({
       key: "userInfo",
       success(res) {
-        console.log("userInfo1", res.data);
         that.userInfo = JSON.parse(res.data);
       }
     });
@@ -194,10 +194,14 @@ export default {
   },
   onShow(){
     this.getrecommend_list();
+    
+      let token = store.state.token || wx.getStorageSync('token');
+      if(token){
+        this.get_user_info(token);
+      }
   },
   mounted(option) {
     //  this.systemHeight = wx.getStorageSync('systemHeight');
-    console.log("systemHeight", store.state.systemHeight);
     this.systemHeight = store.state.systemHeight;
     this.contentHeight = store.state.contentHeight;
   },
@@ -215,11 +219,15 @@ export default {
     clickLove() {
       console.log("clickLove", k);
     },
+    clearTimer(){
+      this.status = 0;
+      this.getrecommend_list();
+
+    },
     getrecommend_list(){  //获取首页推荐
         let that = this;
         let token = store.state.token || wx.getStorageSync('token');
         let url = '';
-        console.log('token',token,!token);
         if(token){
           url = "home/recommend/get_recommend_list";
         }else{
@@ -239,16 +247,17 @@ export default {
 
                 }else{
 
-                   that.downTimerArray={
-                      like: res.data.is_like_num, timer: res.data.count_down
-                  }
+                //    that.downTimerArray={
+                //       like: res.data.is_like_num, timer: res.data.count_down
+                //   }
 
-                  that.status = 1;
+                //   that.status = 1;
                   
                 }
               
             }
         },err=>{
+          
           console.log(err);
           
         })
@@ -259,6 +268,7 @@ export default {
       that.postRequest('home/user/get_user_info',{token}).then(res=>{  
           if(res.code===0){
               that.userInfo = res.data;
+              that.super_like_num = res.data.super_like_num;
           }
         },err=>{
           console.log(err);
@@ -277,7 +287,7 @@ export default {
         if(this.userInfo.is_vip === 1){
 
           wx.navigateTo({
-            url: "/pages/lookBack/main"
+            url: "/pages/index/pages/lookBack/main"
           });
 
         }else{
@@ -299,7 +309,6 @@ export default {
       this.isLogin = store.state.isLogin;
       this.token = wx.getStorageSync('token');
       this.userInfo = store.state.userInfo;
-      console.log(this.token,' ---------this.token');
       var that = this;
       
       if (this.userInfo || this.isLogin===1 || this.token!==null) {
@@ -313,15 +322,21 @@ export default {
             data.type=1;
             url ="home/like/add_like";
           }
-          console.log('clickButtonImage',data);
+
+          if(that.token){
+            that.postRequest(url,data).then(res=>{
+                if(res.code ===0){      
+                    that.getrecommend_list();     
+                }
+            }).catch(res=>{
+              wx.showToast(res)
+            })
+          }else{
+            // 登录
+            this.isAuth = 1;
+
+          }
           
-          that.postRequest(url,data).then(res=>{
-              if(res.code ===0){      
-                  that.getrecommend_list();     
-              }
-          }).catch(res=>{
-            wx.showToast(res)
-          })
       } else {
         // 登录
         this.isAuth = 1;

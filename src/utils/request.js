@@ -1,4 +1,4 @@
-let baseUrl = "http://qqxy.shengbokj.com/"
+let baseUrl = "https://qqxy.shengbokj.com/"
 function getRequest(url,data) {
     return new Promise((resolve, reject) => {
         wx.request({

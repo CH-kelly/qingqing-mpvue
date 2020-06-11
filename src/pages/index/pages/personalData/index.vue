@@ -53,12 +53,18 @@
 
       <!-- 地区 -->
       <div class="index-center-content" v-show="nextStatus==3">
-        <img class="center-content-birthday" src="/static/images/new/location1.png" alt="">
-        <div class="center-content-picker">
+        <img class="center-content-birthday" style="width: 86rpx;"  src="/static/images/new/location1.png" alt="">
+        <!-- <div class="center-content-picker">
             <picker mode="multiSelector" @columnchange="changeCityValue" :value="mulIndex" :range="mulArr" @change="changeCity">
                 <div class="center-content-title" v-show="choiceCityValue==1">点击选择地区</div>
                 <div class="center-content-title" v-show="choiceCityValue==2">{{mulArr[0][mulIndex[0]]}}，{{mulArr[1][mulIndex[1]]}}，{{mulArr[2][mulIndex[2]]}}</div>
             
+            </picker>
+        </div> -->
+        <div class="center-content-picker">
+          <picker mode="region" @change="changeCityValue">
+              <div class="center-content-title" v-show="choiceCityValue==1">点击选择地区</div>
+              <div class="center-content-title" v-show="choiceCityValue==2">{{province}} {{city}}</div>
             </picker>
         </div>
         <div class="index-center-line">
@@ -89,39 +95,12 @@ export default {
       nextStatus: 1, //第一步是性别      第二步是选择生日    第三部是地区
       nextTtitle: "下一步",
       birthdayTimer: '点击选择生日',
+      gender:0,
       choiceCityValue:1,
-      mulIndex: [0, 0, 0],
-      mulArr: [],
-      json: [
-        {
-          type: "汽车",
-          brand: [
-            {
-              name: "领克",
-              cars: ["01", "02", "03"]
-            },
-            {
-              name: "丰田",
-              cars: ["汉兰达", "凯美瑞", "卡罗拉"]
-            }
-          ]
-        },
-        {
-          type: "摩托车",
-          brand: [
-            { name: "雅马哈", cars: ["MT-9", "迅鹰"] },
-            { name: "铃木", cars: ["钻豹", "gw250"] }
-          ]
-        },
-        {
-          type: "自行车",
-          brand: [
-            { name: "美利达", cars: ["挑战者300", "挑战者900"] },
-            { name: "捷安特", cars: ["ATX777", "XTR"] }
-          ]
-        }
-      ],
       area:null,
+      province:'',
+      city:'',
+      token:'',
     };
   },
   components: {
@@ -129,18 +108,13 @@ export default {
   },
   onLoad(options) {
     
-    if(options){
+    if(options.lookAround){
       this.lookAround = options.lookAround;
     }
-    
-    // 初始化picker默认值
-    this.mulArr[0] = this.json.map(function(v) {
-      return v.type;
-    });
-    this.mulArr[1] = this.json[this.mulIndex[0]].brand.map(function(v) {
-      return v.name;
-    });
-    this.mulArr[2] = this.json[this.mulIndex[0]].brand[this.mulIndex[1]].cars;
+    console.log('lookAround-------',this.lookAround);
+
+    let token = store.state.token || wx.getStorageSync("token");
+    this.token = token;
 
   },
   mounted() {
@@ -151,7 +125,7 @@ export default {
   methods: {
     clickRadio(key) {
       this.isActive = key;
-      
+      this.gender = key;
       if(this.lookAround == 1){  //表示随便看看
         wx.setStorageSync('lookAround', 1);   //记录随便看看的值
         wx.setStorageSync('isReadDialog', 1);   //记录随便看看的值
@@ -159,7 +133,7 @@ export default {
         
         setTimeout(() => {
           wx.switchTab({
-            url: "/pages/index/main"
+            url: "/pages/index/index/main"
           });
         }, 1000);
       }
@@ -183,15 +157,37 @@ export default {
           wx.setStorageSync('isReadDialog', 1);   //记录随便看看的值
           wx.setStorageSync('lookAroundSex', this.isActive);  //记录随便看看的性别
           wx.setStorageSync('lookAroundBirthday', this.birthdayTimer);  //记录登录后用户选择的生日
-          wx.setStorageSync('lookAroundArea', this.area);  //记录登录后用户选择的地区
-            wx.showLoading({
-                title: '请稍等...',
-                icon: 'success',
-                duration: 1000
-            })
-            wx.switchTab({
-              url: "/pages/index/main"
-            });
+          wx.setStorageSync('lookAroundArea', this.province+','+ this.city);  //记录登录后用户选择的地区
+            
+            let that = this;
+            let data = {
+              token: this.token,
+              birthday: this.birthdayTimer,
+              province: this.province,
+              city: this.city,
+              gender:this.gender
+            };
+            that.postRequest("home/user/update_user_info", data).then(res => {
+              console.log('update_user_info',res)
+                wx.showLoading({
+                      title: res.message,
+                      icon: 'success',
+                      duration: 1000
+                  })
+                if (res.code === 0) {
+                  
+                  setTimeout(() => {
+                    wx.switchTab({
+                      url: "/pages/index/index/main"
+                    });
+                  }, 3000);
+                }
+              },
+              err => {
+                console.log(err);
+              }
+            );
+            
         }
         
     },
@@ -204,28 +200,13 @@ export default {
       this.area = e.mp.detail.value;
     },
     changeCityValue(e) {
-      //更新城市
-      // 列的值改变时触发   我这里是三列：车子类型  品牌名称  车型
-      console.log("修改的列", e.target.column, "值为", e.target.value);
-      // 监听用户操作，改变mulIndex的值
-      this.mulIndex[e.target.column] = e.target.value;
-      // mulArr[0]的值是不会随用户操作变更的，因此不需要改变
-      // mulArr[1]的值是由 mulIndex[0]的值决定的
-      this.mulArr.splice(
-        1,
-        1,
-        this.json[this.mulIndex[0]].brand.map(function(v) {
-          return v.name;
-        })
-      );
-      // mulArr[2]的值是由 muIndex[1]的值决定的
-      this.mulArr.splice(
-        2,
-        1,
-        this.json[this.mulIndex[0]].brand[this.mulIndex[1]].cars
-      );
+      console.log("picker发送选择改变，携带值为", e);
+      let id = e.mp.detail.value;
       this.choiceCityValue = 2;
-    }
+      console.log(id);
+      this.province = e.mp.detail.value[0];
+      this.city = e.mp.detail.value[1];
+    },
   }
 };
 </script>
@@ -246,6 +227,7 @@ export default {
   height: 45rpx;
 }
 .header-title-h2 {
+  margin-top: 47rpx;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -253,7 +235,7 @@ export default {
 .title-origin {
   width: 14rpx;
   height: 14rpx;
-  background: rgba(240, 200, 139, 1);
+background:rgba(253,59,109,1);
   border-radius: 50%;
 }
 .title-h2 {
@@ -321,7 +303,10 @@ export default {
 
 }
 .active {
-  background: #f0c88b;
+  
+background:linear-gradient(180deg,rgba(219,128,100,1),rgba(253,59,109,1));
+
+  /* background: #f0c88b; */
   color: #ffffff;
 }
 .content-desc {
@@ -386,12 +371,10 @@ color:rgba(16,16,16,1);
 .center-button {
     width:500rpx;
   height: 80rpx;
-  background: linear-gradient(
-    0deg,
-    rgba(242, 204, 146, 1),
-    rgba(229, 178, 101, 1)
-  );
-  box-shadow: 0px 6rpx 18rpx 0px rgba(0, 0, 0, 0.15);
+
+background:linear-gradient(180deg,rgba(219,128,100,1),rgba(253,59,109,1));
+box-shadow:0px 6px 18px 0px rgba(0, 0, 0, 0.15);
+
   border-radius: 40rpx;
     text-align: center;
     line-height: 80rpx;

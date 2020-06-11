@@ -67,7 +67,7 @@ export default {
 
       }
       wx.navigateTo({
-        url:'/pages/basicInfo/pages/basicInfoDesc/main'+"?title="+title+"&placeholder="+placeholder+"&type="+key
+        url:'/pages/basicInfoA/pages/basicInfoDesc/main'+"?title="+title+"&placeholder="+placeholder+"&type="+key
       })
     },
     editInfo() {

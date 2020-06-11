@@ -13,6 +13,9 @@
  </scroll-view>
 
     <!-- <bottomNavBar></bottomNavBar> -->
+    
+    <!-- 登录授权 -->
+    <auth v-if="isAuth===1" @SignInTemporarily="SignInTemporarily"></auth>
 
 
   </div>
@@ -26,10 +29,12 @@ import store from '@/store'
 
 import heartItem from "./child/heartItem"
 
+import auth from "@/pages/auth"; //授权登录
 export default {
   data () {
     return {
 
+      isAuth: 0,
       systemHeight:0,
       contentHeight:0,
       heartList:[
@@ -48,14 +53,27 @@ export default {
           nickname:'李毅',
           education:'电子科技大学'
         }
-      ]
+      ],
+      token:'',
     }
   },
+  onLoad(option){
+    
+    // let token = store.state.token || wx.getStorageSync('token');
+    // this.token = token;
+    // this.my_like_list(token);
+  },
+  onShow(){
 
+    let token = store.state.token || wx.getStorageSync('token');
+    this.token = token;
+    this.my_like_list(token);
+  },
   components: {
     navigationBar,
     // bottomNavBar,
-    heartItem
+    heartItem,
+    auth,
   },
   mounted(option){
     //  this.systemHeight = wx.getStorageSync('systemHeight');
@@ -65,6 +83,47 @@ export default {
      
   },
   methods: {
+    my_like_list(token){
+      let that = this;
+      that.postRequest('home/like/my_like_list',{token}).then(res=>{  
+          console.log(res,res.code==0,token);
+          if(res.code==0){
+              that.heartList = res.data;
+              that.isAuth = 0;
+          }else{
+            wx.showToast({
+              "title":res.message,
+              'icon':'loading'
+            });
+            that.isAuth = 1;
+          }
+        },err=>{
+          
+          console.log(err);
+          
+        })
+    },
+    SignInTemporarily() { //
+      this.isAuth = 0;
+
+        let token = store.state.token || wx.getStorageSync('token');
+        this.token = token;
+        this.my_like_list(token);
+    },
+    /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+    onPullDownRefresh: function () {
+      wx.showLoading({
+        title: '加载中',
+      })
+      let page = 0;
+      let that = this;
+      setTimeout(function () {
+        that.my_like_list();
+        wx.stopPullDownRefresh()
+      }, 2000)
+    },
   },
 
   created () {

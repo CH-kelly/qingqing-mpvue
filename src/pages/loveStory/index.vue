@@ -1,7 +1,7 @@
 <template>
   <div>
     <navigation-bar shadow="true">
-      <div slot="center">发布</div>
+      <div slot="center">恋爱故事</div>
     </navigation-bar>
     <scroll-view
       scroll-y
@@ -11,13 +11,17 @@
       <div class="index-center">
         
         <!-- 恋爱故事列表 -->
-          <loveTrendsLists :dynamicList="dynamicList"></loveTrendsLists>
+          <loveTrendsLists :dynamicList="dynamicList"  @more="more"></loveTrendsLists>
 
       </div>
 
     </scroll-view>
     
     <release :type="2"></release>
+
+    
+  <report v-if="isReport===1" @cancel="cancel" :id="id" :uid="uid" :isDelete="isDelete" ></report>
+
     
     </div>
 </template>
@@ -30,6 +34,9 @@ import store from "@/store";
 import loveTrendsLists from "@/pages/dynamic/dynamic/child/loveTrendsLists";  //动态列表
 import release from "@/pages/dynamic/dynamic/child/send"; //发布按钮
 
+
+import report from "@/components/report";
+
 // import loveTrendsLists from "./child/loveTrendsLists";  //动态列表
 // import release from "./child/send"; //发布按钮
 export default {
@@ -38,34 +45,26 @@ export default {
       systemHeight: 0,
       contentHeight: 0,
       secondPageHeight: 0,
-      dynamicList:[
-        {
-          nickname:'晓欣',
-          avatar:'/static/images/demo_2@2x.png',
-          create:"2020.4.28 17:54",
-          content:'有养金毛犬是为了看家的吗？',
-          image:[
-            "/static/images/demo_4@2x.png",
-            "/static/images/demo_4@2x.png",
-            "/static/images/demo_4@2x.png",
-          ]
-        },{
-          nickname:'晓欣',
-          avatar:'/static/images/demo_2@2x.png',
-          create:"2020.4.28 17:54",
-          content:'有养金毛犬是为了看家的吗？',
-          image:[
-            "/static/images/demo_4@2x.png",
-            "/static/images/demo_4@2x.png",
-            "/static/images/demo_4@2x.png",
-          ]
-        }
-      ]
+      dynamicList:[],
+      
+      isReport:0,
+      id:0,
+      uid:0,
+      isDelete:0,
     };
   },
-
+onLoad(option){
+    
+  },
+  onShow(){
+    
+    let token = store.state.token || wx.getStorageSync('token');
+    this.token = token;
+    this.get_user_moment(token);
+  },
   components: {
-    navigationBar,loveTrendsLists,release
+    navigationBar,loveTrendsLists,release,
+    report
   },
   mounted(option) {
     //  this.systemHeight = wx.getStorageSync('systemHeight');
@@ -75,7 +74,29 @@ export default {
     this.contentHeight = height;
   },
   methods: {
-    
+     get_user_moment(token){
+      let that = this;
+      // let page = this.page+1;
+      that.postRequest('/home/moment/get_user_moment',{token,type:2}).then(res=>{  
+          if(res.code===0){
+            that.dynamicList = res.data.list;
+          }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
+    more(item){      
+      console.log(item);
+      this.isReport = 1;
+      this.id = item.id;
+      this.uid = item.uid;
+      this.isDelete = item.isDelete;
+    },
+    cancel(){ //关闭举报弹框
+      this.isReport = 0;
+      this.get_user_moment(this.token);
+    }
   },
 
   created() {

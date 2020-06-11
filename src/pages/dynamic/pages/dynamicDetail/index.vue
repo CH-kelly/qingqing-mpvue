@@ -9,27 +9,29 @@
       :style="{marginTop:systemHeight+'px',height:contentHeight+'px'}"
     >
       <div class="index-center">
-        <swiper :images="images" />
+        <swiper :images="images" v-if="images.length>0" />
 
         <div class="center-content">
           <div style="padding:30rpx">
             <div class="center-content-top">
-            <img class="contnent-top-avatar" src="/static/images/demo_2@2x.png" alt />
+            <img class="contnent-top-avatar" :src="list.avatar_url" alt />
             <div class="center-content-title1">
-              <div class="center-content-title">晓欣</div>
-              <div class="center-content-date">2020.4.28 17:54</div>
+              <div class="center-content-title">{{list.nickname}}</div>
+              <div class="center-content-date">{{list.add_time}}</div>
             </div>
           </div>
-          <div class="content">有养金毛犬是为了看家的吗？</div>
+          <div class="content">{{list.content}}</div>
           <div class="comment-q">
             <div class="comment-q-left">
-              <div class="comment-like">
-                <img class="dynamic-icon" src="/static/images/new/no-like1.png" alt />
-                <div class="center-heart">1</div>
+              <div class="comment-like"  @click.stop="commentLike(list,1)">
+                <img v-if="list.isLike == 1" class="dynamic-icon" src="/static/images/new/heart2.png" alt />
+                <img v-else class="dynamic-icon" src="/static/images/new/no-like1.png" alt />
+                <div class="center-heart">{{list.thumbs_num}}</div>
               </div>
               <div class="comment-like">
-                <img class="dynamic-icon" src="/static/images/new/no-like2.png" alt />
-                <div class="center-heart">1</div>
+                <img v-if="list.isComment == 1" class="dynamic-icon" src="/static/images/new/comment.png" alt />
+                <img v-else class="dynamic-icon" src="/static/images/new/no-like2.png" alt />
+                <div class="center-heart">{{list.dynamic_review_num}}</div>
               </div>
             </div>
             <div class="comment-q-right" @click="report">
@@ -37,14 +39,14 @@
             </div>
           </div>
           </div>
-          <div class="content-comment">
-            <div class="contnent-comment-q">
-              <img class="contnent-comment-q-avatar" src="/static/images/lvy_icon.png" alt />
+          <div class="content-comment" v-if="dynamic_review.length>0">
+            <div class="contnent-comment-q" v-for="(item,i) in dynamic_review" :key="i">
+              <img class="contnent-comment-q-avatar" :src="item.avatar_url" alt />
               <div class="center-comment-title">
-                <div class="center-content-title">晓欣</div>
-                <div class="center-comment-content">我家金毛就是看家的~</div>
+                <div class="center-content-title">{{item.nickname}}</div>
+                <div class="center-comment-content">{{item.content}}</div>
               </div>
-              <div class="comment-right">14分钟前</div>
+              <div class="comment-right">{{item.add_time}}</div>
             </div>
           </div>
         </div>
@@ -53,17 +55,19 @@
             <input
               class="weui-input"
               auto-focus
+              :value="content"
+              @input="inputContent"
               placeholder="走心评论，说点好听的~"
               placeholder-class="placeholder-class"
             />
           </div>
-          <div class="send-comment-message">发送</div>
+          <div class="send-comment-message" @click="sendComment">发送</div>
         </div>
       </div>
     </scroll-view>
 
 
-    <report v-if="isReport===1" @cancel="cancelReport"></report>
+    <report v-if="isReport===1" @cancel="cancelReport" :id="list.id" :uid="list.uid" :isDelete="isDelete" ></report>
 
   </div>
 </template>
@@ -81,20 +85,24 @@ export default {
     return {
       systemHeight: 0,
       contentHeight: 0,
-      images: [
-        {
-          url:
-            "https://img-oss.yunshanmeicai.com/goods/default/31d8dfa4-0d7b-4694-80f9-41b07c9d0a3a.png"
-        },
-        {
-          url:
-            "https://img-oss.yunshanmeicai.com/goods/default/e83c8f0f-4acc-4729-bcbb-294f2b314977.jpg"
-        }
-      ],
+      images: [],
       isReport:0,
+      id:0,
+      list:{},
+      dynamic_review:[],  //评论列表
+      content:'',
+      isDelete:0
     };
   },
+  onLoad(option){
+    this.id = option.id
+  },
+  onShow(){
 
+    let token = store.state.token || wx.getStorageSync('token');
+    this.token = token;
+    this.get_user_moment_detail(token);
+  },
   components: {
     navigationBar,
     swiper,
@@ -104,9 +112,86 @@ export default {
     //  this.systemHeight = wx.getStorageSync('systemHeight');
     console.log("systemHeight", store.state.systemHeight);
     this.systemHeight = store.state.systemHeight;
-    this.contentHeight = store.state.contentHeight;
+    this.contentHeight = store.state.contentHeight- 50;
   },
   methods: {
+    inputContent(e){
+      console.log(e,e.mp.detail.value)
+      this.content = e.mp.detail.value;
+    },
+    sendComment(){  //发送评论
+        let that = this;
+        let data = {
+          token:this.token,
+          id:this.id,
+          content:this.content
+        }
+        that.postRequest('/home/moment/dynamic_review',data).then(res=>{  
+          if(res.code===0){
+            wx.showToast({
+              title: '发布评论成功',
+              icon: 'success',
+              duration: 3000
+            })
+            that.content = '';
+            that.get_user_moment_detail(that.token);
+          }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
+    commentLike(item){ //点赞
+      let that = this;
+      let token = store.state.token || wx.getStorageSync('token');
+      let id = item.id;
+      let url = '';
+      let title = '';
+      if(item.isLike == 1){ //取消点赞
+
+          url = "/home/moment/cancel_thumbs_num";
+          title="取消成功"
+      }else{    //点赞
+
+          url = "/home/moment/thumbs_num";
+          title="点赞成功"
+      }
+      that.postRequest(url,{token,id:id}).then(res=>{
+        console.log('res',res);  
+          if(res.code===0){
+            if(item.isLike == 1){
+              item.thumbs_num = item.thumbs_num - 1;
+            }else{
+              item.thumbs_num = item.thumbs_num + 1;
+            }
+            item.isLike = !item.isLike;
+
+            wx.showToast({
+              title: title,
+              icon: 'success',
+              duration: 3000
+            })
+          }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
+    get_user_moment_detail(token){
+      let that = this;
+      that.postRequest('/home/moment/get_user_moment_detail',{token,id:that.id}).then(res=>{  
+          if(res.code===0){
+            that.images = res.data.list.photos;
+            console.log(that.images)
+            that.list = res.data.list;
+            that.dynamic_review = res.data.list.dynamic_review;
+            that.isDelete = res.data.isDelete
+          }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
     report(){
       // 举报
       console.log('report举报');
@@ -114,6 +199,8 @@ export default {
     },
     cancelReport(){
       this.isReport = 0;
+      
+      this.get_user_moment_detail(this.token);
     }
   },
 
@@ -223,7 +310,7 @@ color:rgba(153,153,153,1);
 
 .contnent-comment-message {
   width: 100%;
-  height: 87rpx;
+  height: 50px;
   background: rgba(255, 255, 255, 1);
   position: fixed;
   bottom: 0;

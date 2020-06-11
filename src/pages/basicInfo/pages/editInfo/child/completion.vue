@@ -3,9 +3,9 @@
     <div class="progress-bar-content">
         <div class="progress-bar-text">完成度</div>
         <div class="progress-bar-slider">
-            <div class="slider-active" :style="{width:'50%'}" ></div>
+            <div class="slider-active" :style="{width:completeness+'%'}" ></div>
             <!-- <div class="slider-active-block-size" :style="{transform:'translatex(50%)'}">{{number}}%</div> -->
-            <div class="slider-active-block-size" :style="{left:'45%'}">{{number}}%</div>
+            <div class="slider-active-block-size" :style="{left:(completeness-5)+'%'}">{{completeness}}%</div>
         </div>
     </div>
 
@@ -17,6 +17,9 @@
 
 
 export default {
+  props:{
+    completeness:{type:Number,default:50}
+  },
   data () {
     return {
      number:50

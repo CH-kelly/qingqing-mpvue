@@ -2,7 +2,7 @@
   <div class="index-center">
     <div class="index-center-model">
       <img class="logo" src="/static/images/lvy_icon.png" alt />
-      <div class="index-center-title-h1">马上注册青藤之恋</div>
+      <div class="index-center-title-h1">马上注册青青校园</div>
       <div class="index-center-title-h1">高学历优质青年的交友平台</div>
       <div class="index-center-bottom">
         <div class="index-center-bottom-wx">
@@ -111,12 +111,11 @@ export default {
           console.log('这是code是空',code)
         }
         if (e.mp.detail.userInfo){
-            let code = self.code;
-            let inviter = '';
+            let code = self.code;  
+            let inviter = store.state.inviter || wx.getStorageSync('inviter');
             let { encryptedData,userInfo,iv } = e.mp.detail;
-            console.log(code);
-            console.log(encryptedData);
-            console.log(iv);
+
+            console.log('inviter------',inviter);
             self.postRequest('home/user/login',{ encryptedData,iv,code,inviter}).then(res=>{
                 wx.showToast({
                   title: res.message,
@@ -124,13 +123,18 @@ export default {
                   duration: 2000
                 })
               if(res.code ===0){
+                let openid = res.data.openID;
                 store.state.is_new_user = res.data.is_new_user
                 store.state.token = res.data.token
                 
+                userInfo.openid = openid;
+                console.log('userInfo------------');
+                console.log(userInfo);
+
                 wx.setStorageSync('userInfo', JSON.stringify(userInfo)); //保存用户信息
                 wx.setStorageSync('token', res.data.token); //保存用户登录的token信息
 
-                self.$emit('SignInTemporarily',1)  //弹框隐藏,并发送事件通知父组件
+                self.$emit('SignInTemporarily',res.data.token)  //弹框隐藏,并发送事件通知父组件
                 store.commit('setisLogin',1)
                 store.commit('setUserInfo',userInfo)
               

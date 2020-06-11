@@ -22,7 +22,7 @@
       
     <div class="index-center">
 
-      <chat-list :messageLists="messageLists"></chat-list>
+      <chat-list :messageLists="conversations"></chat-list>
 
     </div>
  </scroll-view>
@@ -42,13 +42,18 @@ import store from '@/store'
 
 import chatList from "./child/chatList"
 
+// import App from "../../../App.vue";
+
+// import AppIMDelegate from "../../../delegate/app-im-delegate";
+
 export default {
   data () {
     return {
 
       systemHeight:0,
       contentHeight:0,
-      messageLists:[
+      messageLists:
+      [
             {
                 nickname:'小星',
                 content:'青青校园上线啦',
@@ -75,7 +80,10 @@ export default {
                 avatar:"/static/images/lvy_icon.png",
                 timer:'下午3:50'
             }
-        ],
+      ],
+      
+      conversations: [],
+      // appIMDelegate:'',
     }
   },
 
@@ -89,14 +97,50 @@ export default {
      console.log('systemHeight',store.state.systemHeight);
      this.systemHeight = store.state.systemHeight;
       this.contentHeight = store.state.contentHeight;
+
+
+
+      // 连接文本
      
   },
+
   methods: {
+    getConversationsItem(item) {
+    
+      let {latestMsg, ...msg} = item;
+      console.log(item,latestMsg,msg);
+      return Object.assign(msg, JSON.parse(latestMsg));
+    }
+
+  },
+  created () {
+    console.log('created')
+    let app = getApp()
+    console.log(app);
+  },
+  onShow() {
+      var that = this;
+      this.appIMDelegate.getIMHandlerDelegate().setOnReceiveMessageListener({
+          listener: (msg) => {
+              console.log('会话列表', msg);
+              msg.type === 'get-conversations' && (that.conversations = msg.conversations.map(item => that.getConversationsItem(item)))
+          }
+      });
+      try {
+          this.appIMDelegate.getIMHandlerDelegate().sendMsg({
+              content: {
+                  type: 'get-conversations',
+                  userId: getApp().globalData.userInfo.userId
+              }
+          });
+          console.log('获取会话列表消息发送成功');
+      } catch (e) {
+          console.log('获取会话列表失败', e);
+      }
+
+
   },
 
-  created () {
-    // let app = getApp()
-  }
 }
 </script>
 

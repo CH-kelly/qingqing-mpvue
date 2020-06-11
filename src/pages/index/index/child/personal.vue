@@ -88,7 +88,7 @@ export default {
     align-items: center;
 }
 .card-left{
-    width: 75%;
+    width: 60%;
 }
 .card-left>.info>.info-desc{
     display: inline-block;
@@ -105,9 +105,13 @@ export default {
     font-size: 28rpx;
 }
 .card-right{
+    width: 40%;
+    text-align: right;
+
+
     font-size: 22rpx;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     font-family:PingFang SC;
     font-weight:bold;
 }

@@ -11,18 +11,23 @@
         <div class="vip-lists-item2">
             
             <div class="vip-items-lists">
-                <div class="vip-item" :class="currentIndex === 1?'active':''"  @click="changeVipItem(1)">
+                <div class="vip-item" 
+                    v-for="(item,i) in list" :key="i"
+                :class="currentIndex === item.id?'active':''"  
+                @click="changeVipItem(item.id)"
+
+                >
                     <div class="vip-item-desc" >
-                        <div class="vip-item-title"  :class="currentIndex === 1?'active':''" >1个</div>
-                        <div class="vip-item-title1"  :class="currentIndex === 1?'active':''" >超级会员</div>
+                        <div class="vip-item-title"  :class="currentIndex === item.id?'active':''" >{{item.num}}{{item.unitcon}}</div>
+                        <div class="vip-item-title1"  :class="currentIndex === item.id?'active':''" >{{item.type === 1 ? '超级喜欢':'会员'}}</div>
                     </div>
                     <div class="vip-item-line"></div>
                     <div class="vip-item-price">
-                        <div class="vip-item-newPrice"  :class="currentIndex === 1?'active':''" >￥6.6元</div>
-                        <div class="vip-item-oldPrice"  :class="currentIndex === 1?'active':''" ></div>
+                        <div class="vip-item-newPrice"  :class="currentIndex === item.id?'active':''" >￥{{item.price}}元</div>
+                        <div class="vip-item-oldPrice"  :class="currentIndex === item.id?'active':''" v-if="item.day_price">￥{{item.day_price}}元</div>
                     </div>
                 </div>
-                <div class="vip-item" :class="currentIndex === 2?'active':''"   @click="changeVipItem(2)">
+                <!-- <div class="vip-item" :class="currentIndex === 2?'active':''"   @click="changeVipItem(2)">
                     <div class="vip-item-desc">
                         <div class="vip-item-title" :class="currentIndex === 2?'active':''">1天</div>
                         <div class="vip-item-title1 " :class="currentIndex === 2?'active':''">会员</div>
@@ -54,12 +59,12 @@
                         <div class="vip-item-newPrice" :class="currentIndex === 4?'active':''">￥150元</div>
                         <div class="vip-item-oldPrice" :class="currentIndex === 4?'active':''">￥5元一天</div>
                     </div>
-                </div>
+                </div> -->
             </div>
 
 
             <div class="vip-item-button">
-                <div class="vip-item-button-buy">开通会员</div>
+                <div class="vip-item-button-buy" @click="openVip">开通会员</div>
             </div>
         </div>
         <div class="vip-lists-item3">
@@ -69,16 +74,19 @@
 </template>
 <script>
 export default {
+    props:{
+        list:{ type: Object }
+    },
     data(){
         return {
-            currentIndex:2
+            currentIndex:0
         }
     },
     methods:{
         close(){
             console.log('close');
             
-            this.$emit('close')
+            this.$emit('close',0)
         },
         changeVipItem(number){
             this.currentIndex = number
@@ -87,6 +95,47 @@ export default {
             // })
             console.log(this.currentIndex);
             
+        },
+        openVip(){  //开通会员
+            var that = this;
+            if(that.currentIndex==0){
+               wx.showToast({title:"请选择类型",icon:'none'})
+            };
+            
+            let token = wx.getStorageSync('token') || '';
+            if(!token){
+               wx.showToast({title:"请登录",icon:'none'})
+            };
+            let id = that.currentIndex;
+             that.postRequest('home/Order/index',{token,id}).then(res=>{
+                console.log(res);
+                if(res.code==0){   //下单成功后调用微信支付
+                    let timeStamp = res.data.timeStamp;
+                    let nonceStr = res.data.nonceStr;
+                    let package1 = res.data.package;
+                    let signType = res.data.signType;
+                    let paySign = res.data.sign;
+                    wx.requestPayment({
+                        timeStamp: timeStamp,
+                        nonceStr: nonceStr,
+                        package: package1,
+                        signType: signType,
+                        paySign: paySign,
+                        success (res) {
+                            console.log(res);
+                            if(res){
+                                that.$emit('close',1)
+                            }
+                        },
+                        fail (res) {
+                            console.log(res);
+                        }
+                    })
+                }
+            },err=>{
+            console.log(err);
+            
+            })
         }
     }
 }
@@ -183,7 +232,9 @@ color:#333333;
 }
 .vip-item-price{
 
-    padding: 10rpx 20rpx;
+    /* padding: 10rpx 20rpx; */
+    padding: 10rpx;
+    text-align: center;
     font-size:22rpx;
     font-family:PingFang SC;
     font-weight:800;

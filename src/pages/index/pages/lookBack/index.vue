@@ -142,6 +142,7 @@ onShow(){
 .index-center-title {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 30rpx;
 }
 .top-rounded {
@@ -169,7 +170,7 @@ onShow(){
 
 }
 .top-left{
-  width: 60%;
+  width: 40%;
   display: flex;
   align-items: center;
 }

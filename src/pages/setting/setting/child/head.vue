@@ -1,5 +1,5 @@
 <template>
-  <div class="love-trends-head" v-if="isAuth==0">
+  <div class="love-trends-head" v-if="isLogin==0">
     <div class="head-left">
       <img class="head-avatar" :src="headInfo.avatar_url" alt />
     </div>
@@ -19,27 +19,20 @@
     </div>
   </div>
   <div class="love-trends-head" v-else>
-    <div class="head-left-button">
-      <button
-        class="reminder-button-left"
-        open-type="getUserInfo"
-        @getuserinfo="bindGetUserInfo"
-        style="background: rgba(27,233,201,1);border: none;"
-      >
+    <div class="head-left-button reminder-button-left" @click="bindGetUserInfo">
         <img class="login-icon" src="/static/images/mine/wechat.png" alt />
         <span class="head-bold">微信登录/注册</span>
-      </button>
     </div>
   </div>
 </template>
 <script>
 export default {
   props: {
-    headInfo: { type: Object }
+    headInfo: { type: Object },
+    isLogin:{type:Number,default:1}
   },
   data() {
     return {
-        isAuth: 1,
     };
   },
   onLoad() {
@@ -60,33 +53,8 @@ export default {
         url: "/pages/basicInfo/pages/editInfo/main"
       });
     },
-    bindGetUserInfo(e) {
-        // console.log('回调事件后触发')
-        const self = this;
-        if (e.mp.detail.userInfo){
-            console.log('用户按了允许授权按钮')
-            let { encryptedData,userInfo,iv } = e.mp.detail;
-            
-            wx.setStorageSync('userInfo', JSON.stringify(userInfo)); //保存用户信息
-            this.headInfo = userInfo;
-            this.isAuth = 0;
-            console.log("setting head userInfo",this.headInfo);
-            //userInfo
-            // self.$http.post(api,{
-            //     // 这里的code就是通过wx.login()获取的
-            //     code:self.code,
-            //     encryptedData,
-            //     iv,
-            // }).then(res => {
-            //     console.log(`后台交互拿回数据:`,res);
-            //     // 获取到后台重写的session数据，可以通过vuex做本地保存
-            // }).catch(err => {
-            //     console.log(`api请求出错:`,err);
-            // })  
-        } else {
-            //用户按了拒绝按钮
-            console.log('用户按了拒绝按钮');
-        }
+    bindGetUserInfo() {
+      this.$emit('login',1)
     },
   }
 };
@@ -184,7 +152,7 @@ export default {
   text-align: center;
   border-radius: 45rpx;
   border: 2rpx solid rgba(238, 238, 238, 1);
-
+  background:linear-gradient(0deg,rgba(219,128,100,1),rgba(253,59,109,1));
     display: flex;
     justify-content: center;
     align-items: center;
@@ -199,7 +167,7 @@ export default {
 
 .head-bold {
   font-weight: bold;
-  color: #000;
+  color: #ffffff;
   font-size: 30rpx;
   font-family: PingFang SC;
 }

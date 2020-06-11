@@ -9,7 +9,7 @@
       :style="{marginTop:systemHeight+'px',height:contentHeight+'px'}"
     >
       <div class="index-center" :style="{height:contentHeight+'px'}">
-        <SettingHead :headInfo="headInfo"></SettingHead>
+        <SettingHead :headInfo="headInfo" :isLogin="isLogin" @login="login"></SettingHead>
 
         <!-- vip会员中心 -->
         <div class="member-center">
@@ -31,7 +31,7 @@
           <div class="menu-lists-item"  @click="dynamicMessage">
             <img class="item-icon" src="/static/images/new/dynamic-message.png" alt />
             <div class="item-title">动态消息</div>
-            <div class="item-free-dynamic-message">2</div>
+            <div class="item-free-dynamic-message" v-if="count>0">{{count}}</div>
             <img class="item-back" src="/static/images/new/back.png" alt />
           </div>
           <div class="menu-lists-item"  @click="share">
@@ -82,7 +82,9 @@ export default {
       contentHeight: 0,
       userInfo: null,
       isAuth: 0,
+      isLogin:1,
       token:null,
+      count:0,
     };
   },
   onShow() {
@@ -101,6 +103,7 @@ export default {
     let token = store.state.token || wx.getStorageSync('token');
     this.token = token;
     this.get_user_info(token);
+    this.news_feed_nums(token);
 
   },
 
@@ -117,20 +120,39 @@ export default {
     this.contentHeight = store.state.contentHeight;
   },
   methods: {
+    news_feed_nums(token){
+      let that = this;
+      that.postRequest('home/moment/news_feed_nums',{token}).then(res=>{  
+          if(res.code===0){
+            that.count = res.data.count;
+          }
+      },err=>{
+        console.log(err);
+        
+      })
+    },
     get_user_info(token){
       let that = this;
       that.postRequest('home/user/get_user_info',{token}).then(res=>{  
           if(res.code===0){
               that.userInfo = res.data;
               that.headInfo = res.data;
+              that.isLogin = 0;
           }
         },err=>{
           console.log(err);
           
         })
     },
-    SignInTemporarily() {
+    // 点击授权按钮
+    login(){
+      console.log('login---------')
+        this.isAuth = 1;
+    },
+    SignInTemporarily(item) {
+      console.log('item----------',item)
       this.isAuth = 0;
+      var that = this;
       wx.getStorage({
         key: "userInfo",
         success(res) {
@@ -138,12 +160,16 @@ export default {
           that.headInfo = JSON.parse(res.data);
         }
       });
+      
+      this.token = wx.getStorageSync('token') || item;
+      let token = this.token;
+      this.get_user_info(token);
     },
     openNowVip() {
       // 立即开通VIP按钮
-      if (this.userInfo) {
+      if (this.userInfo && this.isLogin==0) {
         wx.navigateTo({
-          url: "/pages/member/main"
+          url: "/pages/setting/pages/member/main"
         });
       } else {
         // 登录
@@ -152,9 +178,9 @@ export default {
     },
     search() {
       // 搜索设置按钮
-      if (this.userInfo) {
+      if (this.userInfo && this.isLogin==0) {
         wx.navigateTo({
-          url: "/pages/search/main"
+          url: "/pages/setting/pages/search/main"
         });
       } else {
         // 登录
@@ -162,9 +188,9 @@ export default {
       }
     },
     dynamicMessage(){
-      if (this.userInfo) {
+      if (this.userInfo && this.isLogin==0) {
         wx.navigateTo({
-          url: "/pages/dynamicMessage/main"
+          url: "/pages/dynamicMessage/dynamicMessage/main"
         });
       } else {
         // 登录
@@ -172,7 +198,7 @@ export default {
       }
     },
     share(){  //推荐给好友
-      if (this.userInfo) {
+      if (this.userInfo && this.isLogin==0) {
         wx.navigateTo({
           url: "/pages/share/pages/index/main"
         });

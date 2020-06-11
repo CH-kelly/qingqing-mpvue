@@ -17,6 +17,7 @@ const store = new Vuex.Store({
     userInfo:null,
     is_new_user:null,
     token:null,
+    inviter:'',
   },
   mutations: {
     setMenuSettings (state, settings) {
@@ -51,6 +52,9 @@ const store = new Vuex.Store({
     },
     setUserInfo(state,value){
       state.userInfo = value
+    },
+    setInviter(state,key){
+      state.inviter = key   
     }
   }
 })

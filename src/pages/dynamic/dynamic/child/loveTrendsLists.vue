@@ -1,51 +1,100 @@
 <template>
-  <div class="love-trends-head">
-    <div class="love-trends-lists-item" v-for="(item,i) in dynamicList" :key="i" @click="dynamicDetail(item)">
+  <div class="love-trends-head" v-if="dynamicList.length != 0">
+    <div class="love-trends-lists-item" v-for="(item,i) in dynamicList" :key="i" @click="dynamicDetail(item.id)">
       <div class="head-top">
         <div class="head-left">
-          <img class="head-avatar" :src="item.avatar" alt />
+          <img class="head-avatar" :src="item.avatar_url" alt />
         </div>
         <div class="head-center">
           <div class="head-nickname">{{item.nickname}}</div>
-          <div class="head-desc">{{item.create}}</div>
+          <div class="head-desc">{{item.add_time}}</div>
         </div>
         <div class="head-right"></div>
       </div>
       <div class="lists-item-center">
-        <div class="lists-item-center-content">{{item.content}}</div>
-        <div class="lists-item-center-image">
-          <img :src="s" alt v-for="(s,r) in item.image" :key="r" />
+        <div class="lists-item-center-content" v-if="item.content">{{item.content}}</div>
+        <div class="lists-item-center-image" v-if="item.photos">
+          <img :src="s" alt v-for="(s,r) in item.photos" :key="r" />
         </div>
         <div class="comment-q">
           <div class="comment-q-left">
-            <div class="comment-like">
-              <img class="dynamic-icon" src="/static/images/new/no-like1.png" alt />
-              <div class="center-heart">1</div>
+            <div class="comment-like" @click.stop="commentLike(item,1)">
+              <img v-if="item.isLike == 1" class="dynamic-icon" src="/static/images/new/heart2.png" alt />
+              <img v-else class="dynamic-icon" src="/static/images/new/no-like1.png" alt />
+              <div class="center-heart">{{item.thumbs_num}}</div>
             </div>
-            <div class="comment-like">
-              <img class="dynamic-icon" src="/static/images/new/no-like2.png" alt />
-              <div class="center-heart">1</div>
+            <div class="comment-like"  @click.stop="dynamicDetail(item.id)">
+              <img v-if="item.isComment == 1" class="dynamic-icon" src="/static/images/new/comment.png" alt />
+              <img v-else class="dynamic-icon" src="/static/images/new/no-like2.png" alt />
+              <div class="center-heart">{{item.dynamic_review_num}}</div>
             </div>
           </div>
-          <div class="comment-q-right">
+          <div class="comment-q-right"  @click.stop="report(item)">
             <img class="dynamic-icon-report" src="/static/images/new/no-like3.png" alt />
           </div>
         </div>
       </div>
+    
+
     </div>
+    
+        
   </div>
 </template>
 <script>
+
+import store from '@/store'
+
+
 export default {
   props: {
     dynamicList: { type: Array, defaula: [] }
   },
   methods:{
-    dynamicDetail(item){
-      console.log('dynamicDetail',item);
+    dynamicDetail(id){
+      console.log('dynamicDetail',id);
       wx.navigateTo({
-        url:"/pages/dynamicDetail/main"
+        url:"/pages/dynamic/pages/dynamicDetail/main?id="+id
       })
+    },
+    commentLike(item){ //点赞
+      let that = this;
+      let token = store.state.token || wx.getStorageSync('token');
+      let id = item.id;
+      let url = '';
+      let title = '';
+      if(item.isLike == 1){ //取消点赞
+
+          url = "/home/moment/cancel_thumbs_num";
+          title="取消成功"
+      }else{    //点赞
+
+          url = "/home/moment/thumbs_num";
+          title="点赞成功"
+      }
+      that.postRequest(url,{token,id:id}).then(res=>{
+        console.log('res',res);  
+          if(res.code===0){
+            if(item.isLike == 1){
+              item.thumbs_num = item.thumbs_num - 1;
+            }else{
+              item.thumbs_num = item.thumbs_num + 1;
+            }
+            item.isLike = !item.isLike;
+
+            wx.showToast({
+              title: title,
+              icon: 'success',
+              duration: 3000
+            })
+          }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
+    report(item){ //点了三个按钮
+        this.$emit('more',item);
     }
   }
 };
@@ -95,10 +144,20 @@ export default {
   color: rgba(102, 102, 102, 1);
 }
 .lists-item-center {
-  padding-left: 30rpx;
-  padding-bottom: 30rpx;
+  padding: 0 30rpx 30rpx 30rpx;
 }
 .lists-item-center-content {
+
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+
+line-height:56rpx;
   font-size: 26rpx;
   font-family: PingFang SC;
   font-weight: 500;
@@ -107,6 +166,8 @@ export default {
 }
 
 .lists-item-center-image {
+  height: 340rpx;
+  overflow: hidden;
   display: flex;
   flex-wrap: wrap;
 }

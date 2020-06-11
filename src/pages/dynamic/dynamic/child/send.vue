@@ -1,5 +1,5 @@
 <template>
-    <div class="button" :style="{bottom:'80px'}">
+    <div class="button" :style="{bottom:'0px'}">
         <div class="button-circle" @click="gotoSend">
             <div>
                 <img class="button-circle-img"  src="/static/images/new/send.png" alt="">
@@ -40,18 +40,35 @@ export default {
         gotoSend(){ //发送动态
             console.log('type',this.type);
             
-            wx.navigateTo({
-                url:'/pages/dynamicRelease/main?type='+this.type
-            })
+            let token = store.state.token || wx.getStorageSync('token');
+            console.log(token);
+            if(token){
+                wx.navigateTo({
+                    // url:'/pages/dynamic/pages/dynamicRelease/main?type='+this.type
+                    url:'/pages/dynamicRelease/dynamicRelease/main?type='+this.type
+                })
+            }else{
+               wx.showToast({
+                    title: '请登录',
+                    icon: 'none',
+                    duration: 2000
+                })
+            }
+           
         }
     }
 }
 </script>
 <style scoped>
 .button{
-    width: 100%;
+    width: 116rpx;
+    height: 116rpx;
+    /* width: 100%; */
     position: fixed;
     bottom: 0px;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%,-50%);
     z-index: 1;
     display: flex;
     justify-content: center;

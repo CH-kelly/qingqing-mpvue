@@ -1,7 +1,7 @@
 <template>
     <div class="love-trends-head">
         <div class="head-left">
-            <img class="head-avatar" :src="headInfo.avatar" alt="">
+            <img class="head-avatar" :src="headInfo.avatar_url" alt="">
         </div>
         <div class="head-center">
             <div class="head-center-top">
@@ -9,7 +9,8 @@
                 <span class="head-right head-right-problem">遇到会员问题</span>
             </div>
             <div class="head-center-middle">
-                <span class="head-desc">{{headInfo.isVip}}</span>
+                <span class="head-desc" v-if="headInfo.is_vip === 0">暂未激活会员</span>
+                <span class="head-desc" v-else>会员</span>
                 <span class="head-right head-right-service">请联系客服</span>
             </div>
         </div>

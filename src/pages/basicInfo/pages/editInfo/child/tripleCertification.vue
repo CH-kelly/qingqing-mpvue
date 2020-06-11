@@ -71,7 +71,8 @@ export default {
   },
   methods:{
     againAuth(){
-      wx.navigateTo({url:'/pages/setting/pages/idAuth/main'})
+      // wx.navigateTo({url:'/pages/setting/pages/idAuth/main'})
+      wx.navigateTo({url:'/pages/idAuth/pages/idAuth/main'})
     }
   }
 };

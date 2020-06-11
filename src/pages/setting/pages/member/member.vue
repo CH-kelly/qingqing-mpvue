@@ -82,7 +82,7 @@
     </div>
 
     <div class="buy-member-vip" v-show="isShowBuyMemberVip">
-      <buyMemberVip @close="closeBuyMemberVip"></buyMemberVip>
+      <buyMemberVip @close="closeBuyMemberVip" :list="list"></buyMemberVip>
     </div>
 
 
@@ -100,12 +100,12 @@ export default {
   data () {
     return {
       
-      headInfo:{
-        nickname:'晓欣',avatar:'/static/images/demo_2@2x.png',isVip:"您还不是会员"
-      },
+      headInfo:{},
       systemHeight:0,
       contentHeight:0,
-      isShowBuyMemberVip:false
+      isShowBuyMemberVip:false,
+      list:[],
+      token:'',
     }
   },
 
@@ -114,27 +114,62 @@ export default {
     MemberHead,
     buyMemberVip
   },
+  onLoad(){
+
+    let token = store.state.token || wx.getStorageSync('token');
+    this.token = token;
+    this.order_list(token);
+    this.get_user_info(token);
+  },
   mounted(option){
     //  this.systemHeight = wx.getStorageSync('systemHeight');
      console.log('systemHeight',store.state.systemHeight);
      this.systemHeight = store.state.systemHeight;
-      this.contentHeight = store.state.contentHeight;
+    this.contentHeight = store.state.contentHeight;
+      
      
   },
   methods: {
     exchange(){ 
       //兑换码
-      wx.navigateTo({url:'/pages/exchange/main'})
+      // wx.navigateTo({url:'/pages/setting/pages/exchange/main'})
+      wx.navigateTo({url:'/pages/member/pages/exchange/main'})
     },
     openVipMember(){
       // 续费会员
       this.isShowBuyMemberVip = true;
     },
-    closeBuyMemberVip(){
+    closeBuyMemberVip(type){
       console.log('closeBuyMemberVip');
       
       this.isShowBuyMemberVip = false;
-    }
+      if(type==1){
+        
+        this.get_user_info(this.token);
+      }
+    },
+    order_list(token){
+      let that = this;
+      that.postRequest('home/order/order_list',{token}).then(res=>{  
+          if(res.code===0){
+              that.list = res.data;
+          }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
+    get_user_info(token){
+      let that = this;
+      that.postRequest('home/user/get_user_info',{token}).then(res=>{  
+          if(res.code===0){
+              that.headInfo = res.data;
+          }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
   },
 
   created () {

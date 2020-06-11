@@ -1,15 +1,18 @@
 {
   "pages": [
     
-    "pages/index/index/main",
+    "pages/index/index/main",  
     "pages/guide/main",
-    
+  
     
     "pages/auth/main",
     "pages/agreement/main",
 
 
     "pages/message/message/main",
+
+    "pages/chat/main",
+
 
 
     "pages/heart/main",
@@ -26,7 +29,7 @@
   "tabBar": {
     "borderStyle":"black",
     "color":"#999999",
-    "selectedColor":"#595E6D",
+    "selectedColor":"#FD3B6D",
     
     "list": [
       {
@@ -65,10 +68,26 @@
     {
     "root": "pages/dynamic/pages/",
     "pages": [
-        "dynamicDetail/main",
-        "dynamicMessage/main",
-        "dynamicRelease/main"
+        "dynamicDetail/main"
       ]
+    }, 
+    {
+      "root": "pages/dynamicMessage/",
+      "pages": [
+          "dynamicMessage/main"
+        ]
+    },
+    {
+      "root": "pages/dynamicRelease/",
+      "pages": [
+          "dynamicRelease/main"
+        ]
+    },
+    {
+      "root": "pages/heartInfo/",
+      "pages": [
+          "heartInfo/main"
+        ]
     },
     {
       "root": "pages/index/pages/",
@@ -86,19 +105,33 @@
     {
       "root": "pages/setting/pages/",
       "pages": [
-          "exchange/main",
-          "idAuth/main",
           "member/main",
-          "recommend/main",
           "search/main"
+        ]
+    },
+    {
+      "root": "pages/member/pages/",
+      "pages": [
+          "exchange/main"
+        ]
+    },
+    {
+      "root": "pages/idAuth/pages/",
+      "pages": [
+          "idAuth/main"
         ]
     },
     {
       "root": "pages/basicInfo/pages/",
       "pages": [
-          "basicInfo/main",
-          "basicInfoDesc/main",
           "editInfo/main"
+        ]
+    },
+    {
+      "root": "pages/basicInfoA/pages/",
+      "pages": [
+          "basicInfo/main",
+          "basicInfoDesc/main"
         ]
     },
     {
