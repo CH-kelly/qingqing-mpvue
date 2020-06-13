@@ -207,7 +207,20 @@ export default {
   },
   methods: {
     superLike(){
-      this.isSuperLike = 1;
+       // 点击超级喜欢
+      this.isLogin = store.state.isLogin;
+      this.token = wx.getStorageSync('token');
+      this.userInfo = store.state.userInfo;
+      var that = this;
+      console.log('superLike')
+      if (this.token !='' && this.userInfo !='') {
+          
+          this.isSuperLike = 1;
+          
+      } else {
+        // 登录
+        this.isAuth = 1;
+      }
     },
     closeSuperLike(){
       this.isSuperLike = 0;
@@ -215,6 +228,10 @@ export default {
     SignInTemporarily() { //
       this.isAuth = 0;
       this.getrecommend_list();
+      let token =  wx.getStorageSync('token') || store.state.token ;
+      if(token){
+        this.get_user_info(token);
+      }
     },
     clickLove() {
       console.log("clickLove", k);
@@ -310,6 +327,7 @@ export default {
       this.token = wx.getStorageSync('token');
       this.userInfo = store.state.userInfo;
       var that = this;
+      console.log('clickButtonImage  ',key);
       
       if (this.userInfo || this.isLogin===1 || this.token!==null) {
           // 已登录

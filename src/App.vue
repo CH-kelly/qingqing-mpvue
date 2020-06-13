@@ -55,7 +55,7 @@ export default {
     },
     onShow(options) {
        this.appIMDelegate.onLaunch();
-        this.appIMDelegate.onShow(this.userInfo);
+       this.appIMDelegate.onShow();
         // this.globalData.appIMDelegate = this.appIMDelegate.getIMHandlerDelegate();
        
     },

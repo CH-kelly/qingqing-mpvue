@@ -21,18 +21,20 @@ export default class VoiceManager extends FileManager {
      */
     stopAllVoicePlay(isUpdateView = true) {
         let that = this._page;
-        if (this._page.data.isVoicePlaying) {
+        if (this._page.isVoicePlaying) {
             this._stopVoice();
             if (isUpdateView) {
-                that.data.chatItems.forEach(item => {
+                that.chatItems.forEach(item => {
                     if (IMOperator.VoiceType === item.type) {
                         item.isPlaying = false
                     }
                 });
-                that.setData({
-                    chatItems: that.data.chatItems,
-                    isVoicePlaying: false
-                })
+                that.chatItems = that.chatItems;
+                that.isVoicePlaying = false;
+                // that.setData({
+                //     chatItems: that.chatItems,
+                //     isVoicePlaying: false
+                // })
             }
         }
     }

@@ -12,6 +12,9 @@ export default class UI {
      */
     updateViewWhenReceive(msg) {
         this._page.chatItems.push(msg);
+        console.log('++++++++++++++++++++++++++++++++');
+        
+        console.log(this._page.chatItems);
         // this._page.setData({
         //     chatItems: this._page.data.chatItems.sort(UI._sortMsgListByTimestamp),
         //     scrollTopVal: this._page.data.chatItems.length * 999,
@@ -57,7 +60,7 @@ export default class UI {
         console.log('发送成功', sendMsg);
         let that = this._page;
         let item = that.chatItems[itemIndex];
-        item.timestamp = sendMsg.timestamp;
+        item['timestamp'] = sendMsg.timestamp;
         this.updateSendStatusView('success', itemIndex);
     }
 

@@ -16,11 +16,15 @@ export default class FileManager {
         const localFilePath = FileSaveManager.get(msg);
         if (!localFilePath) {
             try {
-                const {tempFilePath} =  downloadFile({url});
-                const {savedFilePath} =  FileSaveManager.saveFileRule({tempFilePath});
-                msg.content = savedFilePath;
-                this._page.UI && this._page.UI.updateViewWhenReceive(msg);
-                FileSaveManager.set(msg, savedFilePath);
+                downloadFile({url}).then(res=>{
+                    const {tempFilePath} =  res
+                    FileSaveManager.saveFileRule({tempFilePath}).then(res1=>{
+                        const {savedFilePath} =  res1;
+                        msg.content = savedFilePath;
+                        this._page.UI && this._page.UI.updateViewWhenReceive(msg);
+                        FileSaveManager.set(msg, savedFilePath);
+                    })
+                })
             } catch (e) {
                 console.warn('文件类型消息下载或存储失败，将使用网络url访问该文件', e);
                 this._page.UI && this._page.UI.updateViewWhenReceive(msg);
@@ -39,8 +43,10 @@ export default class FileManager {
      */
      sendOneMsg({type, content, duration}) {
         try {
-            const {savedFilePath} =  FileSaveManager.saveFileRule({tempFilePath: content});
-             this._sendFileMsg({content: savedFilePath, duration, type});
+            FileSaveManager.saveFileRule({tempFilePath: content}).then(res=>{
+                const {savedFilePath} =  res
+                this._sendFileMsg({content: savedFilePath, duration, type});
+            })
         } catch (e) {
              this._sendFileMsg({content, type, duration});
         }
@@ -53,12 +59,15 @@ export default class FileManager {
     }
 
      uploadFileAndSend({content, duration, type, itemIndex}) {
-        const {url} =  this._page.simulateUploadFile({savedFilePath: content, duration, itemIndex});
-        const {msg} =  this._page.sendMsg({
-            content: this._page.imOperator.createChatItemContent({type, content: url, duration}),
-            itemIndex,
-        });
-        FileSaveManager.set(msg, content);
+        this._page.simulateUploadFile({savedFilePath: content, duration, itemIndex}).then(res=>{
+            const {url} =  res
+            const {msg} =  this._page.sendMsg({
+                content: this._page.imOperator.createChatItemContent({type, content: url, duration}),
+                itemIndex,
+            });
+            FileSaveManager.set(msg, content);
+        })
+        
     }
 
     resend({}) {

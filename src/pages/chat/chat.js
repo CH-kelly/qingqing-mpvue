@@ -159,9 +159,11 @@ Page({
 
     sendMsg({content, itemIndex}) {
         try {
-            const {msg} = this.imOperator.onSimulateSendMsg({content})
-            this.UI.updateViewWhenSendSuccess(msg, itemIndex);
-            return {msg};
+            this.imOperator.onSimulateSendMsg({content}).then(res=>{
+                const {msg} = res;
+                this.UI.updateViewWhenSendSuccess(msg, itemIndex);
+                return {msg};
+            })
         } catch (e) {
             console.error(e);
             this.UI.updateViewWhenSendFailed(itemIndex);

@@ -25,11 +25,12 @@ export default class IIMHandler {
      * @param content 需要发送的消息，是一个对象，如{type:'text',content:'abc'}
      */
     sendMsg({content}) {
+        var that = this;
         return new Promise((resolve, reject) => {
-            if (this._isLogin) {
-                return this._sendMsgImp({content, success: resolve, fail: reject});
+            if (that._isLogin) {
+                return that._sendMsgImp({content, success: resolve, fail: reject});
             } else {
-                this._msgQueue.push({content, resolve, reject});
+                that._msgQueue.push({content, resolve, reject});
             }
         });
     }

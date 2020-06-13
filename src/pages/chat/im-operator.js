@@ -41,13 +41,15 @@ export default class IMOperator {
                     return;
                 }
                 msg.isMy = msg.msgUserId === getApp().globalData.userInfo.userId;
-                const item = this.createNormalChatItem(msg);
-                console.log(item)
-                // const item = this.createNormalChatItem({type: 'voice', content: '上传文件返回的语音文件路径', isMy: false});
-                // const item = this.createNormalChatItem({type: 'image', content: '上传文件返回的图片文件路径', isMy: false});
-                this._latestTImestamp = item.timestamp;
-                //这里是收到好友消息的回调函数，建议传入的item是 由 createNormalChatItem 方法生成的。
-                cbOk && cbOk(item);
+                this.createNormalChatItem(msg).then(res=>{
+                    const item =  res;
+                    console.log(item)
+                    // const item = this.createNormalChatItem({type: 'voice', content: '上传文件返回的语音文件路径', isMy: false});
+                    // const item = this.createNormalChatItem({type: 'image', content: '上传文件返回的图片文件路径', isMy: false});
+                    this._latestTImestamp = item.timestamp;
+                    //这里是收到好友消息的回调函数，建议传入的item是 由 createNormalChatItem 方法生成的。
+                    cbOk && cbOk(item);
+                })
             }
         });
 
@@ -56,14 +58,22 @@ export default class IMOperator {
     onSimulateSendMsg({content}) {
         //这里content即为要发送的数据
         //这里的content是一个对象了，不再是一个JSON格式的字符串。这样可以在发送消息的底层统一处理。
+        var that = this;
         try {
             // this.appIMDelegate.getIMHandlerDelegate()
             // const {content: contentSendSuccess} = getApp().getIMHandler().sendMsg({content});
-            const {content: contentSendSuccess} = this.appIMDelegate.sendMsg({content});
-            //这个contentSendSuccess格式一样,也是一个对象
-            const msg = this.createNormalChatItem(contentSendSuccess);
-            this._latestTImestamp = msg.timestamp;
-            return Promise.resolve({msg});
+            that.appIMDelegate.sendMsg({content}).then(res=>{
+                const {content: contentSendSuccess} = res;
+
+                //这个contentSendSuccess格式一样,也是一个对象
+                that.createNormalChatItem(contentSendSuccess).then(res=>{
+                    const msg =  res;
+                    that._latestTImestamp = msg.timestamp;
+
+                    return Promise.resolve({msg});
+                })
+            })
+            return Promise.reject({});
         } catch (e) {
             return Promise.reject(e);
         }
@@ -82,9 +92,10 @@ export default class IMOperator {
     }
 
     createNormalChatItem({type = IMOperator.TextType, content = '', isMy = true, duration} = {}) {
-        if (!content) return;
+        if (!content) return Promise.reject(obj);
+        
+        // return obj;
         const currentTimestamp = Date.now();
-        console.log(isMy,type,content)
         const time = dealChatTime(currentTimestamp, this._latestTImestamp);
         let obj = {
             msgId: 0,//消息id
@@ -103,7 +114,7 @@ export default class IMOperator {
         if (type !== IMOperator.TextType) {
             obj.saveKey = content;//saveKey是存储文件时的key
         }
-        return obj;
+        return Promise.resolve(obj)
     }
 
     static createCustomChatItem() {

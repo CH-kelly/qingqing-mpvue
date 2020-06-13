@@ -8,7 +8,9 @@
         <div class="news_msg_content">
           <div class="msg_personnel">
             <div class="nickname">{{item.friendName}}</div>
-            <div class="msg_content">{{item.content}}</div>
+            <div class="msg_content"  v-if="item.type==='text'">{{item.content}}</div>
+            <div class="msg_content"  v-if="item.type==='image'">[图片]</div>
+            <div class="msg_content"  v-if="item.type==='voice'">[语音]</div>
           </div>
           <div class="msg_send_time">{{item.timeStr}}</div>
         </div>

@@ -20,7 +20,7 @@ export default class AppIMDelegate {
 
     onShow() {
       
-        let userInfo = store.state.userInfo || wx.getStorageSync('userInfo');
+        let userInfo =  wx.getStorageSync('userInfo') || store.state.userInfo ;
         let user = {},data={};
         if(userInfo){
             user = JSON.parse(userInfo);

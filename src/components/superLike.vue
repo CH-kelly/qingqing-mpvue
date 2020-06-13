@@ -30,13 +30,17 @@
         </div>
       </div>
       <div class="super-flex">
-        <div class="to-button">购买超级喜欢</div>
+        <div class="to-button" v-if="super_like_num<0" @click="gotoBuy">购买超级喜欢</div>
+        <div class="to-button" v-if="super_like_num>0" @click="sendMsgToSuperLike">发送消息</div>
       </div>
       <div class="to-button-desc">你还剩余{{super_like_num}}个超级喜欢</div>
     </div>
   </div>
 </template>
 <script>
+
+import store from '@/store'
+
 export default {
   props:{
     super_like_num:{type:Number,default:0},
@@ -45,13 +49,59 @@ export default {
   data() {
     return {
       num:0,
+      content:'',
     };
   },
   methods: {
       close(){
           this.$emit('close');
       },
+      //发送消息并添加好友
+      sendMsgToSuperLike(){
+        
+        let that = this;
+        let userInfo =  wx.getStorageSync('userInfo') || store.state.userInfo;
+        let token = wx.getStorageSync('token') || store.state.token ;
+        if(userInfo && token){
+            let user = JSON.parse(userInfo);
+            let openid = user.openid;
+            // let friend =  that.currentUser.openid; 
+            let friend =  123123; 
+            let target_uid =  that.currentUser.uid; 
+            let content = that.content;
+            if(!content){
+              wx.showToast({
+                  title: '内容不能为空',
+                  icon: 'none',
+                  duration: 2000
+                })
+                return 
+            }
+
+          that.postRequest("/home/like/dec_super_like_num",{token,target_uid:target_uid}).then(res=>{
+                  
+              if(res.code===0){
+                  // 发送添加好友
+                  that.appIMDelegate.getIMHandlerDelegate()._add_friends(friend,openid,content);
+                  wx.showToast({
+                    title: '发送成功',
+                    icon: 'success',
+                    duration: 2000
+                  })
+                  setTimeout(() => {
+                      that.$emit('close');
+                  }, 2000);
+              }
+          },err=>{
+            
+            console.log(err);
+            
+          })
+
+        }
+      },
       textareaInput(e){
+        this.content = e.mp.detail.value;
         this.num = this.num+1;
       }
   }
@@ -147,7 +197,7 @@ export default {
 .index-center-textarea {
   padding: 20rpx;
   width: 100%;
-  height: 300rpx;
+  height: 200rpx;
   font-size: 28rpx;
   font-family: PingFang SC;
   font-weight: 500;

@@ -1,8 +1,9 @@
 {
   "pages": [
     
-    "pages/index/index/main",  
     "pages/guide/main",
+    
+    "pages/index/index/main",  
   
     
     "pages/auth/main",

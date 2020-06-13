@@ -92,17 +92,6 @@ export default {
     // bottomNavBar,
     chatList
   },
-  mounted(option){
-    //  this.systemHeight = wx.getStorageSync('systemHeight');
-     console.log('systemHeight',store.state.systemHeight);
-     this.systemHeight = store.state.systemHeight;
-      this.contentHeight = store.state.contentHeight;
-
-
-
-      // 连接文本
-     
-  },
 
   methods: {
     getConversationsItem(item) {
@@ -114,11 +103,14 @@ export default {
 
   },
   created () {
-    console.log('created')
     let app = getApp()
-    console.log(app);
   },
-  onShow() {
+  mounted() {
+    
+     console.log('systemHeight',store.state.systemHeight);
+     this.systemHeight = store.state.systemHeight;
+     this.contentHeight = store.state.contentHeight;
+
       var that = this;
       this.appIMDelegate.getIMHandlerDelegate().setOnReceiveMessageListener({
           listener: (msg) => {
@@ -136,6 +128,9 @@ export default {
           console.log('获取会话列表消息发送成功');
       } catch (e) {
           console.log('获取会话列表失败', e);
+          
+          this.appIMDelegate.onLaunch();
+          this.appIMDelegate.onShow();
       }
 
 

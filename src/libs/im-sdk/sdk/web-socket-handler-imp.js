@@ -6,6 +6,8 @@ import IIMHandler from "../interface/i-im-handler";
 import AppIMDelegate from "../../../delegate/app-im-delegate";
 let option_data
 let interval
+
+let superContent = '';
 export default class WebSocketHandlerImp extends IIMHandler {
     constructor() {
         super();
@@ -85,41 +87,51 @@ export default class WebSocketHandlerImp extends IIMHandler {
             
             // wx.hideLoading()
             clearInterval(this.interval)
-
-      
-            let userInfo = store.state.userInfo || wx.getStorageSync('userInfo');
-            let user = {};
-            if(userInfo){
-                user = JSON.parse(userInfo);
-                
-                let login_data = {
-                    type:'getinfo',
-                    userinfo:{
-                        openid:user.openid || '',
-                        username:user.nickName || '' ,
-                        key:'project-6bbf9ac94a7e4595' ,
-                        headimg:user.avatarUrl || '' ,
-                    }
-                };
-                
-                wx.sendSocketMessage({
-                    data:JSON.stringify(login_data)
-                });
-                
-                // 添加好友
-                let login_data1 = {
-                    type:'add_friends',
-                    project_key:'project-6bbf9ac94a7e4595' ,
-                    userid:user.openid,
-                    friend:'123123' //好友的openid
-                };
-                
-                wx.sendSocketMessage({
-                    data:JSON.stringify(login_data1)
-                });
-            }
+            this._get_info();
             
         });
+    }
+    // 获取用户信息
+    _get_info(){
+
+        let userInfo = wx.getStorageSync('userInfo') || store.state.userInfo ;
+        let user = {};
+        if(userInfo){
+            user = JSON.parse(userInfo);
+            
+            let login_data = {
+                type:'getinfo',
+                userinfo:{
+                    openid:user.openid || '',
+                    username:user.nickName || '' ,
+                    key:'project-6bbf9ac94a7e4595' ,
+                    headimg:user.avatarUrl || '' ,
+                }
+            };
+            
+            wx.sendSocketMessage({
+                data:JSON.stringify(login_data)
+            });
+            
+            this._add_friends();
+        }
+    }
+    // 添加好友
+    _add_friends(friend = '',openid="",content){
+        if(friend != '' && openid != ''){
+            // 添加好友
+            let login_data1 = {
+                type:'add_friends',
+                project_key:'project-6bbf9ac94a7e4595' ,
+                userid:openid, //自己的openID
+                friend:friend //好友的openid
+            };
+            superContent = content;
+            wx.sendSocketMessage({
+                data:JSON.stringify(login_data1)
+            });
+        }
+       
     }
 
     /**
@@ -138,8 +150,6 @@ export default class WebSocketHandlerImp extends IIMHandler {
                 getApp().globalData.userInfo = msg.userInfo;
                 getApp().globalData.friendsId = msg.friendsId;
                 
-                
-                
                 if (this._msgQueue.length) {
                     let temp;
                     while (this._isLogin && !!(temp = this._msgQueue.shift())) {
@@ -150,6 +160,19 @@ export default class WebSocketHandlerImp extends IIMHandler {
                         });
                     }
                 }
+            } else if('add_friends' == msg.type){
+                let friendId = msg.userInfo.friendId
+                console.log('getApp()    ',friendId,getApp().globalData.userInfo.userId,superContent)
+                wx.sendSocketMessage({
+                    data:JSON.stringify({
+                        content: superContent,
+                        conversationId: 0,
+                        friendId: friendId,
+                        type: "text",
+                        userId: getApp().globalData.userInfo.userId,
+                    })
+                });
+
             } else {
                 this._receiveListener && this._receiveListener(msg);
             }

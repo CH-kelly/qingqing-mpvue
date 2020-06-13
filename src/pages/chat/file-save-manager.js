@@ -26,6 +26,7 @@ export default class FileSaveManager {
     }
 
     static saveFileRule({tempFilePath}) {
+        console.log('tempFilePath     ',tempFilePath)
         return new Promise((resolve, reject) => {
             wx.getFileInfo({
                 filePath: tempFilePath,
@@ -39,7 +40,7 @@ export default class FileSaveManager {
                     wx.getSavedFileList({
                         success: savedFileInfo => {
                             let {fileList} = savedFileInfo;
-                            console.log('文件列表', fileList);
+                            console.log('文件列表11      ', fileList);
                             if (!fileList) {
                                 reject({errMsg:'获取到的fileList为空，请检查你的wx.getSavedFileList()函数的success返回值'});
                                 return;

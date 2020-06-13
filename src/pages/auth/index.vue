@@ -128,8 +128,7 @@ export default {
                 store.state.token = res.data.token
                 
                 userInfo.openid = openid;
-                console.log('userInfo------------');
-                console.log(userInfo);
+                console.log('userInfo------------',userInfo);
 
                 wx.setStorageSync('userInfo', JSON.stringify(userInfo)); //保存用户信息
                 wx.setStorageSync('token', res.data.token); //保存用户登录的token信息
@@ -137,6 +136,12 @@ export default {
                 self.$emit('SignInTemporarily',res.data.token)  //弹框隐藏,并发送事件通知父组件
                 store.commit('setisLogin',1)
                 store.commit('setUserInfo',userInfo)
+
+                console.log('----------------')
+                console.log(this.appIMDelegate);
+                
+                this.appIMDelegate.onLaunch();
+                this.appIMDelegate.onShow();
               
               }
             }).catch(res=>{
