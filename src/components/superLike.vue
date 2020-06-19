@@ -56,6 +56,11 @@ export default {
       close(){
           this.$emit('close');
       },
+      gotoBuy(){
+        wx.navigateTo({
+          url: 'pages/setting/pages/member/main',
+        })
+      },
       //发送消息并添加好友
       sendMsgToSuperLike(){
         
@@ -65,8 +70,8 @@ export default {
         if(userInfo && token){
             let user = JSON.parse(userInfo);
             let openid = user.openid;
-            // let friend =  that.currentUser.openid; 
-            let friend =  123123; 
+            let friend =  that.currentUser.openid || 123123; 
+            // let friend =  123123; 
             let target_uid =  that.currentUser.uid; 
             let content = that.content;
             if(!content){

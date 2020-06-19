@@ -6,31 +6,31 @@
     </div>
     <div class="center-upload-center">
       <div class="center-upload-left center-upload-border" @click="uploadImage(0)">
-        <img v-if="images[0] !==1" :src="images[0]" alt />
+        <img v-if="images[0] !=1" :src="images[0]" alt />
         <img v-else  src="/static/images/new/upload-background.png" alt />
       </div>
       <div class="center-upload-right">
         <div class="center-upload-right1  center-upload-border1"  @click="uploadImage(1)">
-        <img v-if="images[1] !==1" :src="images[1]" alt />
+        <img v-if="images[1] !=1" :src="images[1]" alt />
           <img v-else src="/static/images/new/upload-background.png" alt />
         </div>
         <div class="center-upload-right1  center-upload-border1"  @click="uploadImage(2)">
-        <img v-if="images[2] !==1" :src="images[2]" alt />
+        <img v-if="images[2] !=1" :src="images[2]" alt />
           <img v-else src="/static/images/new/upload-background.png" alt />
         </div>
       </div>
     </div>
     <div class="center-upload-bottom">
       <div class="center-upload-bottom-image  center-upload-border1"  @click="uploadImage(3)">
-        <img v-if="images[3] !==1" :src="images[3]" alt />
+        <img v-if="images[3] !=1" :src="images[3]" alt />
           <img  v-else src="/static/images/new/upload-background.png" alt />
       </div>
       <div class="center-upload-bottom-image  center-upload-border1"  @click="uploadImage(4)">
-        <img v-if="images[4] !==1" :src="images[4]" alt />
+        <img v-if="images[4] !=1" :src="images[4]" alt />
           <img  v-else  src="/static/images/new/upload-background.png" alt />
       </div>
       <div class="center-upload-bottom-image  center-upload-border1"  @click="uploadImage(5)">
-        <img v-if="images[5] !==1" :src="images[5]" alt />
+        <img v-if="images[5] !=1" :src="images[5]" alt />
           <img  v-else  src="/static/images/new/upload-background.png" alt />
       </div>
     </div>

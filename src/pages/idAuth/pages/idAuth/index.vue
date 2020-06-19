@@ -63,7 +63,9 @@
               <div class="id-auth-input">
                 <div class="id-auth-input-left">身份证号码</div>
                 <div class="id-auth-input-right">
-                  <input type="text" placeholder="点击填写" placeholder-style="color:#999999;font-size:26rpx;direction: rtl;" :value="certInfo.id_card_no"   @input="input2"/>
+                  <input type="idcard" placeholder="点击填写"
+                  maxlength=20
+                   placeholder-style="color:#999999;font-size:26rpx;direction: rtl;" :value="certInfo.id_card_no"   @input="input2"/>
                 </div>
               </div>
             </div>
@@ -104,14 +106,14 @@
                       <div class="education-image">
                           <div style="width:48%">
                               <div class="education-image-left">
-                                <img v-if="image" :src="image" alt="">
-                                <img v-else src="/static/images/certificate.png" alt="">
+                                <img src="/static/images/certificate.png" alt="">
                               </div>
                               <div class="education-desc">毕业证书示例</div>
                           </div>
                           <div style="width:48%">
                               <div class="education-image-left image-upload" @click="uploadCer">
-                                  <img class="education-upload-icon" src="/static/images/camera.png" alt="">
+                                  <img v-if="image" :src="image" alt="">
+                                  <img v-else  class="education-upload-icon" src="/static/images/camera.png" alt="" style="width:80rpx;height:60rpx">
                                   <div class="left-title">上传毕业证原件</div>
                               </div>
                               <div class="education-desc"> 照片仅供青青校园审核使用</div>
@@ -270,12 +272,14 @@ export default {
       let that = this;
       that.postRequest('home/user/get_cert_info',{token}).then(res=>{  
         if(res.code===0){
-            that.certInfo = res.data; 
-            that.name = that.certInfo.name;
-            that.id_card_no = that.certInfo.id_card_no;
-            that.conpany = that.certInfo.conpany;
-            that.profession = that.certInfo.profession;
-            that.credential_id = that.certInfo.credential_id;
+            that.certInfo = res.data || {}; 
+            if(that.certInfo){
+              that.name = that.certInfo.name;
+              that.id_card_no = that.certInfo.id_card_no;
+              that.conpany = that.certInfo.conpany;
+              that.profession = that.certInfo.profession;
+              that.credential_id = that.certInfo.credential_id;
+            }
             
         }
       },err=>{
@@ -333,8 +337,16 @@ export default {
       }else{
         credential_id = this.certificateNo;
       }
-      if(!credential_id){
-        this.showMessage('请选择学历认证')
+      if(!credential_id && type == 1){
+        this.showMessage('请上传毕业证书')
+        return 
+      }
+      if(!credential_id && type == 2){
+        this.showMessage('请输入在线验证码')
+        return 
+      }
+      if(!credential_id && type == 3){
+        this.showMessage('请输入证书编号')
         return 
       }
       let data = {

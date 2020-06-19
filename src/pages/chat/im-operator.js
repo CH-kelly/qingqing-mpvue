@@ -43,7 +43,6 @@ export default class IMOperator {
                 msg.isMy = msg.msgUserId === getApp().globalData.userInfo.userId;
                 this.createNormalChatItem(msg).then(res=>{
                     const item =  res;
-                    console.log(item)
                     // const item = this.createNormalChatItem({type: 'voice', content: '上传文件返回的语音文件路径', isMy: false});
                     // const item = this.createNormalChatItem({type: 'image', content: '上传文件返回的图片文件路径', isMy: false});
                     this._latestTImestamp = item.timestamp;
@@ -62,16 +61,31 @@ export default class IMOperator {
         try {
             // this.appIMDelegate.getIMHandlerDelegate()
             // const {content: contentSendSuccess} = getApp().getIMHandler().sendMsg({content});
+
+            console.log('onSimulateSendMsg',content)
+            console.log(that.appIMDelegate);
+            console.log('[[[[[[[[[[[[[[[[[[[[[   ')
+
             that.appIMDelegate.sendMsg({content}).then(res=>{
                 const {content: contentSendSuccess} = res;
 
-                //这个contentSendSuccess格式一样,也是一个对象
-                that.createNormalChatItem(contentSendSuccess).then(res=>{
-                    const msg =  res;
-                    that._latestTImestamp = msg.timestamp;
+                
+                console.log(contentSendSuccess)
 
-                    return Promise.resolve({msg});
-                })
+                const msg = that.createNormalChatItem(contentSendSuccess);
+                that._latestTImestamp = msg.timestamp;
+                return Promise.resolve({msg});
+
+
+                //这个contentSendSuccess格式一样,也是一个对象
+                // that.createNormalChatItem(contentSendSuccess).then(res=>{
+                //     const msg =  res;
+                //     that._latestTImestamp = msg.timestamp;
+
+                //     return Promise.resolve({msg});
+                // })
+            },err=>{
+                console.log(err);
             })
             return Promise.reject({});
         } catch (e) {
@@ -114,7 +128,11 @@ export default class IMOperator {
         if (type !== IMOperator.TextType) {
             obj.saveKey = content;//saveKey是存储文件时的key
         }
-        return Promise.resolve(obj)
+
+        return obj;
+        // console.log(obj);
+
+        // return Promise.resolve(obj)
     }
 
     static createCustomChatItem() {

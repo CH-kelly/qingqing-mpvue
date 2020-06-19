@@ -85,14 +85,14 @@
         <img
           class="dialog-wrap-guide-like"
           v-if="lookAroundSex===3"
-          src="/static/images/popup/newbie_2.png"
+          src="/static/images/popup/old_1.png"
           alt
           @click="knowSex"
         />
         <img
           class="dialog-wrap-guide-nolike"
           v-if="lookAroundSex===4"
-          src="/static/images/popup/newbie_3.png"
+          src="/static/images/popup/old_2.png"
           alt
           @click="knowSex"
         />
@@ -257,21 +257,23 @@ export default {
             if(res.code===0){
                 // if(res.data.total_rec_num>0){
                 var userList = res.data.user_list;
+                console.log(userList);
                 if(userList.length !== 0){
                   that.user_list = userList;
                   that.currentUser = userList[0];
                   that.images = that.currentUser.photos;
+                  that.status = 0;
 
                 }else{
 
-                //    that.downTimerArray={
-                //       like: res.data.is_like_num, timer: res.data.count_down
-                //   }
+                   that.downTimerArray={
+                      like: res.data.is_like_num, timer: res.data.count_down
+                  }
 
-                //   that.status = 1;
+                  that.status = 1;
                   
                 }
-              
+                console.log(that.status,"   that.status-------")
             }
         },err=>{
           
@@ -325,7 +327,7 @@ export default {
       // 点击喜欢或不喜欢按钮   1不喜欢   2喜欢
       this.isLogin = store.state.isLogin;
       this.token = wx.getStorageSync('token');
-      this.userInfo = store.state.userInfo;
+      this.userInfo = this.userInfo || store.state.userInfo ;
       var that = this;
       console.log('clickButtonImage  ',key);
       
@@ -343,8 +345,21 @@ export default {
 
           if(that.token){
             that.postRequest(url,data).then(res=>{
-                if(res.code ===0){      
-                    that.getrecommend_list();     
+                if(res.code ===0){ 
+                    let result = res.data;
+                    console.log(result,that.userInfo.openid);
+                    if(result && result.openid){
+                        console.log("相互喜欢，可以开始聊天");
+                        // 如果相互喜欢，那么可以添加好友
+                        let openid = that.userInfo.openid;
+                        let friend =  result.openid || 123123; 
+                        let content = "相互喜欢，可以开始聊天"
+                        // 发送添加好友
+                        that.appIMDelegate.getIMHandlerDelegate()._add_friends(friend,openid,content);
+                    }
+
+
+                    that.getrecommend_list();   
                 }
             }).catch(res=>{
               wx.showToast(res)

@@ -222,6 +222,10 @@ export default {
         try {
             this.imOperator.onSimulateSendMsg({content}).then(res=>{
               const {msg} = res
+
+
+              console.log('///1111111///////',res)
+
               this.UI.updateViewWhenSendSuccess(msg, itemIndex);
               return {msg};
             })

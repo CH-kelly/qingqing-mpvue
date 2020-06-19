@@ -102,12 +102,15 @@ export default {
      this.contentHeight = height;
      
   },
-  onLoad() {
-  
+  onShow(){
+
     let token = store.state.token || wx.getStorageSync('token');
     this.token = token;
     this.get_user_info(token);
     this.get_cert_info(token);
+  },
+  onLoad() {
+  
 
   },
   methods: {
@@ -133,7 +136,7 @@ export default {
       let that = this;
       that.postRequest('home/user/get_cert_info',{token}).then(res=>{  
           if(res.code===0){
-              that.certInfo = res.data;
+              that.certInfo = res.data || {};
           }
         },err=>{
           console.log(err);

@@ -42,13 +42,19 @@ export default class UI {
     updateDataWhenStartSending(sendMsg, addToArr = true, needScroll = true) {
         this._page.chatInput.closeExtraView();
         sendMsg.sendStatus = 'sending';
+       
         addToArr && this._page.chatItems.push(sendMsg);
         let obj = {};
         obj['textMessage'] = '';
         obj['chatItems'] = this._page.chatItems;
         needScroll && (obj['scrollTopVal'] = this._page.chatItems.length * 999);
         // this._page.setData(obj);
-        this._page.obj = obj
+        this._page.obj = obj;
+
+        // thia._page.textMessage = '';
+        // thia._page.chatItems = this._page.chatItems;
+        // thia._page.scrollTopVal = this._page.chatItems.length * 999;
+        // console.log('scrollTopVal  ',thia._page.scrollTopVal);
     }
 
     /**

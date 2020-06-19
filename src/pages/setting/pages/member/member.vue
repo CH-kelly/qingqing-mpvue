@@ -74,7 +74,7 @@
             兑换会员
           </div>
           <div class="button-renewal-member" @click="openVipMember()">
-            续费会员
+            {{headInfo.is_vip === 0 ? '续费':'购买'}}会员
           </div>
       </div>
 

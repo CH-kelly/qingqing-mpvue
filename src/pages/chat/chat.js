@@ -161,6 +161,9 @@ Page({
         try {
             this.imOperator.onSimulateSendMsg({content}).then(res=>{
                 const {msg} = res;
+
+                console.log('////////////////////////////',res)
+
                 this.UI.updateViewWhenSendSuccess(msg, itemIndex);
                 return {msg};
             })

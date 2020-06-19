@@ -35,29 +35,29 @@
     "list": [
       {
       "pagePath": "pages/index/index/main",
-      "iconPath":"/static/images/new/index.png",
-      "selectedIconPath":"/static/images/new/index_active.png",
+      "iconPath":"/static/images/new/index.jpg",
+      "selectedIconPath":"/static/images/new/index_active.jpg",
       "text": "首页"
     },{
-      "pagePath": "pages/message/message/main",
-      "iconPath":"/static/images/new/message.png",
-      "selectedIconPath":"/static/images/new/message_active.png",
-      "text": "消息"
-    },{
-      "pagePath": "pages/heart/main",
-      "iconPath":"/static/images/new/heart.png",
-      "selectedIconPath":"/static/images/new/heart_active.png",
-      "text": "中意人"
-    },{
       "pagePath": "pages/dynamic/dynamic/main",
-      "iconPath":"/static/images/new/dynamic.png",
-      "selectedIconPath":"/static/images/new/dynamic_active.png",
+      "iconPath":"/static/images/new/dynamic.jpg",
+      "selectedIconPath":"/static/images/new/dynamic_active.jpg",
       "text": "动态"
     },{
+      "pagePath": "pages/heart/main",
+      "iconPath":"/static/images/new/heart.jpg",
+      "selectedIconPath":"/static/images/new/heart_active.jpg",
+      "text": "中意人"
+    },{
+      "pagePath": "pages/message/message/main",
+      "iconPath":"/static/images/new/message.jpg",
+      "selectedIconPath":"/static/images/new/message_active.jpg",
+      "text": "消息"
+    },{
       "pagePath": "pages/setting/setting/main",
-      "iconPath":"/static/images/new/setting.png",
-      "selectedIconPath":"/static/images/new/setting_active.png",
-      "text": "设置"
+      "iconPath":"/static/images/new/setting.jpg",
+      "selectedIconPath":"/static/images/new/setting_active.jpg",
+      "text": "我的"
     }
   ]
   },

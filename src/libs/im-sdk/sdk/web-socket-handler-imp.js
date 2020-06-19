@@ -108,6 +108,9 @@ export default class WebSocketHandlerImp extends IIMHandler {
                     headimg:user.avatarUrl || '' ,
                 }
             };
+            console.log('login_data---');
+            
+            console.log(login_data)
             
             wx.sendSocketMessage({
                 data:JSON.stringify(login_data)
@@ -118,6 +121,8 @@ export default class WebSocketHandlerImp extends IIMHandler {
     }
     // 添加好友
     _add_friends(friend = '',openid="",content){
+        console.log('friend-----    ',friend,openid,content);
+        
         if(friend != '' && openid != ''){
             // 添加好友
             let login_data1 = {
@@ -160,22 +165,28 @@ export default class WebSocketHandlerImp extends IIMHandler {
                         });
                     }
                 }
-            } else if('add_friends' == msg.type){
-                let friendId = msg.userInfo.friendId
-                console.log('getApp()    ',friendId,getApp().globalData.userInfo.userId,superContent)
-                wx.sendSocketMessage({
-                    data:JSON.stringify({
-                        content: superContent,
-                        conversationId: 0,
-                        friendId: friendId,
-                        type: "text",
-                        userId: getApp().globalData.userInfo.userId,
-                    })
-                });
+            }  else {
 
-            } else {
-                this._receiveListener && this._receiveListener(msg);
+                if('add_friends' == msg.type){
+                    let friendId = msg.userInfo.friendId
+                    console.log('getApp()    ',friendId,getApp().globalData.userInfo.userId,superContent)
+                    wx.sendSocketMessage({
+                        data:JSON.stringify({
+                            content: superContent,
+                            conversationId: 0,
+                            friendId: friendId,
+                            type: "text",
+                            userId: getApp().globalData.userInfo.userId,
+                        })
+                    });
+    
+                }else{
+
+                    this._receiveListener && this._receiveListener(msg);
+                }
+
             }
+            
         })
     }
 

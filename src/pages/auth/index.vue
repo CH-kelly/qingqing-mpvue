@@ -28,10 +28,10 @@
         </div>
         <div class="reminder-button">
           <div class="reminder-button-left" @click="disagree">不同意</div>
-          <button class="reminder-button-left" open-type="getUserInfo" 
-          @getuserinfo="bindGetUserInfo" 
-          style="background: rgba(27,233,201,1);border: none;"
-          >同意</button>
+          
+          <div >
+              <button class="reminder-button-left" open-type="getUserInfo"  @getuserinfo="bindGetUserInfo"  style="background: rgba(27,233,201,1);border: none;" >同意</button>
+          </div>
 
           <!-- <div
             class="reminder-button-left"
@@ -308,7 +308,7 @@ export default {
 .reminder-button {
   margin-bottom: 32rpx;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 .reminder-button-left {
@@ -318,5 +318,6 @@ export default {
   text-align: center;
   border-radius: 45rpx;
   border: 2rpx solid rgba(238, 238, 238, 1);
+  padding: 0;
 }
 </style>

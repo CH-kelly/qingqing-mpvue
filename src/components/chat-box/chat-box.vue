@@ -2,7 +2,7 @@
     <div>
         <div>
 
-            <view class="input-flex-column" >
+            <view class="input-flex-column" :style="{'bottom':inputBottom+'px'}" >
                 <view class="input-text-voice-super">
                     <image 
                         :src="inputStatus==='voice'?'/static/image/chat/voice/keyboard.png':'/static/image/chat/voice/voice.png'"
@@ -29,8 +29,11 @@
                             </view>
                     </block>
                     
-                    <input v-if="inputStatus==='text'"
-                        class="chat-input-style" :style="{'margin-left':showVoicePart?0:16+'rpx;'}"
+                    <input 
+                    id="input"
+                    :adjustPosition="false"
+                    v-if="inputStatus==='text'"
+                        class="chat-input-style" :style="{'margin-left':showVoicePart?0:16+'rpx'}"
                         maxlength="500" confirm-type="send" :value="textMessage" @confirm="_chatInput$send$text$message" @focus="_chatInput$bind$focus$event" @blur="_chatInput$bind$blur$event" @input="_chatInput$getValue$event"/>
                     <view hover-class="press-style-opacity">
                         <div v-if="inputType=='text'" class="chat-input-send-button-style" @click="_chatInput$send$text$message02">发送</div>
@@ -148,6 +151,8 @@ export default {
             inputValueEventTemp: '',
             inputType:'',
             recorderManager:'',
+
+            inputBottom:0,
         }
     },
     computed: {
@@ -186,6 +191,7 @@ export default {
             this._startTimeDown = startTimeDown && startTimeDown < data.maxVoiceTime && startTimeDown > 0 ? startTimeDown : START_TIME_DOWN;
         }
     },
+
     methods: {
         getRecordStatus() {
             return {...status};
@@ -198,6 +204,14 @@ export default {
             this.extraObj['chatInputShowExtra'] = isShow;
             this.$emit(EVENT.EXTRA_CLICK, {isShow}, {});
             
+            if(isShow == true){
+
+                this.inputBottom = 100;
+            }else{
+                
+                this.inputBottom = 0;
+            }
+            
             // this.setData({
             //     'extraObj.chatInputShowExtra': isShow
             // }, () => {
@@ -207,6 +221,8 @@ export default {
         _change$input$way$event() {
             this.inputStatus = this.inputStatus === 'text' ? 'voice' : 'text';
             this.extraObj['chatInputShowExtra'] = false
+
+            this.inputBottom = 0;
             // this.setData({
             //     'inputStatus': this.data.inputStatus === 'text' ? 'voice' : 'text',
             //     'extraObj.chatInputShowExtra': false
@@ -409,13 +425,17 @@ export default {
             //     this.recorderManager.stop();
             // });
         },
-        _chatInput$bind$focus$event() {
-            console.log("获取焦点")
+        _chatInput$bind$focus$event(e) {
+            console.log("键盘聚焦")
             this.inputType = 'text'
             console.log(this.inputType);
-            // this.setData({
-            //     'inputType': 'text'
-            // })
+            console.log(e);
+            if(e.mp.detail.height == 0){
+                return//在开发者工具上便于调试，不会造成input框上推
+            }
+            if (e.mp.detail.height) {
+                this.inputBottom = e.mp.detail.height
+            }
         },
         _chatInput$send$text$message(e) {
             this.textMessage = '';
@@ -439,11 +459,18 @@ export default {
             // obj['extraObj.chatInputShowExtra'] = false;
             this.extraObj['chatInputShowExtra'] = false;
 
+
+            this.inputTop = 82;
+            this.scrollHeight = 81;
+            this.inputBottom = 0
+            // this.toView =  "view" + String(this.array.length-1)
+
         },
         _chatInput$send$text$message02() {
             this.textMessage = '';
             this.inputType = 'none'
             if (!!this.inputValueEventTemp) {
+                console.log('发送消息-----    ',this.inputValueEventTemp);
                 this.$emit(EVENT.SEND_MESSAGE, {value: this.inputValueEventTemp});
                 this.inputValueEventTemp = '';
             }
@@ -558,12 +585,15 @@ input{
     height:100rpx;
 }
 .input-flex-column{
+    box-sizing: border-box;
+    height: 50px;
     width:100%;
     display: flex;
     flex-direction:column;
     position: fixed;
     left: 0;
     bottom: 0;
+    border-top: 1px solid #f2f2f2;
 }
 
 .list-divide-line {
@@ -606,6 +636,7 @@ input{
 .extra-super{
     display: flex;
     padding-top: 25rpx;
+    padding-bottom: 25rpx;
     height: 234rpx;
     width: 100%;
     background-color: white

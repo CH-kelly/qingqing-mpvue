@@ -236,6 +236,7 @@ export default {
         try {
             this.imOperator.onSimulateSendMsg({content}).then(res=>{
               const {msg} = res
+              
               this.UI.updateViewWhenSendSuccess(msg, itemIndex);
               return {msg};
             })

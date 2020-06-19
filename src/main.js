@@ -6,6 +6,7 @@ import { getRequest, postRequest,uploadPhoto } from "./utils/request"
 
 import AppIMDelegate from "./delegate/app-im-delegate";
 
+
 Vue.config.productionTip = false
 App.mpType = 'app'
 

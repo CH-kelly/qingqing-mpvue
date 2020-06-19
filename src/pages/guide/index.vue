@@ -50,10 +50,9 @@
         
         <div class="reminder-button">
           <div class="reminder-button-left" @click="disagree">不同意</div>
-          <button class="reminder-button-left" open-type="getUserInfo" 
-          @getuserinfo="bindGetUserInfo" 
-          style="background: rgba(27,233,201,1);border: none;"
-          >同意</button>
+          <div >
+              <button class="reminder-button-left" style="background: rgba(27,233,201,1);border: none;" open-type="getUserInfo"  @getuserinfo="bindGetUserInfo" >同意</button>
+          </div>
         </div>
       </div>
     </div>
@@ -177,17 +176,25 @@ export default {
                   icon: 'success',
                   duration: 2000
                 })
-              if(res.code ===0){                
+              if(res.code ===0){   
+                let openid = res.data.openID;             
                 this.showModel = 0;
                 
                 store.state.is_new_user = res.data.is_new_user
                 store.state.token = res.data.token
+                
+                userInfo.openid = openid;
                 
                 wx.setStorageSync('userInfo', JSON.stringify(userInfo)); //保存用户信息
                 wx.setStorageSync('token', res.data.token); //保存用户登录的token信息
 
                 store.commit('setisLogin',1)
                 store.commit('setUserInfo',userInfo)
+
+                console.log('----------------')
+                console.log(this.appIMDelegate);
+                this.appIMDelegate.onLaunch();
+                this.appIMDelegate.onShow();
 
 
                 if (this.isReadDialog == 2) {
@@ -395,5 +402,7 @@ export default {
   text-align: center;
   border-radius: 45rpx;
   border: 2rpx solid rgba(238, 238, 238, 1);
+  
+  padding: 0;
 }
 </style>

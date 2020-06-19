@@ -33,7 +33,7 @@ function postRequest(url,data){
                 'content-type': 'application/json' // 默认值
             },
             success(res) {
-                console.log(res.data)
+                // console.log(res.data)
                 if (res.statusCode === 200) {
                     resolve(res.data);
                 } else {

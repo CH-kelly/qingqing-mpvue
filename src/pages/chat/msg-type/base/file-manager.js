@@ -45,6 +45,7 @@ export default class FileManager {
         try {
             FileSaveManager.saveFileRule({tempFilePath: content}).then(res=>{
                 const {savedFilePath} =  res
+                console.log('sendOneMsg-------  ',res);
                 this._sendFileMsg({content: savedFilePath, duration, type});
             })
         } catch (e) {
@@ -53,9 +54,12 @@ export default class FileManager {
     }
 
      _sendFileMsg({content, duration, type}) {
-        const temp = this._page.imOperator.createNormalChatItem({type, content, duration});
-        const {itemIndex} =  this._page.UI.showItemForMoment(temp);
-         this.uploadFileAndSend({content, duration, itemIndex, type})
+        this._page.imOperator.createNormalChatItem({type, content, duration}).then(res=>{
+            const temp = res;
+            console.log('_sendFileMsg-------  ',res);
+            const {itemIndex} =  this._page.UI.showItemForMoment(temp);
+             this.uploadFileAndSend({content, duration, itemIndex, type})
+        })
     }
 
      uploadFileAndSend({content, duration, type, itemIndex}) {

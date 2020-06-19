@@ -105,7 +105,7 @@ export default {
   created () {
     let app = getApp()
   },
-  mounted() {
+  onShow() {
     
      console.log('systemHeight',store.state.systemHeight);
      this.systemHeight = store.state.systemHeight;
@@ -126,6 +126,10 @@ export default {
               }
           });
           console.log('获取会话列表消息发送成功');
+          console.log({
+                  type: 'get-conversations',
+                  userId: getApp().globalData.userInfo.userId
+              })
       } catch (e) {
           console.log('获取会话列表失败', e);
           
