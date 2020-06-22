@@ -2,6 +2,7 @@
   "pages": [
     
     "pages/guide/main",
+    "pages/navigation/main",
     
     "pages/index/index/main",  
   
@@ -30,7 +31,7 @@
   "tabBar": {
     "borderStyle":"black",
     "color":"#999999",
-    "selectedColor":"#FD3B6D",
+    "selectedColor":"#1ce9cb",
     
     "list": [
       {

@@ -310,12 +310,13 @@ export default {
   justify-content: center;
 }
 .index-center-next-button {
-  width: 70%;
+  width: 80%;
   height: 80rpx;
   line-height: 80rpx;
   text-align: center;
   
-  background:linear-gradient(0deg,rgba(219,128,100,1),rgba(253,59,109,1));
+  /* background:linear-gradient(0deg,rgba(219,128,100,1),rgba(253,59,109,1)); */
+  background:linear-gradient(0deg,#1ce9cb,#1ce9cb);
 box-shadow:0px 6px 18px 0px rgba(0, 0, 0, 0.15);
 
   box-shadow: 0px 6rpx 18rpx 0px rgba(0, 0, 0, 0.15);

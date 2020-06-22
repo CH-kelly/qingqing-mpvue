@@ -118,7 +118,7 @@ export default {
             windowHeight: 0,
             windowWidth: 0,
             cancelLineYPosition: 0,
-            _startTimeDown: START_TIME_DOWN,
+            _startTimeDown: 10,
             timer: -1,
             singleVoiceTimeCount: 0,
             textMessage: '',
@@ -153,6 +153,11 @@ export default {
             recorderManager:'',
 
             inputBottom:0,
+
+
+            videoPath:'',   //录音文件地址
+            videoDuration:0,    //录音文件秒数
+            videoTime:null, //录音倒计时
         }
     },
     computed: {
@@ -188,7 +193,7 @@ export default {
         },
         'startTimeDown'(startTimeDown) {
             // const data = this.data;
-            this._startTimeDown = startTimeDown && startTimeDown < data.maxVoiceTime && startTimeDown > 0 ? startTimeDown : START_TIME_DOWN;
+            this._startTimeDown = startTimeDown && startTimeDown < this.maxVoiceTime && startTimeDown > 0 ? startTimeDown : START_TIME_DOWN;
         }
     },
 
@@ -228,35 +233,59 @@ export default {
             //     'extraObj.chatInputShowExtra': false
             // });
         },
-        _triggerVoiceRecordEvent({status, dataset}) {
-            this.$emit(EVENT.VOICE_RECORD, {recordStatus: status, ...dataset}, {});
+        // _triggerVoiceRecordEvent({status, dataset}) {
+        //     this.$emit(EVENT.VOICE_RECORD, {recordStatus: status, ...dataset}, {});
+        // },
+        _triggerVoiceRecordEvent(videoPath,videoDuration) {
+            console.log('_triggerVoiceRecordEvent --- ',videoPath,videoDuration)
+            this.$emit(EVENT.VOICE_RECORD, videoPath,videoDuration);
         },
+       
         _long$click$voice$btn(e) {
-            console.log(e);
             var that = this;
+            console.log('_long$click$voice$btn     ',e);
             if ('send$voice$btn' === e.currentTarget.dataset.id) {//长按时需要打开录音功能，开始录音
-                that._checkRecordAuth(() => {
-                    const maxVoiceTime = that.maxVoiceTime, singleVoiceTimeCount = that.singleVoiceTimeCount;
+                this._checkRecordAuth(() => {
+                    const maxVoiceTime = this.maxVoiceTime;
+                    const singleVoiceTimeCount = this.singleVoiceTimeCount;
+
+                    
                     that.voiceObj['showCancelSendVoicePart'] = true;
                     that.voiceObj['timeDownNum'] = maxVoiceTime - singleVoiceTimeCount;
                     that.voiceObj['status'] = 'start';
                     that.voiceObj['startStatus'] = 1;
                     that.voiceObj['moveToCancel'] = false;
-                    console.log(that.voiceObj['showCancelSendVoicePart']);
-                    console.log(that.voiceObj);
-                    console.log('-------this.voiceObj--------------');
-                    
-                    that.recorderManager.start({duration: 60000, format: this.format});
 
-                            
-                        // 松开手指发送录音文件
-                        // console.log('松开手指发送录音文件')
-                        // that._triggerVoiceRecordEvent({status: status.START})
+                    console.log('///////////',that.voiceObj)
 
                     // setTimeout(() => {
-                    //     console.log('setTimeout',status.START);
-                    //     that._triggerVoiceRecordEvent({status: status.START})
-                    // }, 1000);
+                    //     console.log('status.START+',status.START)
+                    //     that._triggerVoiceRecordEvent({status: status.START});
+                    // }, 100);
+                    that.videoTime = setInterval(function() {
+                        that.videoDuration = that.videoDuration+1;
+                        console.log('videoDuration --------     ',that.videoDuration);
+                    }, 1000);
+
+                    wx.startRecord({
+                        success (res) {
+                            const tempFilePath = res.tempFilePath;
+                            console.log('---录音--',tempFilePath)
+                            
+                            // that.videoPath = tempFilePath;
+                            if(that.videoPath == 1){
+                                clearInterval(that.videoTime)
+                                that.videoTime = null   //录音倒计时为空
+                                console.log('---发送录音文件--',tempFilePath)
+                                that._triggerVoiceRecordEvent(tempFilePath,that.videoDuration)
+                            }
+                        }
+                    })
+                    // wx.getRecorderManager().start({duration: 60000, format: this.format});
+                    // that._dealVoiceLongClickEventWithHighVersion();
+                    // that.recorderManager.start({duration: 60000, format: this.data.format});
+
+
                     // this.setData({//调出取消弹窗
                     //     'voiceObj.showCancelSendVoicePart': true,
                     //     'voiceObj.timeDownNum': maxVoiceTime - singleVoiceTimeCount,
@@ -264,16 +293,18 @@ export default {
                     //     'voiceObj.startStatus': 1,
                     //     'voiceObj.moveToCancel': false
                     // }, () => {
+                    //     console.log('status.START+',status.START)
                     //     this._triggerVoiceRecordEvent({status: status.START});
                     // });
-                    
-                }, (res) => {
+                }, 
+                (res) => {
                     //录音失败
                     console.error('录音拒绝授权');
                     clearInterval(timer);
                     this._endRecord();
                     this.voiceObj['status'] = 'end';
                     this.voiceObj['showCancelSendVoicePart'] = false;
+
 
                     // this.setData({
                     //     'voiceObj.status': 'end',
@@ -290,7 +321,7 @@ export default {
                                 wx.openSetting({
                                     success: res => {
                                         if (res.authSetting['scope.record']) {
-                                            this.extraObj['chatInputShowExtra'] = false
+                                            that.extraObj['chatInputShowExtra'] = false
                                             // this.setData({
                                             //     'extraObj.chatInputShowExtra': false
                                             // });
@@ -298,8 +329,8 @@ export default {
                                     }
                                 });
                             } else {
-                                this.inputStatus = 'text';
-                                this.extraObj['chatInputShowExtra'] = false
+                                that.inputStatus = 'text'
+                                that.extraObj['chatInputShowExtra'] = false
                                 // this.setData({
                                 //     'inputStatus': 'text',
                                 //     'extraObj.chatInputShowExtra': false
@@ -311,16 +342,25 @@ export default {
             }
         },
         _dealVoiceLongClickEventWithHighVersion() {
-            this.recorderManager.onStart(() => {
+            console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq')
+            wx.getRecorderManager().onStart(() => {
                 this.singleVoiceTimeCount = 0;
-                const {_startTimeDown, maxVoiceTime} = this;
+                const _startTimeDown = this._startTimeDown;
+                const maxVoiceTime = this.maxVoiceTime;
+
+                console.log('监听录音：',_startTimeDown,maxVoiceTime)
+
+                // const {_startTimeDown, maxVoiceTime} = this;
                 //设置定时器计时60秒
                 this.timer = setInterval(() => {
                     const voiceTimeCount = ++this.singleVoiceTimeCount;
+                        console.log(voiceTimeCount,_startTimeDown,voiceTimeCount,maxVoiceTime);
                     if (voiceTimeCount >= _startTimeDown && voiceTimeCount < maxVoiceTime) {
                         this.voiceObj['timeDownNum'] = maxVoiceTime - voiceTimeCount;
                         this.voiceObj['status'] = 'timeDown';
+                        
 
+                        console.log(this.voiceObj);
                         // this.setData({
                         //     'voiceObj.timeDownNum': maxVoiceTime - voiceTimeCount,
                         //     'voiceObj.status': 'timeDown'
@@ -337,6 +377,7 @@ export default {
                 }, 1000);
             })
         },
+        // 移动手指表示取消录音
         _send$voice$move$event(e) {
             console.log('touchmove',);
             // e.currentTarget.dataset.id
@@ -346,6 +387,12 @@ export default {
                 if (y > cancelLineYPosition) {
                     if (!voiceObj.moveToCancel) {
                         this.voiceObj['moveToCancel'] = true;
+
+                        wx.stopRecord() // 结束录音
+                        this.videoPath = 0;//删除录音
+                        clearInterval(this.videoTime)
+                        this.videoTime = null   //清空倒计时
+
                         // this.setData({
                         //     'voiceObj.moveToCancel': true
                         // });
@@ -353,6 +400,12 @@ export default {
                 } else {
                     if (voiceObj.moveToCancel) {//如果移出了该区域
                         this.voiceObj['moveToCancel'] = false
+                        
+                        wx.stopRecord() // 结束录音
+                        this.videoPath = 1; //保存录音
+                        clearInterval(this.videoTime)
+                        this.videoTime = null   //清空倒计时
+                      
                         // this.setData({
                         //     'voiceObj.moveToCancel': false
                         // })
@@ -363,30 +416,56 @@ export default {
         },
         _send$voice$move$end$event(e) {
             console.log('touchend',e);
-            if ('send$voice$btn' === e.currentTarget.dataset.id) {
-                const singleVoiceTimeCount = this.singleVoiceTimeCount, minVoiceTime=this.minVoiceTime, timer=this.timer;
-                if (singleVoiceTimeCount < minVoiceTime) {//语音时间太短
-                    this.voiceObj['status'] = 'short';
-                
-                    // this.setData({
-                    //     'voiceObj.status': 'short'
-                    // });
-                    this._delayDismissCancelView();
-                } else {//语音时间正常
-                    this.voiceObj['showCancelSendVoicePart'] = false;
-                    this.voiceObj['status'] = 'end';
-                    
-                    console.log('松开手指发送录音文件')
-                    this._triggerVoiceRecordEvent({status: status.START})
+            wx.stopRecord() // 结束录音
+            this.videoPath = 1; //保存录音
+            clearInterval(this.videoTime)
+            this.videoTime = null   //清空倒计时
 
-                    // this.setData({
-                    //     'voiceObj.showCancelSendVoicePart': false,
-                    //     'voiceObj.status': 'end'
-                    // });
-                }
-                clearInterval(timer);
-                this._endRecord();
-            }
+
+
+            this.voiceObj['showCancelSendVoicePart'] = false;
+            this.voiceObj['status'] = 'end';
+            
+            // if ('send$voice$btn' === e.currentTarget.dataset.id) {
+                // const singleVoiceTimeCount = this.singleVoiceTimeCount, minVoiceTime=this.minVoiceTime, timer=this.timer;
+                // if (singleVoiceTimeCount < minVoiceTime) {//语音时间太短
+                //     this.voiceObj['status'] = 'short';
+                
+                //     // this.setData({
+                //     //     'voiceObj.status': 'short'
+                //     // });
+                //     this._delayDismissCancelView();
+                // } else {//语音时间正常
+                //     this.voiceObj['showCancelSendVoicePart'] = false;
+                //     this.voiceObj['status'] = 'end';
+                    
+                //     console.log('松开手指发送录音文件')
+                //     this._triggerVoiceRecordEvent({status: status.START})
+                    
+
+                //     // this.setData({
+                //     //     'voiceObj.showCancelSendVoicePart': false,
+                //     //     'voiceObj.status': 'end'
+                //     // });
+                // }
+                // if(this.voiceObj['moveToCancel'] = true){
+
+                //     this.voiceObj['showCancelSendVoicePart'] = false;
+                //     this.voiceObj['status'] = 'end';
+
+                //     console.log('松开手指发送录音文件')
+                    
+
+
+
+                // }else{
+                    
+                //     console.log('取消发送语音')
+                // }
+
+                // clearInterval(timer);
+                // this._endRecord();
+            // }
         },
         _initVoiceData() {
             // const {windowWidth, windowHeight} = this, width = windowWidth / 2.6;
@@ -417,7 +496,7 @@ export default {
 
         _endRecord() {
             this.voiceObj['startStatus'] = 0;
-            this.recorderManager.stop();
+            wx.getRecorderManager().stop();
 
             // this.setData({
             //     'voiceObj.startStatus': 0
@@ -494,12 +573,14 @@ export default {
             // })
         },
         _chatInput$extra$item$click$event(e) {
+            this.inputBottom = 0;
             const {currentTarget: {dataset}} = e.mp;
             this.$emit(EVENT.EXTRA_ITEM_CLICK, {...dataset}, {});
+
         },
 
         _setVoiceListener() {
-            this.recorderManager.onStop((res) => {
+            wx.getRecorderManager().onStop((res) => {
                 console.log(res, this.voiceObj.status);
                 if (this.voiceObj.status === 'short') {//录音时间太短或者移动到了取消录音区域， 则取消录音
                     this._triggerVoiceRecordEvent({status: status.SHORT});
@@ -511,7 +592,7 @@ export default {
                 console.log('录音成功');
                 this._triggerVoiceRecordEvent({status: status.SUCCESS, dataset: res});
             });
-            this.recorderManager.onError((res) => {
+            wx.getRecorderManager().onError((res) => {
                 this._triggerVoiceRecordEvent({status: status.FAIL, dataset: res});
             });
         },
@@ -537,8 +618,12 @@ export default {
             })
         }
     },
+
+    
     created() {
         this.recorderManager = wx.getRecorderManager();
+        console.log('------------------------------------')
+        console.log(this.recorderManager)
         const {windowHeight, windowWidth} = wx.getSystemInfoSync();
         if (!windowHeight || !windowWidth) {
             console.error('没有获取到手机的屏幕尺寸：windowWidth', windowWidth, 'windowHeight', windowHeight);
@@ -554,8 +639,9 @@ export default {
         this._initVoiceData();
     },
     detached() {
-        clearInterval(this.timer);
+        clearInterval(this.data.timer);
     }
+    
     // lifetimes: {
        
     // }

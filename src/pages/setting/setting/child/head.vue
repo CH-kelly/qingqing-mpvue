@@ -123,7 +123,7 @@ export default {
   left: -4px;
 }
 .head-right-title {
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-family: PingFang SC;
   font-weight: 500;
   color: rgba(0, 0, 0, 1);

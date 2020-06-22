@@ -13,7 +13,7 @@
       </div>
       <div class="lists-item-center">
         <div class="lists-item-center-content" v-if="item.content">{{item.content}}</div>
-        <div class="lists-item-center-image" v-if="item.photos">
+        <div class="lists-item-center-image" v-if="item.photos.length > 0">
           <img :src="s" alt v-for="(s,r) in item.photos" :key="r" />
         </div>
         <div class="comment-q">

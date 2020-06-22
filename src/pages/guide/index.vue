@@ -70,7 +70,10 @@ export default {
       contentHeight: 0,
       showModel: 0,
       code:"",
-      isReadDialog: 0
+      isReadDialog: 0,
+
+      banner:[],
+      isssetOn:0, 
     };
   },
 
@@ -96,11 +99,10 @@ export default {
         that.isReadDialog = res.data;
       }
     });
-    console.log('this.isReadDialog',this.isReadDialog);
 
   },
   onShow(options){
-    console.log('onShow options',options)
+    this.get_isssetOn();
   },
   mounted(option) {
     //  this.systemHeight = wx.getStorageSync('systemHeight');
@@ -111,6 +113,18 @@ export default {
     console.log("showModel", this.showModel);
   },
   methods: {
+    get_isssetOn(){
+      let that = this;
+      that.postRequest('/home/login/isssetOn').then(res=>{  
+          if(res.code===0){
+            that.isssetOn = (res.data.content == 1) ? 1 : 0;
+            that.banner = res.data.urls
+          }
+        },err=>{
+          console.log(err);
+          
+        })
+    },
     goUserAgreement() {
       wx.navigateTo({
         url: "/pages/agreement/main?agreement=1"
@@ -127,10 +141,19 @@ export default {
       console.log("随便看看");
       
       //判断用户是否第一次访问引导页  2已阅读引导页   1表示要去选择性别
-      if (this.isReadDialog == 2) {
+      if (this.isReadDialog == 2 && this.isssetOn == 0) {
         wx.switchTab({
           url: "/pages/index/index/main"
         });
+      } else if(this.isssetOn == 1){
+            let banner = '';
+            if(this.banner){
+              banner = JSON.stringify(this.banner);
+            }
+            //选择性别
+            wx.navigateTo({
+              url: "/pages/navigation/main?banner="+banner
+            });
       } else {
 
         //选择性别
@@ -178,7 +201,7 @@ export default {
                 })
               if(res.code ===0){   
                 let openid = res.data.openID;             
-                this.showModel = 0;
+                self.showModel = 0;
                 
                 store.state.is_new_user = res.data.is_new_user
                 store.state.token = res.data.token
@@ -191,25 +214,31 @@ export default {
                 store.commit('setisLogin',1)
                 store.commit('setUserInfo',userInfo)
 
-                console.log('----------------')
-                console.log(this.appIMDelegate);
-                this.appIMDelegate.onLaunch();
-                this.appIMDelegate.onShow();
+                console.log('----------------',self.appIMDelegate)
+                console.log();
+                self.appIMDelegate.onLaunch();
+                self.appIMDelegate.onShow();
 
 
-                if (this.isReadDialog == 2) {
-                    console.log('setTimeout isReadDialog ---',this.isReadDialog);
-                  wx.switchTab({
-                    url: "/pages/index/index/main"
-                  });
-                } else {
-                  //选择性别
-                  setTimeout(() => {
-                    console.log('setTimeout 3000 ---');
-                    wx.navigateTo({
-                      url: "/pages/index/pages/personalData/main"
+                if (self.isReadDialog == 2 && self.isssetOn == 0) {
+                    console.log('setTimeout isReadDialog ---',self.isReadDialog);
+                    wx.switchTab({
+                      url: "/pages/index/index/main"
                     });
-                  }, 3000);
+                } else if(self.isssetOn == 1){
+                    let banner = '';
+                    if(self.banner){
+                      banner = JSON.stringify(self.banner);
+                    }
+                    //选择性别
+                    wx.navigateTo({
+                      url: "/pages/navigation/main?banner="+banner
+                    });
+              } else {
+                  //选择性别
+                  wx.navigateTo({
+                    url: "/pages/index/pages/personalData/main"
+                  });
                 }
               
               }

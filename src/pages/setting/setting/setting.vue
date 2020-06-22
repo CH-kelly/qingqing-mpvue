@@ -92,8 +92,10 @@ export default {
     wx.getStorage({
       key: "userInfo",
       success(res) {
-        that.userInfo = JSON.parse(res.data);
-        that.headInfo = JSON.parse(res.data);
+        if(res.data){
+          that.userInfo = JSON.parse(res.data);
+          that.headInfo = JSON.parse(res.data);
+        }
       }
     });
     console.log("this.userInfo", this.userInfo);
@@ -146,18 +148,18 @@ export default {
     },
     // 点击授权按钮
     login(){
-      console.log('login---------')
         this.isAuth = 1;
     },
     SignInTemporarily(item) {
-      console.log('item----------',item)
       this.isAuth = 0;
       var that = this;
       wx.getStorage({
         key: "userInfo",
         success(res) {
-          that.userInfo = JSON.parse(res.data);
-          that.headInfo = JSON.parse(res.data);
+          if(res.data){
+            that.userInfo = JSON.parse(res.data);
+            that.headInfo = JSON.parse(res.data);
+          }
         }
       });
       
@@ -243,7 +245,7 @@ export default {
   border-radius: 20rpx;
   display: flex;
   align-items: center;
-  height: 120rpx;
+  height: 140rpx;
 
   position: relative;
   margin-bottom: 20rpx;
@@ -299,7 +301,7 @@ export default {
 .menu-lists-item {
   display: flex;
   align-items: center;
-  padding: 20rpx;
+  padding: 30rpx 20rpx;
   border-bottom: 1px solid #f6f6f6;
   position: relative;
 }
@@ -309,7 +311,7 @@ export default {
   vertical-align: middle;
 }
 .item-title {
-  font-size: 24rpx;
+  font-size: 28rpx;
   font-family: PingFang SC;
   font-weight: 500;
   color: rgba(17, 17, 17, 1);

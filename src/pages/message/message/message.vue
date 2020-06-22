@@ -10,8 +10,8 @@
       </div> -->
       <div slot="left">
         <div class="navigation-left">
-          <img class="left-img" src="/static/images/new/delete.png" alt="">
-          <div>删除</div>
+          <!-- <img class="left-img" src="/static/images/new/delete.png" alt=""> -->
+          <!-- <div>删除</div> -->
         </div>
       </div>
       <div slot="center"> 

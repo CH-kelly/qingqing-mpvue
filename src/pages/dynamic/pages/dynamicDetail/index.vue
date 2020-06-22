@@ -50,13 +50,15 @@
             </div>
           </div>
         </div>
-        <div class="contnent-comment-message">
+        <div class="contnent-comment-message"  :style="{'bottom':inputBottom+'px'}" >
           <div class="comment-message">
             <input
+              :adjustPosition="false"
               class="weui-input"
-              auto-focus
               :value="content"
               @input="inputContent"
+              @focus="_chatInput$bind$focus$event" 
+              @blur="_chatInput$bind$blur$event"
               placeholder="走心评论，说点好听的~"
               placeholder-class="placeholder-class"
             />
@@ -91,7 +93,9 @@ export default {
       list:{},
       dynamic_review:[],  //评论列表
       content:'',
-      isDelete:0
+      isDelete:0,
+
+      inputBottom:0,
     };
   },
   onLoad(option){
@@ -115,6 +119,16 @@ export default {
     this.contentHeight = store.state.contentHeight- 50;
   },
   methods: {
+    _chatInput$bind$focus$event(e){
+      console.log("键盘聚焦")
+      if(e.mp.detail.height != 0){
+          this.inputBottom = e.mp.detail.height
+      }
+    },
+    _chatInput$bind$blur$event(){
+      console.log('失去焦点')
+      this.inputBottom = 0
+    },
     inputContent(e){
       console.log(e,e.mp.detail.value)
       this.content = e.mp.detail.value;

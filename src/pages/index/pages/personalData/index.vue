@@ -235,7 +235,8 @@ export default {
 .title-origin {
   width: 14rpx;
   height: 14rpx;
-background:rgba(253,59,109,1);
+/* background:rgba(253,59,109,1); */
+background:#1ce9cb;
   border-radius: 50%;
 }
 .title-h2 {
@@ -304,7 +305,8 @@ background:rgba(253,59,109,1);
 }
 .active {
   
-background:linear-gradient(180deg,rgba(219,128,100,1),rgba(253,59,109,1));
+/* background:linear-gradient(180deg,rgba(219,128,100,1),rgba(253,59,109,1)); */
+background:linear-gradient(180deg,#1ce9cb,#1ce9cb);
 
   /* background: #f0c88b; */
   color: #ffffff;
@@ -372,10 +374,11 @@ color:rgba(16,16,16,1);
     width:500rpx;
   height: 80rpx;
 
-background:linear-gradient(180deg,rgba(219,128,100,1),rgba(253,59,109,1));
+/* background:linear-gradient(180deg,rgba(219,128,100,1),rgba(253,59,109,1)); */
+background:linear-gradient(180deg,#1ce9cb,#1ce9cb);
 box-shadow:0px 6px 18px 0px rgba(0, 0, 0, 0.15);
 
-  border-radius: 40rpx;
+    border-radius: 40rpx;
     text-align: center;
     line-height: 80rpx;
   font-size: 30rpx;

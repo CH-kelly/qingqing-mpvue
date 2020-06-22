@@ -422,12 +422,13 @@ export default {
   justify-content: center;
 }
 .submit {
-  width: 544rpx;
+  width: 610rpx;
   height: 80rpx;
   line-height: 80rpx;
   text-align: center;
   /* background: rgba(89, 94, 109, 1); */
-  background:linear-gradient(0deg,rgba(219,128,100,1),rgba(253,59,109,1));
+  /* background:linear-gradient(0deg,rgba(219,128,100,1),rgba(253,59,109,1)); */
+  background:linear-gradient(0deg,#1ce9cb,#1ce9cb);
 box-shadow:0px 6px 18px 0px rgba(0, 0, 0, 0.15);
   box-shadow: 0rpx 6rpx 18rpx 0rpx rgba(0, 0, 0, 0.15);
   border-radius: 40rpx;

@@ -18,16 +18,30 @@ export default class TextManager {
      * @param type
      */
    sendOneMsg({content, type}) {
-        this._page.imOperator.createNormalChatItem({ type,  content }).then(res=>{
 
-            const {itemIndex} =  this._page.UI.showItemForMoment(res);
-            console.log('itemIndex   ',itemIndex);
-            
+
+        const {itemIndex} = this._page.UI.showItemForMoment(this._page.imOperator.createNormalChatItem({
+                type,
+                content
+            }));
+        if(itemIndex){
             this._page.sendMsg({
                 content: this._page.imOperator.createChatItemContent({type, content}),
                 itemIndex
             });
-        })
+        }
+
+
+        // this._page.imOperator.createNormalChatItem({ type,  content }).then(res=>{
+
+        //     const {itemIndex} =  this._page.UI.showItemForMoment(res);
+        //     console.log('itemIndex   ',itemIndex);
+            
+        //     this._page.sendMsg({
+        //         content: this._page.imOperator.createChatItemContent({type, content}),
+        //         itemIndex
+        //     });
+        // })
         
     }
 

@@ -1,0 +1,10 @@
+{
+    "npm.exclude": "",
+    "emmet.excludeLanguages": [
+
+        "markdown"
+    ],
+    "search.exclude": {
+        "**/*.code-search": false
+    }
+}

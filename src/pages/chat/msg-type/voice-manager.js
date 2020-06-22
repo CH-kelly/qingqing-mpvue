@@ -12,7 +12,15 @@ export default class VoiceManager extends FileManager {
         this._page.chatVoiceItemClickEvent = (e) => {
             let dataset = e.currentTarget.dataset;
             console.log('点击的语音Item包含的信息', dataset);
-             this._playVoice({dataset})
+            //  this._playVoice({dataset})
+
+             wx.playVoice({
+                filePath: dataset.content,
+                success:()=>{
+                    console.log('成功');
+                }
+              })
+
         }
     }
 
@@ -48,7 +56,7 @@ export default class VoiceManager extends FileManager {
     }
 
     _playVoice({dataset}) {
-        let data = this._page.data;
+        let data = this._page;
         if (dataset.voicePath === data.latestPlayVoicePath && data.chatItems[dataset.index].isPlaying) {
             this.stopAllVoicePlay();
         } else {
@@ -81,6 +89,7 @@ export default class VoiceManager extends FileManager {
             this.innerAudioContext.src = filePath;
             this.innerAudioContext.startTime = 0;
             this.innerAudioContext.play();
+            console.log('__playVoice --------  ',this.innerAudioContext);
             this.innerAudioContext.onEnded(() => {
                 this.innerAudioContext.offEnded();
                 resolve();
@@ -93,7 +102,7 @@ export default class VoiceManager extends FileManager {
     }
 
     _startPlayVoice(dataset) {
-        const that = this._page, {latestPlayVoicePath, chatItems} = that.data,
+        const that = this._page, {latestPlayVoicePath, chatItems} = that,
             currentPlayItem = chatItems[dataset.index];//本次要播放的语音消息
         currentPlayItem.isPlaying = true;
         if (latestPlayVoicePath && latestPlayVoicePath !== currentPlayItem.content) {//如果重复点击同一个，则不将该isPlaying置为false
@@ -104,12 +113,15 @@ export default class VoiceManager extends FileManager {
                 }
             }
         }
+        that.chatItems = chatItems;
+        that.isVoicePlaying = true;
+        that.latestPlayVoicePath = dataset.voicePath;
 
-        that.setData({
-            chatItems,
-            isVoicePlaying: true
-        });
-        that.data.latestPlayVoicePath = dataset.voicePath;
+        // that.setData({
+        //     chatItems,
+        //     isVoicePlaying: true
+        // });
+        // that.data.latestPlayVoicePath = dataset.voicePath;
     }
 
 }

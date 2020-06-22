@@ -26,11 +26,11 @@ export default class FileSaveManager {
     }
 
     static saveFileRule({tempFilePath}) {
-        console.log('tempFilePath     ',tempFilePath)
         return new Promise((resolve, reject) => {
             wx.getFileInfo({
                 filePath: tempFilePath,
                 success: tempFailInfo => {
+                    console.log('tempFailInfo -----------------  ',tempFailInfo)
                     let tempFileSize = tempFailInfo.size;
                     // console.log('本地临时文件大小', tempFileSize);
                     if (tempFileSize > MAX_SIZE) {

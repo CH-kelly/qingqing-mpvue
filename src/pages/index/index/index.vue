@@ -178,7 +178,10 @@ export default {
     wx.getStorage({
       key: "userInfo",
       success(res) {
-        that.userInfo = JSON.parse(res.data);
+        console.log(res.data);
+        if(res.data){
+          that.userInfo = JSON.parse(res.data);
+        }
       }
     });
   },
@@ -212,7 +215,7 @@ export default {
       this.token = wx.getStorageSync('token');
       this.userInfo = store.state.userInfo;
       var that = this;
-      console.log('superLike')
+      console.log('superLike',this.token,this.userInfo)
       if (this.token !='' && this.userInfo !='') {
           
           this.isSuperLike = 1;
@@ -288,6 +291,14 @@ export default {
           if(res.code===0){
               that.userInfo = res.data;
               that.super_like_num = res.data.super_like_num;
+          }else{
+            
+                store.state.is_new_user = ''
+                store.state.token = ''
+                
+                wx.setStorageSync('userInfo', ''); //保存用户信息
+                wx.setStorageSync('token', ''); //保存用户登录的token信息
+
           }
         },err=>{
           console.log(err);
@@ -299,9 +310,11 @@ export default {
       this.isLogin = store.state.isLogin;
       let token = store.state.token || wx.getStorageSync('token');
 
-      this.get_user_info(token);
 
       if (this.userInfo || this.isLogin===1 || token) { //已登录
+      
+        this.get_user_info(token);
+
         //登录成功后需要时vip才可以查看回看
         if(this.userInfo.is_vip === 1){
 
@@ -311,7 +324,7 @@ export default {
 
         }else{
           wx.showToast({
-            title: '您还不是VIP，不能查看回放',
+            title: '您还不是VIP',
             icon: 'loading',
             duration: 2000
           })
@@ -329,7 +342,7 @@ export default {
       this.token = wx.getStorageSync('token');
       this.userInfo = this.userInfo || store.state.userInfo ;
       var that = this;
-      console.log('clickButtonImage  ',key);
+      console.log('点击喜欢或不喜欢按钮  ',this.isLogin,this.token,this.userInfo);
       
       if (this.userInfo || this.isLogin===1 || this.token!==null) {
           // 已登录
